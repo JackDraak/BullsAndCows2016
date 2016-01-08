@@ -7,6 +7,7 @@ public:
 	int GetMaxTries();
 	std::string PickTargetWord();
 	int GetCurrentTry();
+	void ExpendGuess();
 	bool IsGameWon();
 	bool CheckGuessValidity(std::string);
 

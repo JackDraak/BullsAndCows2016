@@ -2,6 +2,7 @@
 
 void FBullCowGame::Reset()
 {
+	MyCurrentTry = 1;
 	return;
 }
 
@@ -17,7 +18,12 @@ std::string FBullCowGame::PickTargetWord()
 
 int FBullCowGame::GetCurrentTry()
 {
-	return 0;
+	return MyCurrentTry;
+}
+
+void FBullCowGame::ExpendGuess()
+{
+	MyCurrentTry++;
 }
 
 bool FBullCowGame::IsGameWon()
