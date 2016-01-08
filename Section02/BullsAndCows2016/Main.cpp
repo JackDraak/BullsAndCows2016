@@ -4,7 +4,7 @@
 void PrintIntro();
 void PlayGame();
 bool bAskToPlayAgain();
-void SpitNewline(int Repeats);
+void SpamNewline(int Repeats);
 std::string GetGuess();
 
 constexpr int MAX_GUESSES = 5;
@@ -39,7 +39,7 @@ void PrintIntro()
 {
 	constexpr int WORD_LENGTH = 5;
 
-	SpitNewline(72);
+	SpamNewline(72);
 	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << " Welcome  to  Bulls  and  Cows\n";
 	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
@@ -74,8 +74,8 @@ bool bAskToPlayAgain()
 	return false;
 }
 
-//  spit X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
-void SpitNewline(int Repeats)
+//  spam X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
+void SpamNewline(int Repeats)
 {
 	int LoopNumber = 0;
 	if (Repeats >= 1)
