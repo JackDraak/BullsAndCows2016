@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include "FBullCowGame.h"
 
 void PrintIntro();
 void PlayGame();
@@ -23,11 +23,16 @@ int main()
 	return 0;
 }
 
-// core game loop
+// core game
 void PlayGame()
 {
-	// loop for MAX_GUESSES logic
-	for (int count = 1; count <= MAX_GUESSES; count++)
+	// instantiate a new game named BCGame
+	FBullCowGame BCGame;
+	int MaxTries = BCGame.GetMaxTries();
+	std::cout << "\n[MaxTries = " << MaxTries << "]\n";
+
+	// loop through turns
+	for (int count = 1; count <= MaxTries; count++)
 	{
 		std::string Guess = GetGuess();
 		std::cout << "Your guess was: " << Guess << std::endl;
