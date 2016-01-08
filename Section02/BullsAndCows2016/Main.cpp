@@ -2,10 +2,11 @@
 #include <string>
 
 void PrintIntro();
-std::string GetGuess();
 void PlayGame();
-void SpitNewline(int Repeats);
 bool bAskToPlayAgain();
+void SpitNewline(int Repeats);
+std::string GetGuess();
+
 constexpr int MAX_GUESSES = 5;
 
 // the entry-point for our applciation
@@ -37,7 +38,8 @@ void PlayGame()
 void PrintIntro()
 {
 	constexpr int WORD_LENGTH = 5;
-	SpitNewline(32);
+
+	SpitNewline(72);
 	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << " Welcome  to  Bulls  and  Cows\n";
 	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
@@ -72,7 +74,7 @@ bool bAskToPlayAgain()
 	return false;
 }
 
-// quickly spit X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
+//  spit X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
 void SpitNewline(int Repeats)
 {
 	int LoopNumber = 0;
