@@ -5,10 +5,10 @@ class FBullCowGame {
 public:
 	void ExpendGuess();
 	void Reset(); // TODO make a rich return value
-	int GetMaxTries();
-	int GetCurrentTry();
-	bool CheckGuessValidity(std::string);
-	bool IsGameWon();
+	int GetMaxTries() const;
+	int GetCurrentTry() const;
+	bool IsGameWon() const;
+	bool CheckGuessValidity(std::string);	// could be const, methinks, but we have yet to work out what it's doing
 	std::string PickTargetWord();
 
 
