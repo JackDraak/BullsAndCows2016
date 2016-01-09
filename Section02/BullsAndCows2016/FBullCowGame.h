@@ -3,13 +3,13 @@
 
 class FBullCowGame {
 public:
+	void ExpendGuess();
 	void Reset(); // TODO make a rich return value
 	int GetMaxTries();
-	std::string PickTargetWord();
 	int GetCurrentTry();
-	void ExpendGuess();
-	bool IsGameWon();
 	bool CheckGuessValidity(std::string);
+	bool IsGameWon();
+	std::string PickTargetWord();
 
 
 // ignore this section for now vv work up there instead ^^
