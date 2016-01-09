@@ -66,7 +66,7 @@ std::string GetGuess()
 	int MaxTries = BCGame.GetMaxTries();
 	std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
 	std::getline(std::cin, Guess);
-	BCGame.ExpendGuess();
+	BCGame.IncrementTry();
 	return Guess;
 }
 

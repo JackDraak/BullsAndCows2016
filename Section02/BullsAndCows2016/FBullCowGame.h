@@ -3,7 +3,7 @@
 
 class FBullCowGame {
 public:
-	void ExpendGuess();
+	void IncrementTry();
 	void Reset(); // TODO make a rich return value
 	int GetMaxTries() const;
 	int GetCurrentTry() const;
