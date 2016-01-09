@@ -1,6 +1,6 @@
 #include "FBullCowGame.h"
 
-// do I format this so it looks nice in Windows or on Git? I've gone with Git, where these form two lovely collumns 
+// do I format this so it looks nice in Windows or on Git? I've gone with Git, where these form two lovely columns 
 
 void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
 void FBullCowGame::Reset()					{ MyCurrentTry = 1; return; }
