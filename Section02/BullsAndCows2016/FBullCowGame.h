@@ -3,17 +3,18 @@
 
 class FBullCowGame {
 public:
+	//constructors
+	FBullCowGame();
 	void IncrementTry();
 	void Reset(); // TODO make a rich return value
 	int GetMaxTries() const;
 	int GetCurrentTry() const;
 	bool IsGameWon() const;
-	bool CheckGuessValidity(std::string);	// could be const, methinks, but we have yet to work out what it's doing
-	std::string PickTargetWord();
-
+	bool CheckGuessValidity(std::string);
 
 // ignore this section for now vv work up there instead ^^
 private:
-	int MyCurrentTry = 1;
-	int MyMaxTries = 5;
+	// set values in constructor definition FBullCowGame::Reset().cpp
+	int MyCurrentTry;
+	int MyMaxTries;
 };

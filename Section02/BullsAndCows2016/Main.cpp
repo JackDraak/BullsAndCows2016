@@ -7,8 +7,6 @@ bool bAskToPlayAgain();
 void SpamNewline(int Repeats);
 std::string GetGuess();
 
-constexpr int MAX_GUESSES = 5;
-
 // instantiate a new game named BCGame
 FBullCowGame BCGame;
 
