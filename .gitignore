@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+#Misc VS crap
+*.sdf
+*.idb
+*.tlog
+*.opendb
