@@ -13,7 +13,7 @@ void PrintIntro();
 void PlayGame();
 bool bAskToPlayAgain();
 void SpamNewline(int32 Repeats);
-FText GetGuess();
+FText GetValidGuess();
 
 // instantiate a new game named BCGame
 FBullCowGame BCGame;
@@ -42,10 +42,7 @@ void PlayGame()
 	// loop through turns //TODO turn into WHILE loop once validating guesses
 	for (int count = 1; count <= MaxTries; count++)
 	{
-		FText Guess = GetGuess();
-		
-		//check guess length is correct, etc....
-		EGuessStatus Status = BCGame.CheckGuessValidity(Guess);
+		FText Guess = GetValidGuess();
 
 		// submit valid guess to the game engine and recieve counts (IncrementTry happens in there)
 		FBullCowCount BullCowCount = BCGame.SubmitGuess(Guess);
@@ -75,15 +72,34 @@ void PrintIntro()
 	return;
 }
 
-// get a guess from the player
-FText GetGuess()
+// get a valid guess from the player, loop if needed
+FText GetValidGuess()
 {
-	FText Guess = "";
-	int32 CurrentTry = BCGame.GetCurrentTry();
-	int32 MaxTries = BCGame.GetMaxTries();
-	std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
-	std::getline(std::cin, Guess);
-	return Guess;
+	EGuessStatus Status = EGuessStatus::Invalid_Status;
+	do
+	{
+		FText Guess = "";
+		int32 CurrentTry = BCGame.GetCurrentTry();
+		int32 MaxTries = BCGame.GetMaxTries();
+		std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
+		std::getline(std::cin, Guess);
+
+		//check guess length is correct, etc....
+		Status = BCGame.CheckGuessValidity(Guess);
+		switch (Status)
+		{
+		case EGuessStatus::Length_Mismatch:
+			std::cout << "\nPlease enter a " << BCGame.GetGameWordLength() << " letter isogram.\n";
+			break;
+		case EGuessStatus::Not_Lowercase:
+			std::cout << "\nPlease (using lower case this time) enter a " << BCGame.GetGameWordLength() << " letter isogram, instead of " << Guess << "\n";
+			break;
+		case EGuessStatus::Not_Isogram:
+			std::cout << "\nAn isogram doesn't use any single letter more than once, unlike " << Guess << ", please guess again.\n";
+		default: // i.e. case OK
+			return Guess;
+		}
+	} while (Status != EGuessStatus::OK); // lopp until input is validated (error-free)
 }
 
 // determine if the player wants to continue playing
