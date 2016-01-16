@@ -35,6 +35,7 @@ int main()
 // core game
 void PlayGame()
 {
+	BCGame.Reset();
 	int32 MaxTries = BCGame.GetMaxTries();
 	std::cout << "\n[MaxTries = " << MaxTries << "]\n";
 
@@ -42,8 +43,9 @@ void PlayGame()
 	for (int count = 1; count <= MaxTries; count++)
 	{
 		FText Guess = GetGuess();
-		//check guess length is correct
-		//if (Guess.length == FBullCowGame::)
+		
+		//check guess length is correct, etc....
+		EGuessStatus Status = BCGame.CheckGuessValidity(Guess);
 
 		// submit valid guess to the game engine and recieve counts (IncrementTry happens in there)
 		FBullCowCount BullCowCount = BCGame.SubmitGuess(Guess);
@@ -92,7 +94,6 @@ bool bAskToPlayAgain()
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'y') || (Responce[0] == 'Y'))
 	{
-		BCGame.Reset();
 		return true;
 	}
 	return false;
