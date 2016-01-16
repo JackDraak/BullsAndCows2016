@@ -45,11 +45,10 @@ void PlayGame()
 		//check guess length is correct
 		//if (Guess.length == FBullCowGame::)
 
-		// submit valid guess to the game engine and recieve counts
+		// submit valid guess to the game engine and recieve counts (IncrementTry happens in there)
 		FBullCowCount BullCowCount = BCGame.SubmitGuess(Guess);
 
 		// display results, i.e. numbers of Bulls and Cows
-
 		int32 CurrentTry = (BCGame.GetCurrentTry()-1);
 		std::cout << "Guess #" << CurrentTry << ": " << Guess << ": ";
 		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
@@ -61,14 +60,12 @@ void PlayGame()
 // introduce the game
 void PrintIntro()
 {
-	constexpr int32 WORD_LENGTH = 5;
-
 	SpamNewline(72);
 	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << " Welcome  to  Bulls  and  Cows\n";
 	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "Your mission, should you choose to accept it,\n";
-	std::cout << "is to guess an isogram* that is " << WORD_LENGTH;
+	std::cout << "is to guess an isogram* that is " << BCGame.GetGameWordLength();
 	std::cout << " characters long.\n";
 	std::cout << "\n * An isogram is a word comprised of unique letters, example:\n";
 	std::cout << "take: is an isogram, each letter is unique in the word\n";
@@ -84,7 +81,6 @@ FText GetGuess()
 	int32 MaxTries = BCGame.GetMaxTries();
 	std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
 	std::getline(std::cin, Guess);
-	// BCGame.IncrementTry(); now handling this in FBullCowGame
 	return Guess;
 }
 
