@@ -41,10 +41,19 @@ void PlayGame()
 	// loop through turns //TODO turn into WHILE loop once validating guesses
 	for (int count = 1; count <= MaxTries; count++)
 	{
-		FText Guess = GetGuess(); //TODO loop to check for a valid guess
-		// submit valid guess to the game engine TODO
-		// calculate and display numbers of Bulls and Cows TODO
-		std::cout << "Your guess was: " << Guess << std::endl;
+		FText Guess = GetGuess();
+		//check guess length is correct
+		//if (Guess.length == FBullCowGame::)
+
+		// submit valid guess to the game engine and recieve counts
+		FBullCowCount BullCowCount = BCGame.SubmitGuess(Guess);
+
+		// display results, i.e. numbers of Bulls and Cows
+
+		int32 CurrentTry = (BCGame.GetCurrentTry()-1);
+		std::cout << "Guess #" << CurrentTry << ": " << Guess << ": ";
+		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
+		std::cout << "Cows = " << BullCowCount.Cows << "\n";
 	}
 	// TODO add game summary
 }
@@ -75,7 +84,7 @@ FText GetGuess()
 	int32 MaxTries = BCGame.GetMaxTries();
 	std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
 	std::getline(std::cin, Guess);
-	BCGame.IncrementTry();
+	// BCGame.IncrementTry(); now handling this in FBullCowGame
 	return Guess;
 }
 
