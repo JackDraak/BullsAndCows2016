@@ -36,11 +36,11 @@ int main()
 void PlayGame()
 {
 	BCGame.Reset();
-	int32 MaxTries = BCGame.GetMaxTries();
-	std::cout << "\n[MaxTries = " << MaxTries << "]\n";
+	//int32 MaxTries = BCGame.GetMaxTries();
+	std::cout << "\n[MaxTries = " << BCGame.GetMaxTries() << "]\n"; // TODO do we really need this line?
 
-	// loop through turns //TODO turn into WHILE loop once validating guesses
-	for (int count = 1; count <= MaxTries; count++)
+	// loop: if the game is not won and turns remain
+	while ((!BCGame.IsGameWon()) && (BCGame.GetCurrentTry() <= BCGame.GetMaxTries())) // these 4 extra parens are not required by the compiler
 	{
 		FText Guess = GetValidGuess();
 
