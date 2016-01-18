@@ -28,6 +28,7 @@ public:
 	int32 GetMaxTries() const;
 	int32 GetCurrentTry() const;
 	int32 GetGameWordLength() const;
+//	int32 GetBulls() const;
 
 	EGuessStatus CheckGuessValidity(FString) const;
 	bool IsGameWon() const;
@@ -42,5 +43,6 @@ private:
 	// set values in constructor definition FBullCowGame::Reset().cpp
 	int32 MyCurrentTry;
 	int32 MyMaxTries;
+	bool MyWin;
 	FString MyGameWord;
 };

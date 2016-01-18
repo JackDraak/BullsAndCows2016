@@ -36,7 +36,7 @@ int main()
 void PlayGame()
 {
 	BCGame.Reset();
-	//int32 MaxTries = BCGame.GetMaxTries();
+	//int32 MaxTries = BCGame.GetMaxTries(); // we only reference this twice... for consistency I'm trying w/out it
 	std::cout << "\n[MaxTries = " << BCGame.GetMaxTries() << "]\n"; // TODO do we really need this line?
 
 	// loop: if the game is not won and turns remain
