@@ -35,7 +35,7 @@ public:
 	void IncrementTry();
 	void Reset(); // TODO rich return
 	
-	FBullCowCount SubmitGuess(FString);
+	FBullCowCount SubmitValidGuess(FString);
 
 // ignore this section for now vv work up there instead ^^
 private:

@@ -45,7 +45,7 @@ void PlayGame()
 		FText Guess = GetValidGuess();
 
 		// submit valid guess to the game engine and recieve counts (IncrementTry happens in there)
-		FBullCowCount BullCowCount = BCGame.SubmitGuess(Guess);
+		FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
 
 		// display results, i.e. numbers of Bulls and Cows
 		int32 CurrentTry = (BCGame.GetCurrentTry()-1);
@@ -76,9 +76,9 @@ void PrintIntro()
 FText GetValidGuess()
 {
 	EGuessStatus Status = EGuessStatus::Invalid_Status;
+	FText Guess = "";
 	do
 	{
-		FText Guess = "";
 		int32 CurrentTry = BCGame.GetCurrentTry();
 		int32 MaxTries = BCGame.GetMaxTries();
 		std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
@@ -97,9 +97,10 @@ FText GetValidGuess()
 		case EGuessStatus::Not_Isogram:
 			std::cout << "\nAn isogram doesn't use any single letter more than once, unlike " << Guess << ", please guess again.\n";
 		default: // i.e. case OK
-			return Guess;
+			break;
 		}
 	} while (Status != EGuessStatus::OK); // lopp until input is validated (error-free)
+	return Guess;
 }
 
 // determine if the player wants to continue playing

@@ -37,17 +37,17 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 }
 
 // Upon reciept of a valid* guess, increments turn and returns count
-FBullCowCount FBullCowGame::SubmitGuess(FString Guess)
+FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 {
 	//IncrementTry();
 	MyCurrentTry++;
 	FBullCowCount BullCowCount;
 
-	// loop through all letters in the guess
+	// loop through all letters in the game word
 	int32 GameWordLength = GetGameWordLength();
 	for (int32 MyGameWordChar = 0; MyGameWordChar < GameWordLength; MyGameWordChar++) 
 	{	
-		// compare letters against gameword
+		// compare letters against guess
 		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
 		{	
 			// if match then
