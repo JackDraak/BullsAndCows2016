@@ -43,6 +43,6 @@ private:
 	// set values in constructor definition FBullCowGame::Reset().cpp
 	int32 MyCurrentTry;
 	int32 MyMaxTries;
-	bool MyWin;
+	bool bMyWin;
 	FString MyGameWord;
 };

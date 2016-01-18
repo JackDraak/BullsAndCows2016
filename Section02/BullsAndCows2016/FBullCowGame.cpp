@@ -7,8 +7,7 @@ void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
 int32 FBullCowGame::GetMaxTries() const			{ return MyMaxTries; }
 int32 FBullCowGame::GetCurrentTry() const		{ return MyCurrentTry; }
 int32 FBullCowGame::GetGameWordLength() const	{ return (MyGameWord.length()); }
-//int32 FBullCowGame::GetBulls() const { return FBullCowCount::Bulls; }
-bool FBullCowGame::IsGameWon() const			{ return MyWin; }
+bool FBullCowGame::IsGameWon() const			{ return bMyWin; }
 
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
@@ -64,17 +63,19 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 			}
 		}
 	}
-	if (GameWordLength == BullCowCount.Bulls) { FBullCowGame::MyWin = true; }
+	if (BullCowCount.Bulls == GameWordLength) FBullCowGame::bMyWin = true; // bad form here, FTR
 	return BullCowCount;
 }
 void FBullCowGame::Reset()
 {
-	const FString GAME_WORD = "abound";
-	MyGameWord = GAME_WORD;
+	bMyWin = false;
+	MyCurrentTry = 1;
 	
 	constexpr int32 MAX_TRIES = 5;
 	MyMaxTries = MAX_TRIES;
-	MyWin = false;
-	MyCurrentTry = 1;
+	
+	const FString GAME_WORD = "abound";
+	MyGameWord = GAME_WORD;
+
 	return;
 }

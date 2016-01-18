@@ -107,7 +107,7 @@ FText GetValidGuess()
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-	std::cout << std::endl << "Would you like to play again? (Yes/No) ";
+	std::cout << std::endl << "Would you like to play again? y/N ";
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'y') || (Responce[0] == 'Y'))
 	{
