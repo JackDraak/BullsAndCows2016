@@ -10,13 +10,23 @@ int32 FBullCowGame::GetGameWordLength() const	{ return (MyGameWord.length()); }
 bool FBullCowGame::IsGameWon() const			{ return bMyWin; }
 void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
 
+bool FBullCowGame::IsIsogram(FString Guess) const
+{
+	// Ben says, "treat 0 and 1 char words as isograms"
+	// taking the input string Guess, sort into a hash table, one character at a time (converting to lower case on the fly)
+		// return false if a character in the sort is not alpha
+		// return false if a character is in the hash table more than once
+	// if all characters pass the above two filters, congratulations, you have an isogram
+	return true; // TODO make it work as advertised
+}
+
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
 	int32 GameWL = GetGameWordLength();
 	int32 GuessWL = Guess.length();
 
 	// if guess is not isogram return error
-	if (false) // TODO make it actually... you know, check
+	if (!IsIsogram(Guess))
 	{
 		return EGuessStatus::Not_Isogram;
 	}

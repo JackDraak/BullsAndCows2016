@@ -44,4 +44,6 @@ private:
 	int32 MyMaxTries;
 	bool bMyWin;
 	FString MyGameWord;
+
+	bool IsIsogram(FString) const;
 };
