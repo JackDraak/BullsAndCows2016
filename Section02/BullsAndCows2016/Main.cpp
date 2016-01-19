@@ -11,6 +11,7 @@ using int32 = int;
 
 void PrintIntro();
 void PlayGame();
+void PrintGameSummary();
 bool bAskToPlayAgain();
 void SpamNewline(int32 Repeats);
 FText GetValidGuess();
@@ -45,15 +46,47 @@ void PlayGame()
 
 		// submit valid guess to the game engine which will update counts
 		FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
-
-		// display results, i.e. numbers of Bulls and Cows and burn a turn
 		std::cout << "Guess #" << BCGame.GetCurrentTry() << ": " << Guess << ": ";
 		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 		std::cout << "Cows = " << BullCowCount.Cows << "\n";
 		BCGame.IncrementTry();
 	}
+	PrintGameSummary();
+	return;
+}
 
-	// Game Summary generated here: if won Form-A, else if out of turns Form-B
+// introduce the game
+void PrintIntro()
+{
+	SpamNewline(72);
+	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
+	std::cout << " Welcome  to  Bulls  and  Cows\n";
+	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
+	std::cout << "Your mission, should you choose to accept it,\n";
+	std::cout << "is to guess an isogram* that is " << BCGame.GetGameWordLength();
+	std::cout << " characters long.\n";
+	std::cout << "\n * An isogram is a word comprised of unique letters, example:\n";
+	std::cout << "take: is an isogram, each letter is unique in the word\n";
+	std::cout << "book: is NOT an isogram; it contains two 'o's\n";
+	return;
+}
+
+// determine if the player wants to continue playing, explicit Y/y required or exit
+bool bAskToPlayAgain()
+{
+	FText Responce = "";
+	std::cout << std::endl << "Would you like to play again? y/N ";
+	std::getline(std::cin, Responce);
+	if ((Responce[0] == 'y') || (Responce[0] == 'Y'))
+	{
+		return true;
+	}
+	return false;
+}
+
+// Game Summary generated here: if won Form-A, else if out of turns Form-B
+void PrintGameSummary()
+{
 	if (BCGame.IsGameWon())
 	{
 		std::cout << std::endl;
@@ -70,21 +103,21 @@ void PlayGame()
 		std::cout << std::endl << "!~!~!~!~!~!~!~!		Game Word : " << BCGame.GetGameWord();
 		std::cout << std::endl;
 	}
+	return;
 }
 
-// introduce the game
-void PrintIntro()
+//  spam X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
+void SpamNewline(int32 Repeats)
 {
-	SpamNewline(72);
-	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
-	std::cout << " Welcome  to  Bulls  and  Cows\n";
-	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
-	std::cout << "Your mission, should you choose to accept it,\n";
-	std::cout << "is to guess an isogram* that is " << BCGame.GetGameWordLength();
-	std::cout << " characters long.\n";
-	std::cout << "\n * An isogram is a word comprised of unique letters, example:\n";
-	std::cout << "take: is an isogram, each letter is unique in the word\n";
-	std::cout << "book: is NOT an isogram; it contains two 'o's\n";
+	int32 LoopNumber = 0;
+	if (Repeats >= 1)
+	{
+		do
+		{
+			std::cout << std::endl;
+			LoopNumber++;
+		} while (LoopNumber < Repeats);
+	}
 	return;
 }
 
@@ -117,32 +150,4 @@ FText GetValidGuess()
 		}
 	} while (Status != EGuessStatus::OK); // lopp until input is validated (error-free)
 	return Guess;
-}
-
-// determine if the player wants to continue playing, explicit Y/y required or exit
-bool bAskToPlayAgain()
-{
-	FText Responce = "";
-	std::cout << std::endl << "Would you like to play again? y/N ";
-	std::getline(std::cin, Responce);
-	if ((Responce[0] == 'y') || (Responce[0] == 'Y'))
-	{
-		return true;
-	}
-	return false;
-}
-
-//  spam X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
-void SpamNewline(int32 Repeats)
-{
-	int32 LoopNumber = 0;
-	if (Repeats >= 1)
-	{
-		do
-		{
-			std::cout << std::endl;
-			LoopNumber++;
-		} while (LoopNumber < Repeats);
-	}
-	return;
 }
