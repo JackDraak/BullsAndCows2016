@@ -3,6 +3,7 @@
 using int32 = int;
 
 FBullCowGame::FBullCowGame()					{ FBullCowGame::Reset(); }
+FString FBullCowGame::GetGameWord() const		{ return MyGameWord; }
 int32 FBullCowGame::GetMaxTries() const			{ return MyMaxTries; }
 int32 FBullCowGame::GetCurrentTry() const		{ return MyCurrentTry; }
 int32 FBullCowGame::GetGameWordLength() const	{ return (MyGameWord.length()); }
@@ -39,7 +40,6 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 // Upon reciept of a valid* guess, increments turn and returns count
 FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 {
-	MyCurrentTry++;
 	FBullCowCount BullCowCount;
 
 	// loop through each letter in the game word
@@ -62,6 +62,7 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 			}
 		}
 	}
+	// MyCurrentTry++; now handling this elsewhere
 	if (BullCowCount.Bulls == GameWordLength) FBullCowGame::bMyWin = true; // bad form here, FTR
 	return BullCowCount;
 }
@@ -70,7 +71,7 @@ void FBullCowGame::Reset()
 	bMyWin = false;
 	MyCurrentTry = 1;
 	
-	constexpr int32 MAX_TRIES = 5;
+	constexpr int32 MAX_TRIES = 3;
 	MyMaxTries = MAX_TRIES;
 	
 	const FString GAME_WORD = "abound";

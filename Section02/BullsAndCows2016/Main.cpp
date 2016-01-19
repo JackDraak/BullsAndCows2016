@@ -43,16 +43,33 @@ void PlayGame()
 	{
 		FText Guess = GetValidGuess();
 
-		// submit valid guess to the game engine and recieve counts (IncrementTry happens in there)
+		// submit valid guess to the game engine which will update counts
 		FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
 
-		// display results, i.e. numbers of Bulls and Cows
-		int32 CurrentTry = (BCGame.GetCurrentTry()-1);
-		std::cout << "Guess #" << CurrentTry << ": " << Guess << ": ";
+		// display results, i.e. numbers of Bulls and Cows and burn a turn
+		std::cout << "Guess #" << BCGame.GetCurrentTry() << ": " << Guess << ": ";
 		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 		std::cout << "Cows = " << BullCowCount.Cows << "\n";
+		BCGame.IncrementTry();
 	}
-	// TODO add game summary
+
+	// Game Summary generated here: if won Form-A, else if out of turns Form-B
+	if (BCGame.IsGameWon())
+	{
+		std::cout << std::endl;
+		std::cout << std::endl << "!~!~!~!~!~!~!~!";
+		std::cout << std::endl << "!~!~WINNER!~!~!		Guesses: " << BCGame.GetCurrentTry() -1 << " of " << BCGame.GetMaxTries();
+		std::cout << std::endl << "!~!~!~!~!~!~!~!		Game Word: " << BCGame.GetGameWord();
+		std::cout << std::endl;
+	}
+	else if (BCGame.GetCurrentTry() >= BCGame.GetMaxTries())
+	{
+		std::cout << std::endl;
+		std::cout << std::endl << "!~!~!~!~!~!~!~!";
+		std::cout << std::endl << "!~!~!LOSER!~!~!		Guesses: " << BCGame.GetCurrentTry() -1 << " of " << BCGame.GetMaxTries();
+		std::cout << std::endl << "!~!~!~!~!~!~!~!		Game Word : " << BCGame.GetGameWord();
+		std::cout << std::endl;
+	}
 }
 
 // introduce the game

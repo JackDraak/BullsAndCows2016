@@ -25,18 +25,18 @@ public:
 	//constructors
 	FBullCowGame();
 
+	FString GetGameWord() const;
 	int32 GetMaxTries() const;
 	int32 GetCurrentTry() const;
 	int32 GetGameWordLength() const;
 	bool IsGameWon() const;
 
 	EGuessStatus CheckGuessValidity(FString) const;
-
+	
+	FBullCowCount SubmitValidGuess(FString);
 	void IncrementTry();
 	void Reset(); // TODO rich return
 	
-	FBullCowCount SubmitValidGuess(FString);
-
 // ignore this section for now vv work up there instead ^^
 private:
 	// set values in constructor definition FBullCowGame::Reset().cpp
