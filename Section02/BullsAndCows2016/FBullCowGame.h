@@ -28,10 +28,9 @@ public:
 	int32 GetMaxTries() const;
 	int32 GetCurrentTry() const;
 	int32 GetGameWordLength() const;
-//	int32 GetBulls() const;
+	bool IsGameWon() const;
 
 	EGuessStatus CheckGuessValidity(FString) const;
-	bool IsGameWon() const;
 
 	void IncrementTry();
 	void Reset(); // TODO rich return

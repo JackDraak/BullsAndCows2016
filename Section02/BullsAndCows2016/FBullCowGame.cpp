@@ -3,11 +3,11 @@
 using int32 = int;
 
 FBullCowGame::FBullCowGame()					{ FBullCowGame::Reset(); }
-void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
 int32 FBullCowGame::GetMaxTries() const			{ return MyMaxTries; }
 int32 FBullCowGame::GetCurrentTry() const		{ return MyCurrentTry; }
 int32 FBullCowGame::GetGameWordLength() const	{ return (MyGameWord.length()); }
 bool FBullCowGame::IsGameWon() const			{ return bMyWin; }
+void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
 
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
@@ -39,18 +39,17 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 // Upon reciept of a valid* guess, increments turn and returns count
 FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 {
-	//IncrementTry();
 	MyCurrentTry++;
 	FBullCowCount BullCowCount;
 
-	// loop through all letters in the game word
+	// loop through each letter in the game word
 	int32 GameWordLength = GetGameWordLength();
 	for (int32 MyGameWordChar = 0; MyGameWordChar < GameWordLength; MyGameWordChar++) 
 	{	
-		// compare letters against guess
+		// compare letters against guess word
 		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
 		{	
-			// if match then
+			// if match then...
 			char GameWordChar = MyGameWord[MyGameWordChar];
 			char GuessWordChar = Guess[GuessChar];
 			if (GuessWordChar == GameWordChar)

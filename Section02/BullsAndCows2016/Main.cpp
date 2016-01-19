@@ -36,11 +36,10 @@ int main()
 void PlayGame()
 {
 	BCGame.Reset();
-	//int32 MaxTries = BCGame.GetMaxTries(); // we only reference this twice... for consistency I'm trying w/out it
 	std::cout << "\n[MaxTries = " << BCGame.GetMaxTries() << "]\n"; // TODO do we really need this line?
 
 	// loop: if the game is not won and turns remain
-	while ((!BCGame.IsGameWon()) && (BCGame.GetCurrentTry() <= BCGame.GetMaxTries())) // these 4 extra parens are not required by the compiler
+	while (!BCGame.IsGameWon() && BCGame.GetCurrentTry() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
 
@@ -103,7 +102,7 @@ FText GetValidGuess()
 	return Guess;
 }
 
-// determine if the player wants to continue playing
+// determine if the player wants to continue playing, explicit Y/y required or exit
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
