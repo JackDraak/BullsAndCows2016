@@ -19,7 +19,7 @@ FText GetValidGuess();
 // instantiate a new game named BCGame
 FBullCowGame BCGame;
 
-// the entry-point for our applciation
+// the entry-point for the applciation
 int main()
 {
 	do
@@ -33,7 +33,7 @@ int main()
 	return 0;
 }
 
-// core game
+// core game method
 void PlayGame()
 {
 	BCGame.Reset();
@@ -55,7 +55,7 @@ void PlayGame()
 	return;
 }
 
-// introduce the game
+// print game introduction text
 void PrintIntro()
 {
 	SpamNewline(72);
@@ -71,7 +71,7 @@ void PrintIntro()
 	return;
 }
 
-// determine if the player wants to continue playing, explicit Y/y required or exit
+// determine if the player wants to continue playing, explicit Y/y required, or exit
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
@@ -84,7 +84,7 @@ bool bAskToPlayAgain()
 	return false;
 }
 
-// Game Summary generated here: if won Form-A, else if out of turns Form-B
+// Game Summary generated here: if won then Form-A, else if out of turns then Form-B
 void PrintGameSummary()
 {
 	if (BCGame.IsGameWon())
@@ -140,11 +140,12 @@ FText GetValidGuess()
 		case EGuessStatus::Length_Mismatch:
 			std::cout << "\nPlease enter a " << BCGame.GetGameWordLength() << " letter isogram.\n";
 			break;
-		case EGuessStatus::Not_Lowercase:
-			std::cout << "\nPlease (using lower case this time) enter a " << BCGame.GetGameWordLength() << " letter isogram, instead of " << Guess << "\n";
-			break;
 		case EGuessStatus::Not_Isogram:
 			std::cout << "\nAn isogram doesn't use any single letter more than once, unlike " << Guess << ", please guess again.\n";
+			break;
+		case EGuessStatus::Not_Alpha:
+			std::cout << "\nYou've entered one or more non-alphabetic characters. Instead of " << Guess << ", please try an isogram word.\n";
+			break;
 		default: // i.e. case OK
 			break;
 		}

@@ -1,4 +1,6 @@
 #include "FBullCowGame.h"
+#include <map>
+#define TMap std::map
 
 using int32 = int;
 
@@ -10,36 +12,63 @@ int32 FBullCowGame::GetGameWordLength() const	{ return (MyGameWord.length()); }
 bool FBullCowGame::IsGameWon() const			{ return bMyWin; }
 void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
 
-bool FBullCowGame::IsIsogram(FString Guess) const
+bool FBullCowGame::IsWordIsogram(FString Word) const
 {
-	// Ben says, "treat 0 and 1 char words as isograms"
-	// taking the input string Guess, sort into a hash table, one character at a time (converting to lower case on the fly)
-		// return false if a character in the sort is not alpha
+	// treat 0 and 1 char words as isograms, because by strict definition, they are
+	if (Word.length() <= 1) { return true; }
+
+	// if Word is 2+ characters sort into a hash table, one character at a time (converting to lower case on the fly)
+	TMap<char, bool> LetterSeen; // a hashmap of Word
+	for (auto Letter : Word)
+	{
+		Letter = tolower(Letter); // convert to lowercase for simplicity
 		// return false if a character is in the hash table more than once
-	// if all characters pass the above two filters, congratulations, you have an isogram
-	return true; // TODO make it work as advertised
+		if (!LetterSeen[Letter]) 
+		{
+			LetterSeen[Letter] = true; // if first time seen, then set to true
+		}
+		else if (LetterSeen[Letter]) // duplicate letter detected, therefore exit 1
+		{
+			return false; 
+		}
+	}
+	// if all characters pass through the above filter, congratulations, you have an isogram
+	return true;
+}
+
+// if there are characters in the Word which are not alphabetic, return false, otherwise return true
+bool FBullCowGame::IsWordAlpha(FString Word) const
+{
+	for (int32 WordChar = 0; WordChar < Word.length(); WordChar++)
+	{
+		// compare letters, exit 1 on detection of non-alpha entry
+		if (!isalpha(Word[WordChar])) return false;
+	}
+	return true; // if Word is alphabetic
 }
 
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
+	// if guess is short|long return error
 	int32 GameWL = GetGameWordLength();
 	int32 GuessWL = Guess.length();
-
-	// if guess is not isogram return error
-	if (!IsIsogram(Guess))
-	{
-		return EGuessStatus::Not_Isogram;
-	}
-	// if guess is not lowercase, convert or return error
-	else if (false) // TODO make it actually... you know, check
-	{
-		return EGuessStatus::Not_Lowercase;
-	}
-	// if guess is short|long return error
-	else if (GuessWL != GameWL)
+	if (GuessWL != GameWL)
 	{
 		return EGuessStatus::Length_Mismatch;
 	}
+
+	// if guess is not isogram return error
+	else if (!IsWordIsogram(Guess))
+	{
+		return EGuessStatus::Not_Isogram;
+	}
+
+	// if Guess is not alphabetical, return error
+	else if (!IsWordAlpha(Guess))
+	{
+		return EGuessStatus::Not_Alpha;
+	}
+
 	// else return EGuessStatus::OK;
 	else
 	{
@@ -54,14 +83,14 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 
 	// loop through each letter in the game word
 	int32 GameWordLength = GetGameWordLength();
-	for (int32 MyGameWordChar = 0; MyGameWordChar < GameWordLength; MyGameWordChar++) 
-	{	
+	for (int32 MyGameWordChar = 0; MyGameWordChar < GameWordLength; MyGameWordChar++)
+	{
 		// compare letters against guess word
 		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
-		{	
+		{
 			// if match then...
 			char GameWordChar = MyGameWord[MyGameWordChar];
-			char GuessWordChar = Guess[GuessChar];
+			char GuessWordChar = tolower(Guess[GuessChar]);
 			if (GuessWordChar == GameWordChar)
 			{
 				// incrememnt Bulls if they're in the corresponding position
@@ -72,10 +101,14 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 			}
 		}
 	}
-	// MyCurrentTry++; now handling this elsewhere
-	if (BullCowCount.Bulls == GameWordLength) FBullCowGame::bMyWin = true; // bad form here, FTR
+
+	if (BullCowCount.Bulls == GameWordLength)
+	{
+		FBullCowGame::bMyWin = true;
+	}
 	return BullCowCount;
 }
+
 void FBullCowGame::Reset()
 {
 	bMyWin = false;

@@ -11,12 +11,13 @@ struct FBullCowCount
 	int32 Cows = 0;
 };
 
+// possible return status' when processing Guess input
 enum class EGuessStatus
 {
 	Invalid_Status,
 	OK,
 	Not_Isogram,
-	Not_Lowercase,
+	Not_Alpha,
 	Length_Mismatch,
 };
 
@@ -37,13 +38,13 @@ public:
 	void IncrementTry();
 	void Reset(); // TODO rich return
 	
-// ignore this section for now vv work up there instead ^^
 private:
-	// set values in constructor definition FBullCowGame::Reset().cpp
+	// set values in constructor definition FBullCowGame::Reset() %0.cpp
 	int32 MyCurrentTry;
 	int32 MyMaxTries;
 	bool bMyWin;
 	FString MyGameWord;
 
-	bool IsIsogram(FString) const;
+	bool IsWordIsogram(FString) const;
+	bool IsWordAlpha(FString) const;
 };
