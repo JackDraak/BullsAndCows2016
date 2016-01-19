@@ -42,9 +42,11 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 	for (int32 WordChar = 0; WordChar < Word.length(); WordChar++)
 	{
 		// compare letters, exit 1 on detection of non-alpha entry
-		if (!isalpha(Word[WordChar])) return false;
+		auto testee = Word[WordChar];
+		bool tester = (!isalpha(Word[WordChar]));
+		if (!isalpha(Word[WordChar])) return false; // exit 1, non-alpha detection
 	}
-	return true; // if Word is alphabetic
+	return true; // if Word is alphabetic then exit 0
 }
 
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
