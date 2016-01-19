@@ -31,10 +31,8 @@
 *.sdf
 *.idb
 *.tlog
-*.sln
 *.lastbuildstate
 *.opendb
-*.vcxproj
 *.filters
 .vs
 

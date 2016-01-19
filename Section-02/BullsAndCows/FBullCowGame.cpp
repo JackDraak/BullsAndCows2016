@@ -4,13 +4,13 @@
 
 using int32 = int;
 
-FBullCowGame::FBullCowGame()					{ FBullCowGame::Reset(); }
-FString FBullCowGame::GetGameWord() const		{ return MyGameWord; }
-int32 FBullCowGame::GetMaxTries() const			{ return MyMaxTries; }
-int32 FBullCowGame::GetCurrentTry() const		{ return MyCurrentTry; }
-int32 FBullCowGame::GetGameWordLength() const	{ return (MyGameWord.length()); }
-bool FBullCowGame::IsGameWon() const			{ return bMyWin; }
-void FBullCowGame::IncrementTry()				{ MyCurrentTry++; return; }
+FBullCowGame::FBullCowGame()                    { FBullCowGame::Reset(); }
+FString FBullCowGame::GetGameWord() const       { return MyGameWord; }
+int32 FBullCowGame::GetMaxTries() const         { return MyMaxTries; }
+int32 FBullCowGame::GetCurrentTry() const       { return MyCurrentTry; }
+int32 FBullCowGame::GetGameWordLength() const   { return (MyGameWord.length()); }
+bool FBullCowGame::IsGameWon() const            { return bMyWin; }
+void FBullCowGame::IncrementTry()               { MyCurrentTry++; return; }
 
 bool FBullCowGame::IsWordIsogram(FString Word) const
 {
@@ -51,10 +51,10 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
-	if (Guess.length() != GetGameWordLength())	{ return EGuessStatus::Length_Mismatch; }
-	else if (!IsWordIsogram(Guess))				{ return EGuessStatus::Not_Isogram; }
-	else if (!IsWordAlpha(Guess))				{ return EGuessStatus::Not_Alpha; }
-	else										{ return EGuessStatus::OK; }
+	if (Guess.length() != GetGameWordLength())  { return EGuessStatus::Length_Mismatch; }
+	else if (!IsWordIsogram(Guess))             { return EGuessStatus::Not_Isogram; }
+	else if (!IsWordAlpha(Guess))               { return EGuessStatus::Not_Alpha; }
+	else                                        { return EGuessStatus::OK; }
 }
 
 // Upon reciept of a valid* guess, increments turn and returns count
