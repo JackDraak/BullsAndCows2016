@@ -26,7 +26,7 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 		// return false if a character is in the hash table more than once
 		if (!LetterSeen[Letter])
 		{
-			LetterSeen[Letter] = true; // if first time seen, then set to true
+			LetterSeen[Letter] = true;	// if first time seen, then set to true
 		}
 		else if (LetterSeen[Letter])
 		{
@@ -41,8 +41,8 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 {
 	for (int32 WordChar = 0; WordChar < Word.length(); WordChar++)
 	{
-//		auto testee = Word[WordChar];				// set break-point and uncomment to watch this term
-//		bool tester = (!isalpha(Word[WordChar]));	// set break-point and uncomment to watch this term
+//              auto testee = Word[WordChar];                   // set break-point and uncomment to watch this term
+//              bool tester = (!isalpha(Word[WordChar]));       // set break-point and uncomment to watch this term
 		// compare letters, exit 1 on detection of non-alpha entry
 		if (!isalpha(Word[WordChar])) return false; // exit 1, non-alpha detection
 	}
@@ -95,10 +95,10 @@ void FBullCowGame::Reset()
 {
 	bMyWin = false;
 	MyCurrentTry = 1;
-	
+
 	constexpr int32 MAX_TRIES = 3;
 	MyMaxTries = MAX_TRIES;
-	
+
 	const FString GAME_WORD = "abound";
 	MyGameWord = GAME_WORD;
 

@@ -36,3 +36,7 @@
 *.opendb
 *.vcxproj
 *.filters
+.vs
+
+#temp files
+*.swp

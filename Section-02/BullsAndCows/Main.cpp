@@ -39,7 +39,7 @@ void PlayGame()
 	BCGame.Reset();
 	std::cout << "\n[MaxTries = " << BCGame.GetMaxTries() << "]\n"; // TODO do we really need this line?
 
-	// loop: if the game is not won and turns remain
+																	// loop: if the game is not won and turns remain
 	while (!BCGame.IsGameWon() && BCGame.GetCurrentTry() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
@@ -71,6 +71,7 @@ void PrintIntro()
 	return;
 }
 
+
 // determine if the player wants to continue playing, explicit Y/y required, or exit
 bool bAskToPlayAgain()
 {
@@ -91,16 +92,16 @@ void PrintGameSummary()
 	{
 		std::cout << std::endl;
 		std::cout << std::endl << "!~!~!~!~!~!~!~!";
-		std::cout << std::endl << "!~!~WINNER!~!~!		Guesses: " << BCGame.GetCurrentTry() -1 << " of " << BCGame.GetMaxTries();
-		std::cout << std::endl << "!~!~!~!~!~!~!~!		Game Word: " << BCGame.GetGameWord();
+		std::cout << std::endl << "!~!~WINNER!~!~!              Guesses: " << BCGame.GetCurrentTry() - 1 << " of " << BCGame.GetMaxTries();
+		std::cout << std::endl << "!~!~!~!~!~!~!~!              Game Word: " << BCGame.GetGameWord();
 		std::cout << std::endl;
 	}
 	else if (BCGame.GetCurrentTry() >= BCGame.GetMaxTries())
 	{
 		std::cout << std::endl;
 		std::cout << std::endl << "!~!~!~!~!~!~!~!";
-		std::cout << std::endl << "!~!~!LOSER!~!~!		Guesses: " << BCGame.GetCurrentTry() -1 << " of " << BCGame.GetMaxTries();
-		std::cout << std::endl << "!~!~!~!~!~!~!~!		Game Word : " << BCGame.GetGameWord();
+		std::cout << std::endl << "!~!~!LOSER!~!~!              Guesses: " << BCGame.GetCurrentTry() - 1 << " of " << BCGame.GetMaxTries();
+		std::cout << std::endl << "!~!~!~!~!~!~!~!              Game Word : " << BCGame.GetGameWord();
 		std::cout << std::endl;
 	}
 	return;

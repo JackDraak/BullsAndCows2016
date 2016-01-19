@@ -33,11 +33,11 @@ public:
 	bool IsGameWon() const;
 
 	EGuessStatus CheckGuessValidity(FString) const;
-	
+
 	FBullCowCount SubmitValidGuess(FString);
 	void IncrementTry();
 	void Reset(); // TODO rich return, i.e. pick a new game word
-	
+
 private:
 	// set values in constructor definition FBullCowGame::Reset() %0.cpp
 	int32 MyCurrentTry;
