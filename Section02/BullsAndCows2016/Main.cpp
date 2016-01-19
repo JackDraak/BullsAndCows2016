@@ -66,8 +66,8 @@ void PrintIntro()
 	std::cout << "is to guess an isogram* that is " << BCGame.GetGameWordLength();
 	std::cout << " characters long.\n";
 	std::cout << "\n * An isogram is a word comprised of unique letters, example:\n";
-	std::cout << "take: is an isogram, each letter is unique in the word\n";
-	std::cout << "book: is NOT an isogram; it contains two 'o's\n";
+	std::cout << "  - take: is an isogram, each letter is unique in the word\n";
+	std::cout << "  - book: is NOT an isogram; it contains two 'o's\n";
 	return;
 }
 
@@ -121,19 +121,17 @@ void SpamNewline(int32 Repeats)
 	return;
 }
 
-// get a valid guess from the player, loop if needed
+// get a valid guess from the player, loop as needed
 FText GetValidGuess()
 {
 	EGuessStatus Status = EGuessStatus::Invalid_Status;
 	FText Guess = "";
 	do
 	{
-		int32 CurrentTry = BCGame.GetCurrentTry();
-		int32 MaxTries = BCGame.GetMaxTries();
-		std::cout << std::endl << "Please enter guess #" << CurrentTry << " of " << MaxTries << ": ";
+		std::cout << std::endl << "Please enter guess #" << BCGame.GetCurrentTry() << " of " << BCGame.GetMaxTries() << ": ";
 		std::getline(std::cin, Guess);
 
-		//check guess length is correct, etc....
+		//Validate Guess: length, isogram, alpha...
 		Status = BCGame.CheckGuessValidity(Guess);
 		switch (Status)
 		{
@@ -149,6 +147,6 @@ FText GetValidGuess()
 		default: // i.e. case OK
 			break;
 		}
-	} while (Status != EGuessStatus::OK); // lopp until input is validated (error-free)
+	} while (Status != EGuessStatus::OK); // lopp until input is validated
 	return Guess;
 }
