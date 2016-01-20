@@ -1,4 +1,3 @@
-// working 
 #pragma once
 #include "FBullCowGame.h"
 #include <map>
@@ -83,7 +82,6 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 		else if (MyLevel == 2 && MyScore > 27) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 3 && MyScore > 71) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 4 && MyScore > 223) { FBullCowGame::LevelUp(); }
-
 		FBullCowGame::bMyWin = true;
 	}
 	return BullCowCount;
@@ -100,22 +98,16 @@ void FBullCowGame::Reset()
 	else { bNewPLay = false; }
 	bMyWin = false;
 	MyCurrentTry = 1;
-
-	const FString GAME_WORD = "abound";
-	MyGameWord = GAME_WORD; // TODO select randomly from an array of words, remove when complete
-
 	FString MyGameWord = SelectGameWordForLevel();
-
-	constexpr int32 MAX_TRIES = 4;
-	MyMaxTries = MAX_TRIES;
-	if (int32(MyGameWord.length()) >= MAX_TRIES) { MyMaxTries = int32(MyGameWord.length()); }
+	constexpr int32 DEFAULT_MAX_TRIES = 4;
+	MyMaxTries = DEFAULT_MAX_TRIES;
+	if (int32(MyGameWord.length()) >= DEFAULT_MAX_TRIES) { MyMaxTries = int32(MyGameWord.length()); }
 	return;
 }
 
 // based on the player level, select an apropriate random word from the map
 FString FBullCowGame::SelectGameWordForLevel()
 {
-	FString MAGIC_WORD = "string"; // TODO make this obsolete
 	FString Words_0[10] = { "pat", "eat", "rat", "and", "mat", "cat", "ate", "sat", "fat", "bat" };
 	FString Words_1[10] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk" };
 	FString Words_2[10] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks" };
@@ -124,8 +116,10 @@ FString FBullCowGame::SelectGameWordForLevel()
 	FString Words_5[10] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately" };
 
 	// select a random word from the pool for the player level to return
-	std::srand(time(NULL));
-	int32 frame = rand() % 10 + 1;
+	//	std::srand(time(NULL));
+	int32 frame = rand() % 10;
+	if (frame < 0) { frame = 0; }
+	if (frame > 9) { frame = 9; }
 	switch (MyLevel)
 	{
 	case 0:

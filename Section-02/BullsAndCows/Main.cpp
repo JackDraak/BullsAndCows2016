@@ -1,4 +1,4 @@
-/* working version
+/*
 This is the console executable that makes use of the FBullCowGame class.
 This acts as the view in a MVC pattern, and is responsible for all
 user input & output. For game logic/engine, see the FBullCowGame class.
@@ -10,12 +10,12 @@ user input & output. For game logic/engine, see the FBullCowGame class.
 using FText = std::string;
 using int32 = int;
 
-void PrintIntro();
 void PlayGame();
-void PrintGameSummary();
-bool bAskToPlayAgain();
+void PrintIntro();
+void PrintPhaseSummary();
 void SpamNewline(int32 Repeats);
 FText GetValidGuess();
+bool bAskToPlayAgain();
 
 // instantiate a new game named BCGame
 FBullCowGame BCGame;
@@ -39,7 +39,6 @@ void PlayGame()
 {
 	BCGame.Reset();
 	// effectively, the tail of the PrintIntro() header:
-	//
 	std::cout << BCGame.GetGameWordLength() << " Bulls\n";
 	std::cout << "with one of your guesses to win. Good luck!\n";
 	std::cout << "\n     | Player Level: " << BCGame.GetLevel() +1 << "\n";
@@ -51,7 +50,7 @@ void PlayGame()
 	{
 		FText Guess = GetValidGuess();
 
-		// submit valid guess to the game engine which will update counts
+		// submit valid guess to the game engine which will update Bull/Cow counts
 		FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
 
 		// display the results back to the player each turn
@@ -61,7 +60,7 @@ void PlayGame()
 		BCGame.IncrementTry();
 	}
 	// Win or lose, what's the result?
-	PrintGameSummary();
+	PrintPhaseSummary();
 	return;
 }
 
@@ -84,6 +83,7 @@ void PrintIntro()
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
 	std::cout << "determine your next guess. In other words, this round you need to earn ";
 	// proceed to header-tail because we need a number, but need to call Reset() first [see PlayGame() above]
+	// TODO right around here is where we're getting random errors
 	return;
 }
 
@@ -101,7 +101,7 @@ bool bAskToPlayAgain()
 }
 
 // Game Summary generated here: if won then Form-A, else if out of turns then Form-B
-void PrintGameSummary()
+void PrintPhaseSummary()
 {
 	if (BCGame.IsGameWon())
 	{

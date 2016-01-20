@@ -11,7 +11,7 @@ struct FBullCowCount
 	int32 Cows = 0;
 };
 
-// possible return status' when processing Guess input
+// possible return status' when processing Guess input:
 enum class EGuessStatus
 {
 	Invalid_Status,
@@ -41,17 +41,17 @@ public:
 	void IncrementTry();
 	void LevelUp();
 	void ScoreUp(int32);
-	void Reset(); // TODO rich return? i.e. pick a new game word
+	void Reset();
 
 private:
 	// set values in constructor definition FBullCowGame::Reset() %0.cpp
+	FString MyGameWord;
 	int32 MyCurrentTry;
 	int32 MyScore;
 	int32 MyLevel;
 	int32 MyMaxTries;
 	bool bMyWin;
 	bool bNewPLay;
-	FString MyGameWord;
 
 	bool IsWordIsogram(FString) const;
 	bool IsWordAlpha(FString) const;
