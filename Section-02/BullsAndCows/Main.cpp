@@ -38,7 +38,10 @@ int main()
 void PlayGame()
 {
 	BCGame.Reset();
-	std::cout << "\n[Maximum number of guesses: " << BCGame.GetMaxTries() << "]\n"; 
+	// effectively, the tail of the PrintIntro() header:
+	std::cout << "\n     | Player Level: " << BCGame.GetLevel() << "\n";
+	std::cout << "     | Player Score: " << BCGame.GetScore() << "\n";
+	std::cout << "     | Maximum guesses this round: " << BCGame.GetMaxTries() << "\n";
 
 	// loop: if the game is not won and turns remain
 	while (!BCGame.IsGameWon() && BCGame.GetCurrentTry() <= BCGame.GetMaxTries())
@@ -47,11 +50,14 @@ void PlayGame()
 
 		// submit valid guess to the game engine which will update counts
 		FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
+
+		// display the results back to the player each turn
 		std::cout << "Guess #" << BCGame.GetCurrentTry() << ": " << Guess << ": ";
 		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 		std::cout << "Cows = " << BullCowCount.Cows << "\n";
 		BCGame.IncrementTry();
 	}
+	// Win or lose, what's the result?
 	PrintGameSummary();
 	return;
 }
@@ -79,7 +85,6 @@ void PrintIntro()
 	std::cout << "with one of your guesses to win. Good luck!\n";
 	return;
 }
-
 
 // determine if the player wants to continue playing, explicit Y/y required, or exit
 bool bAskToPlayAgain()

@@ -28,21 +28,28 @@ public:
 
 	FString GetGameWord() const;
 	int32 GetMaxTries() const;
+	int32 GetScore() const; // TODO make increment/decrement methods, also to change player level
 	int32 GetCurrentTry() const;
+	int32 GetLevel() const;
 	int32 GetGameWordLength() const;
 	bool IsGameWon() const;
 
 	EGuessStatus CheckGuessValidity(FString) const;
 
 	FBullCowCount SubmitValidGuess(FString);
+	FString SelectGameWordForLevel();
 	void IncrementTry();
+	void ScoreUp(int32);
 	void Reset(); // TODO rich return? i.e. pick a new game word
 
 private:
 	// set values in constructor definition FBullCowGame::Reset() %0.cpp
 	int32 MyCurrentTry;
+	int32 MyScore;
+	int32 MyLevel;
 	int32 MyMaxTries;
 	bool bMyWin;
+	bool bNewPLay;
 	FString MyGameWord;
 
 	bool IsWordIsogram(FString) const;
