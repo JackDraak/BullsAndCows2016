@@ -1,35 +1,34 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.1b
-*
-*	I/O functions are handled here in the Main.cpp class, while the
-*	game mechanics are found in the FBullCowGame.cpp class.
+*	Jan.2016 pre-release 0.9.2
 *
 *	This is the console executable that makes use of the FBullCowGame class.
-*	This acts as the view in a MVC pattern, and is responsible for all
-*	user input & output. For game logic/engine, see the FBullCowGame class.
+*	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
+*	The game mechanics operate in the FBullCowGame.cpp class.
 */
 #pragma once
 #include <iostream>
 #include "FBullCowGame.h"
 
+// required for UnrealEngine-friendly syntax:
 using FText = std::string;
 using int32 = int;
 
+// function prototypes, as outside class:
 void ManageGame();
-void PrintTurnSummary(FText &Guess, FBullCowCount &BullCowCount);
-void PrintIntroTail();
 void PrintIntroHead();
+void PrintIntroTail();
+void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount);
 void PrintPhaseSummary();
 void SpamNewline(int32 Repeats);
-FText GetValidGuess();
 bool bAskToPlayAgain();
+FText GetValidGuess();
 
-// instantiate a new game named BCGame
+// instantiate a new game named BCGame, which is recycled through each turn and round or phase:
 FBullCowGame BCGame;
 
-// the entry-point for the applciation
+// the entry-point for the applciation:
 int main()
 {
 	do
@@ -38,34 +37,25 @@ int main()
 		ManageGame();
 	} while (bAskToPlayAgain());
 
-	// "end of line." program execution complete
+	// "end of line." program execution complete:
 	std::cout << std::endl << "E n d . o f . l i n e . ." << std::endl;
 	return 0;
 }
 
-// core game method
+// core game I/O handler method:
 void ManageGame()
 {
 	BCGame.Reset();
 	PrintIntroTail();
 
-	while (!BCGame.IsGameWon() && BCGame.GetCurrentTry() <= BCGame.GetMaxTries())
+	while (!BCGame.IsPhaseWon() && BCGame.GetTurn() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
-		FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
-		PrintTurnSummary(Guess, BullCowCount);
+		FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(Guess);
+		PrintTurnSummary(Guess, BullCowCounts);
 	}
 	PrintPhaseSummary();
 	return;
-}
-
-// output: after a guess is validated, print the results for the turn
-void PrintTurnSummary(FText &Guess, FBullCowCount &BullCowCount)
-{
-	std::cout << "Guess #" << BCGame.GetCurrentTry() << ": " << Guess << ": ";
-	std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
-	std::cout << "Cows = " << BullCowCount.Cows << "\n";
-	BCGame.IncrementTry();
 }
 
 // print game introduction text HEAD
@@ -92,14 +82,14 @@ void PrintIntroHead()
 // print game introduction text TAIL
 void PrintIntroTail()
 {
-	std::cout << BCGame.GetGameWordLength() << " Bulls\n";
+	std::cout << BCGame.GetIsogramLength() << " Bulls\n";
 	std::cout << "with one of your guesses to win. Good luck!\n";
 	std::cout << "\n     | Player Level: " << BCGame.GetLevel() + 1 << "\n";
 	std::cout << "     | Player Score: " << BCGame.GetScore() << "\n";
 	std::cout << "     | Maximum guesses this round: " << BCGame.GetMaxTries() << "\n";
 }
 
-// determine if the player wants to continue playing, explicit Y/y required, or exit 1
+// determine if the player wants to continue playing, explicit n/N required, or exit 0
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
@@ -112,24 +102,32 @@ bool bAskToPlayAgain()
 	return true;
 }
 
-// Game-Phase Summary generated here: if won then Form-A, else if out of turns then Form-B
+// output - after a guess is validated, print the results: Guess# of #, Bull# Cow# & IncrementTry()
+void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) // TODO create a method that instead of #####.length returns with Bulls (i.e. am###s) for optional hints, i.e. run-in hint-mode
+{
+	std::cout << "Guess #" << BCGame.GetTurn() << ": " << Guess << ": ";
+	std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
+	std::cout << "Cows = " << BullCowCount.Cows << "\n";
+	BCGame.IncrementTry();
+}
+
+// Game-Phase Summary generated here: if pase is won then use Form-A, else if out of turns then use Form-B
 void PrintPhaseSummary()
 {
-	if (BCGame.IsGameWon())
+	if (BCGame.IsPhaseWon())
 	{
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Congratulations on winning this round!";
-		std::cout << std::endl << "      !~!~WINNER!~!~!       Guesses: " << BCGame.GetCurrentTry() - 1 << " of " << BCGame.GetMaxTries() << " used";
+		std::cout << std::endl << "      !~!~WINNER!~!~!       Guesses: " << BCGame.GetTurn() - 1 << " of " << BCGame.GetMaxTries() << " used";
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word: ";
-		std::cout << BCGame.GetGameWord();
+		std::cout << BCGame.GetRankedIsogram();
 		std::cout << std::endl;
 	}
-	else if (BCGame.GetCurrentTry() >= BCGame.GetMaxTries())
+	else if (BCGame.GetTurn() >= BCGame.GetMaxTries()) // TODO track lost rounds, include with phase summary
 	{
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it! Don't give up yet!";
-		std::cout << std::endl << "      !~!~!LOSER!~!~!       Guesses: " << BCGame.GetCurrentTry() - 1 << " of " << BCGame.GetMaxTries() << " used";
+		std::cout << std::endl << "      !~!~!LOSER!~!~!       Guesses: " << BCGame.GetTurn() - 1 << " of " << BCGame.GetMaxTries() << " used";
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word : ";
-		// TODO create a method that instead of #####.length returns with Bulls (i.e. am###s) for optional hints
-		for (auto Letter : BCGame.GetGameWord()) { std::cout << "#"; }
+		for (auto Letter : BCGame.GetRankedIsogram()) { std::cout << "#"; }
 		std::cout << std::endl;
 	}
 	return;
@@ -144,7 +142,7 @@ FText GetValidGuess()
 	do
 	{
 		// acquire input:
-		std::cout << std::endl << "Please enter guess #" << BCGame.GetCurrentTry() << " of " << BCGame.GetMaxTries() << ": ";
+		std::cout << std::endl << "Please enter guess #" << BCGame.GetTurn() << " of " << BCGame.GetMaxTries() << ": ";
 		std::getline(std::cin, Guess);
 
 		// provide helpful feedback if the guess is unexpected:
@@ -152,7 +150,7 @@ FText GetValidGuess()
 		switch (Status)
 		{
 		case EGuessStatus::Length_Mismatch:
-			std::cout << "\nPlease enter a " << BCGame.GetGameWordLength() << " letter isogram.\n";
+			std::cout << "\nPlease enter a " << BCGame.GetIsogramLength() << " letter isogram.\n";
 			break;
 		case EGuessStatus::Not_Isogram:
 			std::cout << "\nAn isogram doesn't use any single letter more than once, unlike " << Guess << ", please guess again.\n";
