@@ -1,4 +1,4 @@
-/*
+/* working version
 This is the console executable that makes use of the FBullCowGame class.
 This acts as the view in a MVC pattern, and is responsible for all
 user input & output. For game logic/engine, see the FBullCowGame class.
@@ -39,9 +39,10 @@ void PlayGame()
 {
 	BCGame.Reset();
 	// effectively, the tail of the PrintIntro() header:
+	//
 	std::cout << BCGame.GetGameWordLength() << " Bulls\n";
 	std::cout << "with one of your guesses to win. Good luck!\n";
-	std::cout << "\n     | Player Level: " << BCGame.GetLevel() << "\n";
+	std::cout << "\n     | Player Level: " << BCGame.GetLevel() +1 << "\n";
 	std::cout << "     | Player Score: " << BCGame.GetScore() << "\n";
 	std::cout << "     | Maximum guesses this round: " << BCGame.GetMaxTries() << "\n";
 
@@ -118,7 +119,7 @@ void PrintGameSummary()
 		std::cout << std::endl << "!~!~!~!~!~!~!~!              Game Word : ";
 		for (auto Letter : BCGame.GetGameWord())
 		{
-			std::cout << "#"; // TODO create a method that instead of #####.length returns with Bulls (i.e. am###s)
+			std::cout << "#"; // TODO create a method that instead of #####.length returns with Bulls (i.e. am###s) for optional hints
 		}
 		std::cout << std::endl;
 	}
