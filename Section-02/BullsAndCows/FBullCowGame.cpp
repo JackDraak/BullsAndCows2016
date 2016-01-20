@@ -1,6 +1,7 @@
 #pragma once
 #include "FBullCowGame.h"
 #include <map>
+#include<ctime>
 
 #define TMap std::map
 
@@ -132,26 +133,34 @@ FString FBullCowGame::SelectGameWordForLevel()
 	FString Words_2[10] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks" };
 	FString Words_3[10] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos" };
 	FString Words_4[10] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside" };
-	FString Words_5[10] = { "", "", "", "", "", "", "", "", "", "" };
+	FString Words_5[10] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately" };
 
 	// select a random word from the player level to return
+	std::srand(time(NULL));
+	int32 frame = rand() % 10 + 1;
 	switch (MyLevel)
 	{
 	case 0:
-		return "ate";
+		return Words_0[frame];
 		break;
 	case 1:
-		return "sand";
+		return Words_1[frame];
 		break;
 	case 2:
-		return "toads";
+		return Words_2[frame];
 		break;
 	case 3:
-		return "tricks";
+		return Words_3[frame];
 		break;
 	case 4:
-		return "workmanship";
+		return Words_4[frame];
 		break;
+	case 5:
+		return Words_5[frame];
+		break;
+
+	default:
+		return Words_0[frame];
 	}
 	
 	return MAGIC_WORD;
