@@ -1,3 +1,4 @@
+#pragma once
 #include "FBullCowGame.h"
 #include <map>
 #define TMap std::map
@@ -26,12 +27,9 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 		// return false if a character is in the hash table more than once
 		if (!LetterSeen[Letter])
 		{
-			LetterSeen[Letter] = true;	// if first time seen, then set to true
+			LetterSeen[Letter] = true; // if first time seen, then set to true
 		}
-		else if (LetterSeen[Letter])
-		{
-			return false; // duplicate letter detected, therefore exit 1
-		}
+		else { return false; }         // duplicate letter detected, therefore exit 1
 	}
 	return true; // if complement of characters pass through the above filter, Word is an isogram, exit 0
 }

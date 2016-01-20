@@ -3,6 +3,7 @@ This is the console executable that makes use of the FBullCowGame class.
 This acts as the view in a MVC pattern, and is responsible for all
 user input & output. For game logic/engine, see the FBullCowGame class.
 */
+#pragma once
 #include <iostream>
 #include "FBullCowGame.h"
 
@@ -49,7 +50,6 @@ void PlayGame()
 		std::cout << "Guess #" << BCGame.GetCurrentTry() << ": " << Guess << ": ";
 		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 		std::cout << "Cows = " << BullCowCount.Cows << "\n";
-//		std::cout << "(Each Bull is awarded for a correct letter in the correct position, and each Cow is for a correct letter in the wrong place.)\n";
 		BCGame.IncrementTry();
 	}
 	PrintGameSummary();

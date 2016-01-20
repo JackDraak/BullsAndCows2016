@@ -36,7 +36,7 @@ public:
 
 	FBullCowCount SubmitValidGuess(FString);
 	void IncrementTry();
-	void Reset(); // TODO rich return, i.e. pick a new game word
+	void Reset(); // TODO rich return? i.e. pick a new game word
 
 private:
 	// set values in constructor definition FBullCowGame::Reset() %0.cpp
