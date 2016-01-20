@@ -9,7 +9,6 @@ using int32 = int;
 
 FBullCowGame::FBullCowGame()                    { FBullCowGame::Reset(); }
 FString FBullCowGame::GetGameWord() const       { return MyGameWord; }
-int32 FBullCowGame::GetMaxTries() const         { return MyMaxTries; }
 int32 FBullCowGame::GetScore() const            { return MyScore; }
 int32 FBullCowGame::GetCurrentTry() const       { return MyCurrentTry; }
 int32 FBullCowGame::GetLevel() const            { return MyLevel; }
@@ -76,19 +75,21 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 	}
 	if (BullCowCount.Bulls == GameWordLength) 
 	{
-		FBullCowGame::ScoreUp(FBullCowGame::GetLevel() + (MyMaxTries - MyCurrentTry) +1);
+		// game [DIFFICULTY Tuning: Part C] because the quicker a player score goes up, the more quickly difficulty goes up
+		FBullCowGame::ScoreUp(MyLevel + (FBullCowGame::GetMaxTries() - MyCurrentTry));
+		// breakpoint here to see the result of the score calulation
 
-		// game difficulty tuning can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
+		// game [DIFFICULTY Tuning: Part B] can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
 		// this could certainly be done with more eloquence., I think...
-		if (MyLevel == 0 && MyScore > 2) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 1 && MyScore > 4) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 2 && MyScore > 8) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 3 && MyScore > 16) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 4 && MyScore > 32) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 5 && MyScore > 64) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 6 && MyScore > 128) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 7 && MyScore > 256) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 8 && MyScore > 512) { FBullCowGame::LevelUp(); }
+		if (MyLevel == 0 && MyScore > 3) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 1 && MyScore > 6) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 2 && MyScore > 12) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 3 && MyScore > 24) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 4 && MyScore > 48) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 5 && MyScore > 96) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 6 && MyScore > 192) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 7 && MyScore > 384) { FBullCowGame::LevelUp(); }
+//		else if (MyLevel == 8 && MyScore > 768) { FBullCowGame::LevelUp(); } // whoops, getting carried away!
 		FBullCowGame::bMyWin = true;
 	}
 	return BullCowCount;
@@ -106,17 +107,24 @@ void FBullCowGame::Reset()
 	bMyWin = false;
 	MyCurrentTry = 1;
 	FString MyGameWord = SelectGameWordForLevel();
-	int32 MyGameWordLength = MyGameWord.length();
-
-	constexpr int32 DEFAULT_MAX_TRIES = 4;
-	MyMaxTries = DEFAULT_MAX_TRIES;
-
-	if (MyGameWordLength >= MyMaxTries)
-	{
-		if (MyGameWordLength > 10) { MyMaxTries = 10; } // TODO no word of any size is allowed more than 10 guesses; is this too dissicult? (Lecture 46)
-		else { MyMaxTries = MyGameWordLength; }
-	}
 	return;
+}
+
+// use a map to correlate Word.length and MaxTries [DIFFICULTY Tuning: Part A]
+int32 FBullCowGame::GetMaxTries() const
+{
+	TMap<int32, int32>WordLengthToMaxTries 
+	{
+		{ 3, 5 },   { 11, 24 },
+		{ 4, 6 },   { 12, 20 },
+		{ 5, 8 },   { 13, 16 },
+		{ 6, 11 },  { 14, 12 },
+		{ 7, 15 },  { 15, 10 },
+		{ 8, 20 },  { 16, 8 },
+		{ 9, 26 },  { 17, 6 },
+		{ 10, 32 }, { 18, 3 }
+	};
+	return WordLengthToMaxTries[MyGameWord.length()];
 }
 
 // based on the player level, select an apropriate random word from the map
@@ -126,16 +134,16 @@ FString FBullCowGame::SelectGameWordForLevel()
 	FString Words_1[15] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk", "same", "dart", "this", "from", "suit" };
 	FString Words_2[15] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks", "thing", "miles", "lives", "facts", "cloth" };
 	FString Words_3[15] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos", "travel", "wealth", "second", "curled", "loving" };
-	FString Words_4[15] = { "jukebox", "ziplock", "lockjaw", "quickly", "question", "jaybird", "jackpot", "quicken", "quicker", "student", "clothes", "spectrum", "jockeys", "subject", "cliquey" };
+	FString Words_4[15] = { "jukebox", "ziplock", "lockjaw", "quickly", "question", "jaybird", "jackpot", "quicken", "quicker", "imports", "clothes", "spectrum", "jockeys", "subject", "cliquey" };
 	FString Words_5[15] = { "hospitable", "background", "campground", "greyhounds", "infamously", "slumbering", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "chlothespin", "introduces", "nightmares" };
 	FString Words_6[15] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
 	FString Words_7[15] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
 	FString Words_8[15] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", "computerizably", "unmaledictory", "ambidextrously" };
 
-	std::srand(time(NULL));
+	std::srand(time(NULL)); // this may appear extraneous, but seems to be required for proper random results in `frame` below
 	int32 frame = rand() % 15;
-	if (frame < 0) { frame = 0; } // TODO overkill much?
-	if (frame > 14) { frame = 14; } // do you even code, bro?
+//	if (frame < 0) { frame = 0; } // TODO overkill much?
+//	if (frame > 14) { frame = 14; } // do you even code, bro?
 	switch (MyLevel)
 	{
 	case 0:
@@ -169,5 +177,5 @@ FString FBullCowGame::SelectGameWordForLevel()
 		MyGameWord = Words_0[frame];
 		break;
 	}
-	return MyGameWord;
+	return MyGameWord; // breakpoint here to cheat and glimpse the next game word
 }

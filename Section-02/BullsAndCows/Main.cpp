@@ -96,7 +96,7 @@ void PrintIntroTail()
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-	std::cout << std::endl << " [`Ctrl-C` to exit anytime, explicit N expected] Continue playing? Y/n";
+	std::cout << std::endl << "[`Ctrl-C` to exit anytime, explicit N expected] Continue playing? Y/n ";
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'n') || (Responce[0] == 'N'))
 	{
