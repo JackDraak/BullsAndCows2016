@@ -83,7 +83,6 @@ void PrintIntro()
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
 	std::cout << "determine your next guess. In other words, this round you need to earn ";
 	// proceed to header-tail because we need a number, but need to call Reset() first [see PlayGame() above]
-	// TODO right around here is where we're getting random errors
 	return;
 }
 
@@ -149,12 +148,14 @@ FText GetValidGuess()
 
 	do
 	{
-		// acquire input
+		// acquire input:
 		std::cout << std::endl << "Please enter guess #" << BCGame.GetCurrentTry() << " of " << BCGame.GetMaxTries() << ": ";
 		std::getline(std::cin, Guess);
 
 		// validate Guess: length, isogram, alpha...
 		Status = BCGame.CheckGuessValidity(Guess);
+
+		// provide helpful feedback if the guess is unexpected:
 		switch (Status)
 		{
 		case EGuessStatus::Length_Mismatch:

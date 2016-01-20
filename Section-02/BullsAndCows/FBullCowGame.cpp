@@ -115,11 +115,9 @@ FString FBullCowGame::SelectGameWordForLevel()
 	FString Words_4[10] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside" };
 	FString Words_5[10] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately" };
 
-	// select a random word from the pool for the player level to return
-	//	std::srand(time(NULL));
 	int32 frame = rand() % 10;
-	if (frame < 0) { frame = 0; }
-	if (frame > 9) { frame = 9; }
+	if (frame < 0) { frame = 0; } // TODO overkill much?
+	if (frame > 9) { frame = 9; } // do you even code, bro?
 	switch (MyLevel)
 	{
 	case 0:
