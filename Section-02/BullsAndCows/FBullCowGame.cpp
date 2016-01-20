@@ -1,3 +1,20 @@
+/*	FBullCowGame.cpp
+*	created by Jack Draak
+*	as tutored by Ben Tristem
+*	Jan.2016 pre-release 0.9.1b
+*
+*	This class handles the mechanics of the Bull Cow Game, i.e.
+*		GetGameWord,         IsWordAlpha,
+*		GetScore,            LevelUp,
+*		GetCurrentTry,       ScoreUp,
+*		GetLevel,            CheckGuessValidity,
+*		GetGameWordLength,   SubmitValidGuess,
+*		IsGameWon,           Reset,
+*		IncrementTry,        GuessMaxTries,
+*		IsWordIsogram,       SelectGameWordForLevel,
+*
+*	I/O functions are handled in the Main.cpp class
+*/
 #pragma once
 #include "FBullCowGame.h"
 #include <map>
@@ -89,13 +106,12 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 		else if (MyLevel == 5 && MyScore > 96) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 6 && MyScore > 192) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 7 && MyScore > 384) { FBullCowGame::LevelUp(); }
-//		else if (MyLevel == 8 && MyScore > 768) { FBullCowGame::LevelUp(); } // whoops, getting carried away!
 		FBullCowGame::bMyWin = true;
 	}
 	return BullCowCount;
 }
 
-// Initialize a new game state (overloading: if game InPlay set-up for a new turn)
+// Initialize a new game state (overloaded: if game InPlay set-up for a new turn)
 void FBullCowGame::Reset()
 {
 	if (bNewPLay) 
@@ -142,8 +158,6 @@ FString FBullCowGame::SelectGameWordForLevel()
 
 	std::srand(time(NULL)); // this may appear extraneous, but seems to be required for proper random results in `frame` below
 	int32 frame = rand() % 15;
-//	if (frame < 0) { frame = 0; } // TODO overkill much?
-//	if (frame > 14) { frame = 14; } // do you even code, bro?
 	switch (MyLevel)
 	{
 	case 0:

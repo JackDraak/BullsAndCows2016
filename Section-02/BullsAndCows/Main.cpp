@@ -1,7 +1,14 @@
-/*
-This is the console executable that makes use of the FBullCowGame class.
-This acts as the view in a MVC pattern, and is responsible for all
-user input & output. For game logic/engine, see the FBullCowGame class.
+/*	Main.cpp
+*	created by Jack Draak
+*	as tutored by Ben Tristem
+*	Jan.2016 pre-release 0.9.1b
+*
+*	I/O functions are handled here in the Main.cpp class, while the
+*	game mechanics are found in the FBullCowGame.cpp class.
+*
+*	This is the console executable that makes use of the FBullCowGame class.
+*	This acts as the view in a MVC pattern, and is responsible for all
+*	user input & output. For game logic/engine, see the FBullCowGame class.
 */
 #pragma once
 #include <iostream>

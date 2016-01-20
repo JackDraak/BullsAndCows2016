@@ -1,3 +1,24 @@
+/*	FBullCowGame.ch
+*	created by Jack Draak
+*	as tutored by Ben Tristem
+*	Jan.2016 pre-release 0.9.1b
+*
+*	This header file is included by both:
+*		Main.cpp
+*		FBullCowGame.cpp
+*
+*	The FBullCowGame class handles the mechanics of the Bull Cow Game, i.e.
+*		GetGameWord,         IsWordAlpha,
+*		GetScore,            LevelUp,
+*		GetCurrentTry,       ScoreUp,
+*		GetLevel,            CheckGuessValidity,
+*		GetGameWordLength,   SubmitValidGuess,
+*		IsGameWon,           Reset,
+*		IncrementTry,        GuessMaxTries,
+*		IsWordIsogram,       SelectGameWordForLevel,
+*
+*	I/O functions are handled in the Main.cpp class
+*/
 #pragma once
 #include <string>
 
