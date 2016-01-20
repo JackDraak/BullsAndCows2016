@@ -36,7 +36,7 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 	return true;
 }
 
-// if there are characters in the Word which are not alphabetic, return false, otherwise return true
+// True/False: Alphabetic
 bool FBullCowGame::IsWordAlpha(FString Word) const
 {
 	for (int32 WordChar = 0; WordChar < int32(Word.length()); WordChar++)
@@ -55,7 +55,7 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 	else                                        { return EGuessStatus::OK; }
 }
 
-// Upon reciept of a valid* guess, increments turn and returns count
+// upon reciept of a valid* guess, increments turn and returns count
 FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 {
 	FBullCowCount BullCowCount;
@@ -77,17 +77,24 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 	if (BullCowCount.Bulls == GameWordLength) 
 	{
 		FBullCowGame::ScoreUp(FBullCowGame::GetLevel() + (MyMaxTries - MyCurrentTry) +1);
-		if (MyLevel == 0 && MyScore > 3) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 1 && MyScore > 9) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 2 && MyScore > 27) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 3 && MyScore > 71) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 4 && MyScore > 223) { FBullCowGame::LevelUp(); }
+
+		// game difficulty tuning can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
+		// this could certainly be done with more eloquence., I think...
+		if (MyLevel == 0 && MyScore > 2) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 1 && MyScore > 4) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 2 && MyScore > 8) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 3 && MyScore > 16) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 4 && MyScore > 32) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 5 && MyScore > 64) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 6 && MyScore > 128) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 7 && MyScore > 256) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 8 && MyScore > 512) { FBullCowGame::LevelUp(); }
 		FBullCowGame::bMyWin = true;
 	}
 	return BullCowCount;
 }
 
-// Initialize a new game state (overloading: if game InPlay set for a new round)
+// Initialize a new game state (overloading: if game InPlay set-up for a new turn)
 void FBullCowGame::Reset()
 {
 	if (bNewPLay) 
@@ -99,25 +106,36 @@ void FBullCowGame::Reset()
 	bMyWin = false;
 	MyCurrentTry = 1;
 	FString MyGameWord = SelectGameWordForLevel();
+	int32 MyGameWordLength = MyGameWord.length();
+
 	constexpr int32 DEFAULT_MAX_TRIES = 4;
 	MyMaxTries = DEFAULT_MAX_TRIES;
-	if (int32(MyGameWord.length()) >= DEFAULT_MAX_TRIES) { MyMaxTries = int32(MyGameWord.length()); }
+
+	if (MyGameWordLength >= MyMaxTries)
+	{
+		if (MyGameWordLength > 10) { MyMaxTries = 10; } // TODO no word of any size is allowed more than 10 guesses; is this too dissicult? (Lecture 46)
+		else { MyMaxTries = MyGameWordLength; }
+	}
 	return;
 }
 
 // based on the player level, select an apropriate random word from the map
 FString FBullCowGame::SelectGameWordForLevel()
 {
-	FString Words_0[10] = { "pat", "eat", "rat", "and", "mat", "cat", "ate", "sat", "fat", "bat" };
-	FString Words_1[10] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk" };
-	FString Words_2[10] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks" };
-	FString Words_3[10] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos" };
-	FString Words_4[10] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside" };
-	FString Words_5[10] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately" };
+	FString Words_0[15] = { "pat", "eat", "rat", "and", "mat", "cat", "ate", "sat", "fat", "bat", "our", "the", "new", "had", "day" };
+	FString Words_1[15] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk", "same", "dart", "this", "from", "suit" };
+	FString Words_2[15] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks", "thing", "miles", "lives", "facts", "cloth" };
+	FString Words_3[15] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos", "travel", "wealth", "second", "curled", "loving" };
+	FString Words_4[15] = { "jukebox", "ziplock", "lockjaw", "quickly", "question", "jaybird", "jackpot", "quicken", "quicker", "student", "clothes", "spectrum", "jockeys", "subject", "cliquey" };
+	FString Words_5[15] = { "hospitable", "background", "campground", "greyhounds", "infamously", "slumbering", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "chlothespin", "introduces", "nightmares" };
+	FString Words_6[15] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
+	FString Words_7[15] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
+	FString Words_8[15] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", "computerizably", "unmaledictory", "ambidextrously" };
 
-	int32 frame = rand() % 10;
+	std::srand(time(NULL));
+	int32 frame = rand() % 15;
 	if (frame < 0) { frame = 0; } // TODO overkill much?
-	if (frame > 9) { frame = 9; } // do you even code, bro?
+	if (frame > 14) { frame = 14; } // do you even code, bro?
 	switch (MyLevel)
 	{
 	case 0:
@@ -137,6 +155,15 @@ FString FBullCowGame::SelectGameWordForLevel()
 		break;
 	case 5:
 		MyGameWord = Words_5[frame];
+		break;
+	case 6:
+		MyGameWord = Words_6[frame];
+		break;
+	case 7:
+		MyGameWord = Words_7[frame];
+		break;
+	case 8:
+		MyGameWord = Words_8[frame];
 		break;
 	default:
 		MyGameWord = Words_0[frame];
