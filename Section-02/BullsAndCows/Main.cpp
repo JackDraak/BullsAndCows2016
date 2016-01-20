@@ -1,7 +1,7 @@
 /*
-This is the console executable that makes use of the BullCow class.
+This is the console executable that makes use of the FBullCowGame class.
 This acts as the view in a MVC pattern, and is responsible for all
-user interaction. For game logic, see the FBullCowGame class.
+user input & output. For game logic/engine, see the FBullCowGame class.
 */
 #include <iostream>
 #include "FBullCowGame.h"
@@ -37,9 +37,9 @@ int main()
 void PlayGame()
 {
 	BCGame.Reset();
-	std::cout << "\n[MaxTries = " << BCGame.GetMaxTries() << "]\n"; // TODO do we really need this line?
+	std::cout << "\n[Maximum number of guesses: " << BCGame.GetMaxTries() << "]\n"; 
 
-																	// loop: if the game is not won and turns remain
+	// loop: if the game is not won and turns remain
 	while (!BCGame.IsGameWon() && BCGame.GetCurrentTry() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
@@ -49,6 +49,7 @@ void PlayGame()
 		std::cout << "Guess #" << BCGame.GetCurrentTry() << ": " << Guess << ": ";
 		std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 		std::cout << "Cows = " << BullCowCount.Cows << "\n";
+//		std::cout << "(Each Bull is awarded for a correct letter in the correct position, and each Cow is for a correct letter in the wrong place.)\n";
 		BCGame.IncrementTry();
 	}
 	PrintGameSummary();
@@ -59,15 +60,23 @@ void PlayGame()
 void PrintIntro()
 {
 	SpamNewline(72);
-	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
-	std::cout << " Welcome  to  Bulls  and  Cows\n";
-	std::cout << "-+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
-	std::cout << "Your mission, should you choose to accept it,\n";
-	std::cout << "is to guess an isogram* that is " << BCGame.GetGameWordLength();
-	std::cout << " characters long.\n";
+	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
+	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
+	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
+
+	std::cout << "Your mission, should you choose to accept it, is to guess an isogram* that\n";
+	std::cout << "is " << BCGame.GetGameWordLength() << " characters long.\n";
+
 	std::cout << "\n * An isogram is a word comprised of unique letters, example:\n";
 	std::cout << "  - take: is an isogram, each letter is unique in the word\n";
 	std::cout << "  - book: is NOT an isogram; it contains two 'o's\n";
+
+	std::cout << "\nHow to win: After you enter a guess, you will be awarded Bulls and Cows.\n";
+	std::cout << "Guessing a correct letter in the correct position is worth one Bull, while a\n";
+	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
+	std::cout << "determine your next guess. In other words, this game you need to earn ";
+	std::cout << BCGame.GetGameWordLength() << " Bulls\n";
+	std::cout << "with one of your guesses to win. Good luck!\n";
 	return;
 }
 
@@ -101,13 +110,17 @@ void PrintGameSummary()
 		std::cout << std::endl;
 		std::cout << std::endl << "!~!~!~!~!~!~!~!";
 		std::cout << std::endl << "!~!~!LOSER!~!~!              Guesses: " << BCGame.GetCurrentTry() - 1 << " of " << BCGame.GetMaxTries();
-		std::cout << std::endl << "!~!~!~!~!~!~!~!              Game Word : " << BCGame.GetGameWord();
+		std::cout << std::endl << "!~!~!~!~!~!~!~!              Game Word : ";
+		for (auto Letter : BCGame.GetGameWord())
+		{
+			std::cout << "#"; // TODO create a method that instead of #####.length returns with Bulls (i.e. am###s)
+		}
 		std::cout << std::endl;
 	}
 	return;
 }
 
-//  spam X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
+// spam X newlines at the console (primarily for a 'clean  and consistent' presentation of the game interface)
 void SpamNewline(int32 Repeats)
 {
 	int32 LoopNumber = 0;
@@ -127,12 +140,14 @@ FText GetValidGuess()
 {
 	EGuessStatus Status = EGuessStatus::Invalid_Status;
 	FText Guess = "";
+
 	do
 	{
+		// acquire input
 		std::cout << std::endl << "Please enter guess #" << BCGame.GetCurrentTry() << " of " << BCGame.GetMaxTries() << ": ";
 		std::getline(std::cin, Guess);
 
-		//Validate Guess: length, isogram, alpha...
+		// validate Guess: length, isogram, alpha...
 		Status = BCGame.CheckGuessValidity(Guess);
 		switch (Status)
 		{

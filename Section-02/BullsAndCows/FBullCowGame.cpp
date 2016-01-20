@@ -14,10 +14,10 @@ void FBullCowGame::IncrementTry()               { MyCurrentTry++; return; }
 
 bool FBullCowGame::IsWordIsogram(FString Word) const
 {
-	// treat 0 and 1 char words as isograms, because we clearly don't need to check them
+	// treat 0 and 1 char words as isograms, because clearly they don't need to be checked
 	if (Word.length() <= 1) { return true; }
 
-	// if Word is 2+ characters sort into a hash table, one character at a time (converting to lower case on the fly)
+	// if Word is 2+ characters sort into a hash table, one character at a time (convert to lowercase on the fly)
 	TMap<char, bool> LetterSeen; // a hashmap framework for Word
 	for (auto Letter : Word)
 	{
@@ -33,16 +33,17 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 			return false; // duplicate letter detected, therefore exit 1
 		}
 	}
-	return true; // if all characters pass through the above filter, congratulations, you have an isogram, exit 0
+	return true; // if complement of characters pass through the above filter, Word is an isogram, exit 0
 }
 
 // if there are characters in the Word which are not alphabetic, return false, otherwise return true
 bool FBullCowGame::IsWordAlpha(FString Word) const
 {
-	for (int32 WordChar = 0; WordChar < Word.length(); WordChar++)
+	for (int32 WordChar = 0; WordChar < int32(Word.length()); WordChar++)
 	{
-//              auto testee = Word[WordChar];                   // set break-point and uncomment to watch this term
-//              bool tester = (!isalpha(Word[WordChar]));       // set break-point and uncomment to watch this term
+//		auto testee = Word[WordChar];                   // set break-point and uncomment to watch this term
+//		bool tester = (!isalpha(Word[WordChar]));       // set break-point and uncomment to watch this term
+
 		// compare letters, exit 1 on detection of non-alpha entry
 		if (!isalpha(Word[WordChar])) return false; // exit 1, non-alpha detection
 	}
@@ -70,7 +71,8 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
 		{
 			char GameWordChar = MyGameWord[MyGameWordChar];
-			char GuessWordChar = tolower(Guess[GuessChar]); // NOTE the other place I use tolower() [see also IsWordIsogram()]
+			// NOTE this is the other place I use tolower() [see also IsWordIsogram()]
+			char GuessWordChar = tolower(Guess[GuessChar]);
 
 			// if letters match:
 			if (GuessWordChar == GameWordChar)
@@ -91,16 +93,19 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 	return BullCowCount;
 }
 
+// Initialize a new game state
 void FBullCowGame::Reset()
 {
 	bMyWin = false;
 	MyCurrentTry = 1;
 
-	constexpr int32 MAX_TRIES = 3;
+	const FString GAME_WORD = "abound";
+	MyGameWord = GAME_WORD; // TODO select randomly from an array of words
+
+	constexpr int32 MAX_TRIES = 4;
 	MyMaxTries = MAX_TRIES;
 
-	const FString GAME_WORD = "abound";
-	MyGameWord = GAME_WORD;
+	if (int32(MyGameWord.length()) >= MAX_TRIES) { MyMaxTries = int32(MyGameWord.length()); }
 
 	return;
 }
