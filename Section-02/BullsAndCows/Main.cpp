@@ -39,6 +39,8 @@ void PlayGame()
 {
 	BCGame.Reset();
 	// effectively, the tail of the PrintIntro() header:
+	std::cout << BCGame.GetGameWordLength() << " Bulls\n";
+	std::cout << "with one of your guesses to win. Good luck!\n";
 	std::cout << "\n     | Player Level: " << BCGame.GetLevel() << "\n";
 	std::cout << "     | Player Score: " << BCGame.GetScore() << "\n";
 	std::cout << "     | Maximum guesses this round: " << BCGame.GetMaxTries() << "\n";
@@ -70,19 +72,17 @@ void PrintIntro()
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
 
-	std::cout << "Your mission, should you choose to accept it, is to guess an isogram* that\n";
-	std::cout << "is " << BCGame.GetGameWordLength() << " characters long.\n";
+	std::cout << "Your mission, should you choose to accept it, is to guess an isogram*.\n";
 
-	std::cout << "\n * An isogram is a word comprised of unique letters, example:\n";
-	std::cout << "  - take: is an isogram, each letter is unique in the word\n";
-	std::cout << "  - book: is NOT an isogram; it contains two 'o's\n";
+	std::cout << "\n * An isogram is a word comprised of unique letters, for example:\n";
+	std::cout << "     - step: is an isogram, each letter is unique in the word\n";
+	std::cout << "     - book: is NOT an isogram; it contains two 'o's\n";
 
 	std::cout << "\nHow to win: After you enter a guess, you will be awarded Bulls and Cows.\n";
 	std::cout << "Guessing a correct letter in the correct position is worth one Bull, while a\n";
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
-	std::cout << "determine your next guess. In other words, this game you need to earn ";
-	std::cout << BCGame.GetGameWordLength() << " Bulls\n";
-	std::cout << "with one of your guesses to win. Good luck!\n";
+	std::cout << "determine your next guess. In other words, this round you need to earn ";
+	// proceed to header-tail because we need a number, but need to call Reset() first [see PlayGame() above]
 	return;
 }
 

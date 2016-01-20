@@ -28,7 +28,7 @@ public:
 
 	FString GetGameWord() const;
 	int32 GetMaxTries() const;
-	int32 GetScore() const; // TODO make increment/decrement methods, also to change player level
+	int32 GetScore() const;
 	int32 GetCurrentTry() const;
 	int32 GetLevel() const;
 	int32 GetGameWordLength() const;
@@ -39,6 +39,7 @@ public:
 	FBullCowCount SubmitValidGuess(FString);
 	FString SelectGameWordForLevel();
 	void IncrementTry();
+	void LevelUp();
 	void ScoreUp(int32);
 	void Reset(); // TODO rich return? i.e. pick a new game word
 
