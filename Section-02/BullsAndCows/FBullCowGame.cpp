@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.4a
+*	Jan.2016 pre-release version 0.9.4b
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -28,7 +28,7 @@ void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; }
 
-// ensure the entered guess is alphabetic, correct # of letters, etc...
+// ensure the entered guess is alphabetic, correct # of letters & is an isogram
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
 	if (Guess.length() != GetIsogramLength())   { return EGuessStatus::Length_Mismatch; }

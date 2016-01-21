@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.4a
+*	Jan.2016 pre-release version 0.9.4b
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -44,19 +44,14 @@ int main()
 // core game I/O handler method:
 void ManageGame()
 {
-/*	// validate dictionary once
-	 // if !(valid) else set valid true;
-	std::cout << BCGame.ValidateDictionary();
-*/	
 	BCGame.Reset();
-
 	PrintIntroTail();
-
 	while (!BCGame.IsPhaseWon() && BCGame.GetTurn() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
 		FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(Guess);
 		PrintTurnSummary(Guess, BullCowCounts);
+		BCGame.IncrementTry();
 	}
 	PrintPhaseSummary();
 	return;
@@ -65,7 +60,7 @@ void ManageGame()
 // print game introduction text HEAD
 void PrintIntroHead()
 {
-	std::cout << "Version 0.9.4a";
+	std::cout << "Version 0.9.4b";
 	SpamNewline(72);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -107,16 +102,16 @@ bool bAskToPlayAgain()
 	return true;
 }
 
-// output - after a guess is validated, print the results: Guess# of #, Bull# Cow# & IncrementTry()
+// output & increment - after a guess is validated, print the results: Guess# of #, Bull# Cow# & IncrementTry()
 void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) // TODO create a method that instead of #####.length returns with Bulls (i.e. am###s) for optional hints, i.e. run-in hint-mode
 {
 	std::cout << "Guess #" << BCGame.GetTurn() << ": " << Guess << ": ";
 	std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 	std::cout << "Cows = " << BullCowCount.Cows << "\n";
-	BCGame.IncrementTry();
+//	BCGame.IncrementTry(); moved into Manager
 }
 
-// Game-Phase Summary generated here: if pase is won then use Form-A, else if out of turns then use Form-B
+// Game-Phase (Round) Summary generated here: if phase is won then use Form-A, else if out of turns then use Form-B
 void PrintPhaseSummary()
 {
 	if (BCGame.IsPhaseWon())
@@ -138,7 +133,7 @@ void PrintPhaseSummary()
 	return;
 }
 
-// get a valid guess from the player, loop as needed
+// get a valid guess from the player, loop until satisfied
 FText GetValidGuess()
 {
 	EGuessStatus Status = EGuessStatus::Invalid_Status;
