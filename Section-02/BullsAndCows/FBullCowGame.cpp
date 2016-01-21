@@ -110,7 +110,10 @@ void FBullCowGame::Reset()
 
 	// The following Do-While code validates dictionary entries before putting them in play...
 	// it will silently select a new word if it first selects a non isogram word from the dictionary.
-	// TODO test it's actually working as advertized
+	// TODO apply this to a Dictionary of size S
+		// select random member from pool
+		// size-compare, is it level-appropriate
+		// then vv check for isogram... serve the word when all tests pass(?)
 	bool bSafeWord;
 	do
 	{
@@ -140,9 +143,10 @@ FString FBullCowGame::SelectIsogramForLevel()
 	// bad words are sent to std::cout, 
 	// so scroll up in the console to see if any were flagged before the first header was printed
 	// Yes, it's bootleg, but so is running a dictionary with non-isogram members! :)
-	// TODO perhaps instead, only test the words as they're selected... on reject, silently pick a replacement!
+	// REVISED: before a word is put in play it is validated as an isogram or replaced, but let's leave 
+	// this hear as an easy way to validate updated dictionaries.... Once you do remove it:
 	// ^^ that would allow you to remove #include<stdio> from FBullCowGame.h nad put it back in Main.cpp
-	// (where it belongs!)
+	// (where it belongs!) 
 	if (!DoneOnce) 
 	{
 		int32 Index = 1;
