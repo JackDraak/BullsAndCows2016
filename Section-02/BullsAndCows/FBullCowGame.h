@@ -69,7 +69,7 @@ private:
 	int32 MyLevel;
 	int32 MyScore;
 	bool bGuessMatches;
-	bool bNewPLay;
+	bool bDoneOnce;
 	bool DoneOnce;
 
 	bool IsWordIsogram(FString) const;
