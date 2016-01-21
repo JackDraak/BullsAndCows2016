@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.3e
+*	Jan.2016 pre-release version 0.9.4a
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -27,16 +27,6 @@ bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
 void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; }
-
-/*
-// RUN_ONCE validate all dictionary members are isograms
-FString FBullCowGame::ValidateDictionary() const
-{
-	//walk through isograms by level (0-9) and index (15)
-
-	return FString(); //return bad members
-}
-*/
 
 // ensure the entered guess is alphabetic, correct # of letters, etc...
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
@@ -108,17 +98,26 @@ int32 FBullCowGame::GetMaxTries() const
 // Initialize a new game state (overloaded: if game InPlay set-up for a new turn)
 void FBullCowGame::Reset()
 {
-	if (bNewPLay) 
+	if (bNewPLay)
 	{
-//		FString validation = FBullCowGame::ValidateDictionary();
+		//		FString validation = FBullCowGame::ValidateDictionary();
 		MyScore = 0;
 		MyLevel = 0;
 	}
 	else { bNewPLay = false; }
 	bGuessMatches = false;
 	MyCurrentTurn = 1;
-	FString MyGameWord = SelectIsogramForLevel();
-	return;
+
+	// The following Do-While code validates dictionary entries before putting them in play...
+	// it will silently select a new word if it first selects a non isogram word from the dictionary.
+	// TODO test it's actually working as advertized
+	bool bSafeWord;
+	do
+	{
+		FString MyGameWord = SelectIsogramForLevel();
+		bSafeWord = IsWordIsogram(MyGameWord);
+	} while (!bSafeWord);
+	return; // sniff game word here BREAKPOINT
 }
 
 // select an apropriate random *isogram from the map, based on the player level
@@ -131,14 +130,38 @@ FString FBullCowGame::SelectIsogramForLevel()
 	FString Words_2[MAP_DEPTH] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks", "thing", "miles", "lives", "facts", "cloth" };
 	FString Words_3[MAP_DEPTH] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos", "travel", "wealth", "second", "curled", "loving" };
 	FString Words_4[MAP_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports", "clothes", "polearm", "jockeys", "subject", "cliquey" };
-	FString Words_5[MAP_DEPTH] = { "slumbering", "ziplocks", "hospital", "imported", "questing", "tremors", "question", "speaking", "spectrum", "imports", "clothes", "spectrum", "jockular", "subjectify", "pronated" };
-	FString Words_6[MAP_DEPTH] = { "hospitable", "background", "campground", "greyhounds", "infamously", "sympathizer", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "chlothespin", "introduces", "nightmares" };
+	FString Words_5[MAP_DEPTH] = { "slumbering", "ziplocks", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "imports", "clothes", "spectrum", "jockular", "gumption", "pronated" };
+	FString Words_6[MAP_DEPTH] = { "hospitable", "background", "campground", "greyhounds", "infamously", "sympathizer", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "subjectify", "introduces", "nightmares" };
 	FString Words_7[MAP_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
 	FString Words_8[MAP_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
 	FString Words_9[MAP_DEPTH] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", "computerizably", "unmaledictory", "ambidextrously" };
 
-	// validate dictionary once
-	// if !(valid) else set valid true;
+	// validate dictionary once --
+	// bad words are sent to std::cout, 
+	// so scroll up in the console to see if any were flagged before the first header was printed
+	// Yes, it's bootleg, but so is running a dictionary with non-isogram members! :)
+	// TODO perhaps instead, only test the words as they're selected... on reject, silently pick a replacement!
+	// ^^ that would allow you to remove #include<stdio> from FBullCowGame.h nad put it back in Main.cpp
+	// (where it belongs!)
+	if (!DoneOnce) 
+	{
+		int32 Index = 1;
+		do
+		{
+			if (!IsWordIsogram(Words_0[Index])) { std::cout << Words_0[Index] << std::endl; }
+			if (!IsWordIsogram(Words_1[Index])) { std::cout << Words_1[Index] << std::endl; }
+			if (!IsWordIsogram(Words_2[Index])) { std::cout << Words_2[Index] << std::endl; }
+			if (!IsWordIsogram(Words_3[Index])) { std::cout << Words_3[Index] << std::endl; }
+			if (!IsWordIsogram(Words_4[Index])) { std::cout << Words_4[Index] << std::endl; }
+			if (!IsWordIsogram(Words_5[Index])) { std::cout << Words_5[Index] << std::endl; }
+			if (!IsWordIsogram(Words_6[Index])) { std::cout << Words_6[Index] << std::endl; }
+			if (!IsWordIsogram(Words_7[Index])) { std::cout << Words_7[Index] << std::endl; }
+			if (!IsWordIsogram(Words_8[Index])) { std::cout << Words_8[Index] << std::endl; }
+			if (!IsWordIsogram(Words_9[Index])) { std::cout << Words_9[Index] << std::endl; }
+			Index++;
+		} while (Index < 15);
+		DoneOnce = true;
+	}
 
 	std::srand(time(NULL)); // REQUIRED this populates the SEED for the random number generator, used for randomized results in `frame` below
 	int32 frame = rand() % MAP_DEPTH;

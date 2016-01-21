@@ -1,14 +1,13 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.3e
+*	Jan.2016 pre-release version 0.9.4a
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
 *	The game mechanics operate in the FBullCowGame.cpp class.
 */
 #pragma once
-#include <iostream>
 #include "FBullCowGame.h"
 
 // required for UnrealEngine-friendly syntax:
@@ -66,6 +65,7 @@ void ManageGame()
 // print game introduction text HEAD
 void PrintIntroHead()
 {
+	std::cout << "Version 0.9.4a";
 	SpamNewline(72);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";

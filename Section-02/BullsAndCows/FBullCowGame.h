@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.3e
+*	Jan.2016 pre-release version 0.9.4a
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
@@ -18,6 +18,7 @@
 */
 #pragma once
 #include <string>
+#include<iostream>
 
 // required for UnrealEngine-friendly syntax
 using FString = std::string;
@@ -50,7 +51,6 @@ public:
 	int32 GetTurn() const;
 	int32 GetLevel() const;
 	int32 GetScore() const;
-//	FString ValidateDictionary() const;
 	bool IsPhaseWon() const;
 	EGuessStatus CheckGuessValidity(FString) const;
 
@@ -70,6 +70,7 @@ private:
 	int32 MyScore;
 	bool bGuessMatches;
 	bool bNewPLay;
+	bool DoneOnce;
 
 	bool IsWordIsogram(FString) const;
 	bool IsWordAlpha(FString) const;
