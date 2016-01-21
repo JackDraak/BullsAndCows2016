@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.2
+*	Jan.2016 pre-release 0.9.3e
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -27,6 +27,16 @@ bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
 void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; }
+
+/*
+// RUN_ONCE validate all dictionary members are isograms
+FString FBullCowGame::ValidateDictionary() const
+{
+	//walk through isograms by level (0-9) and index (15)
+
+	return FString(); //return bad members
+}
+*/
 
 // ensure the entered guess is alphabetic, correct # of letters, etc...
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
@@ -60,10 +70,9 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
 		// game [DIFFICULTY Tuning: Part A] because the quicker a player score goes up, the more quickly difficulty goes up
-		FBullCowGame::ScoreUp(MyLevel + (FBullCowGame::GetMaxTries() - MyCurrentTurn));
+		FBullCowGame::ScoreUp((MyLevel +1) + (FBullCowGame::GetMaxTries() - MyCurrentTurn));
 
 		// game [DIFFICULTY Tuning: Part B] can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
-		// TODO this could certainly be done with more eloquence, I think... this feels rather brute-force... switch, perhaps?
 		if (MyLevel == 0 && MyScore > 3) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 1 && MyScore > 6) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 2 && MyScore > 12) { FBullCowGame::LevelUp(); }
@@ -72,6 +81,8 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 		else if (MyLevel == 5 && MyScore > 96) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 6 && MyScore > 192) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 7 && MyScore > 384) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 8 && MyScore > 768) { FBullCowGame::LevelUp(); }
+
 		FBullCowGame::bGuessMatches = true;
 	}
 	return BullCowCounts;
@@ -99,6 +110,7 @@ void FBullCowGame::Reset()
 {
 	if (bNewPLay) 
 	{
+//		FString validation = FBullCowGame::ValidateDictionary();
 		MyScore = 0;
 		MyLevel = 0;
 	}
@@ -118,46 +130,43 @@ FString FBullCowGame::SelectIsogramForLevel()
 	FString Words_1[MAP_DEPTH] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk", "same", "dart", "this", "from", "suit" };
 	FString Words_2[MAP_DEPTH] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks", "thing", "miles", "lives", "facts", "cloth" };
 	FString Words_3[MAP_DEPTH] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos", "travel", "wealth", "second", "curled", "loving" };
-	FString Words_4[MAP_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "question", "jaybird", "jackpot", "quicken", "quicker", "imports", "clothes", "spectrum", "jockeys", "subject", "cliquey" };
-	FString Words_5[MAP_DEPTH] = { "hospitable", "background", "campground", "greyhounds", "infamously", "slumbering", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "chlothespin", "introduces", "nightmares" };
-	FString Words_6[MAP_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
-	FString Words_7[MAP_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
-	FString Words_8[MAP_DEPTH] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", "computerizably", "unmaledictory", "ambidextrously" };
+	FString Words_4[MAP_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports", "clothes", "polearm", "jockeys", "subject", "cliquey" };
+	FString Words_5[MAP_DEPTH] = { "slumbering", "ziplocks", "hospital", "imported", "questing", "tremors", "question", "speaking", "spectrum", "imports", "clothes", "spectrum", "jockular", "subjectify", "pronated" };
+	FString Words_6[MAP_DEPTH] = { "hospitable", "background", "campground", "greyhounds", "infamously", "sympathizer", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "chlothespin", "introduces", "nightmares" };
+	FString Words_7[MAP_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
+	FString Words_8[MAP_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
+	FString Words_9[MAP_DEPTH] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", "computerizably", "unmaledictory", "ambidextrously" };
 
-	std::srand(time(NULL)); // this may appear extraneous, but seems to be required for proper random results in `frame` below
+	// validate dictionary once
+	// if !(valid) else set valid true;
+
+	std::srand(time(NULL)); // REQUIRED this populates the SEED for the random number generator, used for randomized results in `frame` below
 	int32 frame = rand() % MAP_DEPTH;
+
 	switch (MyLevel)
 	{
 	case 0:
-		MyIsogram = Words_0[frame];
-		break;
+		MyIsogram = Words_0[frame];	break;
 	case 1:
-		MyIsogram = Words_1[frame];
-		break;
+		MyIsogram = Words_1[frame];	break;
 	case 2:
-		MyIsogram = Words_2[frame];
-		break;
+		MyIsogram = Words_2[frame];	break;
 	case 3:
-		MyIsogram = Words_3[frame];
-		break;
+		MyIsogram = Words_3[frame];	break;
 	case 4:
-		MyIsogram = Words_4[frame];
-		break;
+		MyIsogram = Words_4[frame];	break;
 	case 5:
-		MyIsogram = Words_5[frame];
-		break;
+		MyIsogram = Words_5[frame];	break;
 	case 6:
-		MyIsogram = Words_6[frame];
-		break;
+		MyIsogram = Words_6[frame];	break;
 	case 7:
-		MyIsogram = Words_7[frame];
-		break;
+		MyIsogram = Words_7[frame];	break;
 	case 8:
-		MyIsogram = Words_8[frame];
-		break;
+		MyIsogram = Words_8[frame];	break;
+	case 9:
+		MyIsogram = Words_9[frame];	break;
 	default:
-		MyIsogram = Words_0[frame];
-		break;
+		MyIsogram = Words_0[frame];	break;
 	}
 	return MyIsogram;
 }

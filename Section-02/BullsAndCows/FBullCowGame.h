@@ -1,13 +1,13 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.2
+*	Jan.2016 pre-release 0.9.3e
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
 *	dictionary of isograms, tied to a scoring and leveling system
 *	designed to provide increasingly difficult challenges to one
-*   or more players working co-oepratively.
+*	or more players working co-oepratively.
 *
 *	This header file is included by both:
 *		Main.cpp
@@ -50,6 +50,7 @@ public:
 	int32 GetTurn() const;
 	int32 GetLevel() const;
 	int32 GetScore() const;
+//	FString ValidateDictionary() const;
 	bool IsPhaseWon() const;
 	EGuessStatus CheckGuessValidity(FString) const;
 

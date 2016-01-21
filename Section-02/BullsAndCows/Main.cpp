@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release 0.9.2
+*	Jan.2016 pre-release 0.9.3e
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -25,7 +25,7 @@ void SpamNewline(int32 Repeats);
 bool bAskToPlayAgain();
 FText GetValidGuess();
 
-// instantiate a new game named BCGame, which is recycled through each turn and round or phase:
+// instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
 
 // the entry-point for the applciation:
@@ -45,7 +45,12 @@ int main()
 // core game I/O handler method:
 void ManageGame()
 {
+/*	// validate dictionary once
+	 // if !(valid) else set valid true;
+	std::cout << BCGame.ValidateDictionary();
+*/	
 	BCGame.Reset();
+
 	PrintIntroTail();
 
 	while (!BCGame.IsPhaseWon() && BCGame.GetTurn() <= BCGame.GetMaxTries())
