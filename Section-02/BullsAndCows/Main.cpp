@@ -95,10 +95,12 @@ FText GetValidGuess()
 			std::cout << "\nPlease enter a " << BCGame.GetIsogramLength() << " letter isogram.\n";
 			break;
 		case EGuessStatus::Not_Isogram:
-			std::cout << "\nAn isogram doesn't use any single letter more than once, unlike " << Guess << ", please guess again.\n";
+			std::cout << "\nAn isogram doesn't use any single letter more than once, rather than using\n";
+			std::cout << Guess << ", please try guessing again.\n";
 			break;
 		case EGuessStatus::Not_Alpha:
-			std::cout << "\nYou've entered one or more non-alphabetic characters. Instead of " << Guess << ", please try an isogram word.\n";
+			std::cout << "\nYou've entered one or more non-alphabetic characters. Instead of using\n";
+			std::cout << Guess << ", please try an English isogram word.\n";
 			break;
 		default: // i.e. case OK
 			break;

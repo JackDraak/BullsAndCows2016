@@ -131,6 +131,7 @@ void FBullCowGame::Reset()
 		MyTotalCow = 0;
 		MyTotalBull = 0;
 		MyWins = 0;
+		MyDefeats = 0;
 		bDoneOnceReset = true;
 	}
 	bGuessMatches = false;
