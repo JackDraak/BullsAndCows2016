@@ -111,7 +111,7 @@ FText GetValidGuess()
 }
 
 // output - after a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) // TODO create a method that instead of #####.length returns with Bulls (i.e. am###s) for optional hints, i.e. run-in hint-mode
+void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) // TODO create a method that instead of #####.length returns with Bulls (i.e. ab###f) for optional hints, i.e. run-in hint-mode
 {
 	std::cout << "Guess #" << BCGame.GetTurn() << ": " << Guess << ": ";
 	std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
@@ -130,7 +130,7 @@ void PrintPhaseSummary()
 		std::cout << std::endl;
 		BCGame.IncrementWins();
 	}
-	else if (BCGame.GetTurn() >= BCGame.GetMaxTries()) // TODO track lost rounds, include with phase summary
+	else if (BCGame.GetTurn() >= BCGame.GetMaxTries())
 	{
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it! Don't give up yet!";
 		std::cout << std::endl << "      !~!~!LOSER!~!~!       Guesses: " << BCGame.GetTurn() - 1 << " of " << BCGame.GetMaxTries() << " used";
