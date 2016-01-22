@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42d
+*	Jan.2016 pre-release version 0.9.42e
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
@@ -72,7 +72,7 @@ public:
 	void ScoreUp(int32);
 
 private:
-	// set values in constructor definition FBullCowGame::Reset() %0.cpp
+	// set values in constructor definition FBullCowGame::Reset()
 	FString MyIsogram;
 	int32 MyMaxTries;
 	int32 MyCurrentTurn;
@@ -91,4 +91,3 @@ private:
 	bool IsWordIsogram(FString) const;
 	bool IsWordAlpha(FString) const;
 };
-

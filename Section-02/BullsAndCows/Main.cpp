@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42d
+*	Jan.2016 pre-release version 0.9.42e
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -52,10 +52,10 @@ void ManageGame()
 	return;
 }
 
-// print game introduction text
+// output - print game introduction, instruction and status text
 void PrintIntro()
 {
-	std::cout << "Version 0.9.42d";
+	std::cout << "Version 0.9.42e";
 	SpamNewline(72);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -76,7 +76,7 @@ void PrintIntro()
 	std::cout << "     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
 
-// get a valid guess from the player, loop until satisfied
+// I/O - get a valid guess from the player, loop until satisfied
 FText GetValidGuess()
 {
 	EGuessStatus Status = EGuessStatus::Invalid_Status;
@@ -84,7 +84,8 @@ FText GetValidGuess()
 	do
 	{
 		// acquire input:
-		std::cout << std::endl << "Please enter guess #" << BCGame.GetTurn() << " of " << BCGame.GetMaxTries() << ": ";
+		std::cout << std::endl << "Please enter guess #" << BCGame.GetTurn();
+		std::cout << " of " << BCGame.GetMaxTries() << ": ";
 		std::getline(std::cin, Guess);
 
 		// provide helpful feedback if the guess is unexpected:
@@ -117,7 +118,7 @@ void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) // TODO create
 	std::cout << "Cows = " << BullCowCount.Cows << "\n";
 }
 
-// Game-Phase (Round) Summary generated here: if phase is won then use Form-A, else if out of turns then use Form-B
+// output - Game-Phase (Round) Summary generated here: if phase is won then use Form-A, else if out of turns then use Form-B
 void PrintPhaseSummary()
 {
 	if (BCGame.IsPhaseWon())
@@ -141,7 +142,7 @@ void PrintPhaseSummary()
 	return;
 }
 
-// determine if the player wants to continue playing, explicit n/N required, or exit 0
+// I/O - determine if the player wants to continue playing, explicit n/N required, or exit 0
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
@@ -154,7 +155,7 @@ bool bAskToPlayAgain()
 	return true;
 }
 
-// spam `X` newlines at the console
+// output - spam `X` newlines at the console
 void SpamNewline(int32 Repeats)
 {
 	int32 LoopNumber = 0;

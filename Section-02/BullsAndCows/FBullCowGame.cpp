@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42d
+*	Jan.2016 pre-release version 0.9.42e
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -83,14 +83,13 @@ int32 FBullCowGame::GetMaxTries() const
 {
 	TMap<int32, int32>WordLengthToMaxTries 
 	{
-		{ 3, 6 },   { 11, 30 },
-		{ 4, 9 },   { 12, 33 },
-		{ 5, 12 },  { 13, 36 },
-		{ 6, 15 },  { 14, 33 },
-		{ 7, 18 },  { 15, 24 },
-		{ 8, 21 },  { 16, 18 },
-		{ 9, 24 },  { 17, 12 },
-		{ 10, 27 }, { 18, 3 }
+		{ 3, 6 },   { 10, 17 },
+		{ 4, 7 },   { 11, 15 },
+		{ 5, 9 },   { 12, 13 },
+		{ 6, 12 },  { 13, 10 },
+		{ 7, 15 },  { 14, 7 },
+		{ 8, 17 },  { 15, 2 },
+		{ 9, 18 }
 	};
 	return WordLengthToMaxTries[MyIsogram.length()];
 }
