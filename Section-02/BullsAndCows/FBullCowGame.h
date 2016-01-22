@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.4b
+*	Jan.2016 pre-release version 0.9.42b
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
@@ -18,7 +18,7 @@
 */
 #pragma once
 #include <string>
-#include<iostream>
+#include <iostream>
 
 // required for UnrealEngine-friendly syntax
 using FString = std::string;
@@ -37,7 +37,7 @@ enum class EGuessStatus
 	OK,
 	Not_Isogram,
 	Not_Alpha,
-	Length_Mismatch,
+	Length_Mismatch
 };
 
 class FBullCowGame {
@@ -51,13 +51,18 @@ public:
 	int32 GetTurn() const;
 	int32 GetLevel() const;
 	int32 GetScore() const;
+	int32 GetMisses() const;
+	int32 GetDefeats() const;
 	bool IsPhaseWon() const;
 	EGuessStatus CheckGuessValidity(FString) const;
 
 	FBullCowCounts ProcessValidGuess(FString);
+	void TallyBullsAndCows(const int32 &GameWordLength, FString &Guess, FBullCowCounts &BullCowCounts);
 	FString SelectIsogramForLevel();
 	void Reset();
 	void IncrementTry();
+	void IncrementMisses();
+	void IncrementDefeats();
 	void LevelUp();
 	void ScoreUp(int32);
 
@@ -68,9 +73,11 @@ private:
 	int32 MyCurrentTurn;
 	int32 MyLevel;
 	int32 MyScore;
+	int32 MyMisses;
+	int32 MyDefeats;
 	bool bGuessMatches;
-	bool bDoneOnce;
-	bool DoneOnce;
+	bool bDoneOnceReset;
+	bool bDoneOnceValidateDictionary;
 
 	bool IsWordIsogram(FString) const;
 	bool IsWordAlpha(FString) const;

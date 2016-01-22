@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.4b
+*	Jan.2016 pre-release version 0.9.42b
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -23,8 +23,12 @@ int32 FBullCowGame::GetIsogramLength() const    { return (MyIsogram.length()); }
 int32 FBullCowGame::GetScore() const            { return MyScore; }
 int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
 int32 FBullCowGame::GetLevel() const            { return MyLevel; }
+int32 FBullCowGame::GetMisses() const           { return MyMisses; }
+int32 FBullCowGame::GetDefeats() const          { return MyDefeats; }
 bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
 void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
+void FBullCowGame::IncrementMisses()            { MyMisses++; return; }
+void FBullCowGame::IncrementDefeats()           { MyDefeats++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; }
 
@@ -40,10 +44,33 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 // upon reciept of a valid* guess, increments turn and returns count
 FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 {
-	// instantiate a new container named BullCowCounts of type FBullCowCounts, which is recycled through each turn and round or phase(?):
 	FBullCowCounts BullCowCounts;
-
 	int32 GameWordLength = GetIsogramLength();
+
+	TallyBullsAndCows(GameWordLength, Guess, BullCowCounts);
+	if (BullCowCounts.Bulls == GameWordLength) 
+	{
+		// game [DIFFICULTY Tuning: Part A] because the quicker a player score goes up, the more quickly difficulty goes up
+		FBullCowGame::ScoreUp(10*(MyLevel +1) + (FBullCowGame::GetMaxTries() - MyCurrentTurn));
+
+		// game [DIFFICULTY Tuning: Part B] can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
+		if (MyLevel == 0 && MyScore > 30) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 1 && MyScore > 60) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 2 && MyScore > 120) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 3 && MyScore > 240) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 4 && MyScore > 480) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 5 && MyScore > 960) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 6 && MyScore > 1920) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 7 && MyScore > 3840) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 8 && MyScore > 7680) { FBullCowGame::LevelUp(); }
+		FBullCowGame::bGuessMatches = true;
+	}
+	else { FBullCowGame::IncrementMisses(); }
+	return BullCowCounts;
+}
+
+void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess, FBullCowCounts &BullCowCounts)
+{
 	for (int32 MyGameWordChar = 0; MyGameWordChar < GameWordLength; MyGameWordChar++)
 	{
 		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
@@ -57,24 +84,6 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 			}
 		}
 	}
-	if (BullCowCounts.Bulls == GameWordLength) 
-	{
-		// game [DIFFICULTY Tuning: Part A] because the quicker a player score goes up, the more quickly difficulty goes up
-		FBullCowGame::ScoreUp((MyLevel +1) + (FBullCowGame::GetMaxTries() - MyCurrentTurn));
-
-		// game [DIFFICULTY Tuning: Part B] can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
-		if (MyLevel == 0 && MyScore > 3) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 1 && MyScore > 6) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 2 && MyScore > 12) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 3 && MyScore > 24) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 4 && MyScore > 48) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 5 && MyScore > 96) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 6 && MyScore > 192) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 7 && MyScore > 384) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 8 && MyScore > 768) { FBullCowGame::LevelUp(); }
-		FBullCowGame::bGuessMatches = true;
-	}
-	return BullCowCounts;
 }
 
 // use a map to correlate Word.length and MaxTries [DIFFICULTY Tuning: Part C]
@@ -97,11 +106,12 @@ int32 FBullCowGame::GetMaxTries() const
 // Initialize a new game state (overloaded: if game InPlay set-up for a new turn)
 void FBullCowGame::Reset()
 {
-	if (!bDoneOnce)
+	if (!bDoneOnceReset)
 	{
 		MyScore = 0;
 		MyLevel = 0;
-		bDoneOnce = true;
+		MyMisses = 0;
+		bDoneOnceReset = true;
 	}
 	bGuessMatches = false;
 	MyCurrentTurn = 1;
@@ -111,8 +121,8 @@ void FBullCowGame::Reset()
 	// WARNING If the dictionary is absent or overly corrupted, this could result in an infinte loop
 	// TODO apply this to a Dictionary of size S
 		// select random member from pool
-		// size-compare, is it level-appropriate
-		// then vv check for isogram... serve the word when all tests pass(?)
+		// size-compare, is it level-appropriate? if so
+		// then vVv check for isogram... serve the word when all tests pass(?)
 	bool bSafeWord;
 	do
 	{
@@ -147,7 +157,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 	// this here as an easy way to validate updated dictionaries.... Once you do remove it:
 	// ^^ that would allow you to remove #include<stdio> from FBullCowGame.h and put it back in Main.cpp
 	// (where it belongs!) 
-	if (!DoneOnce) 
+	if (!bDoneOnceValidateDictionary) 
 	{
 		int32 Index = 1;
 		do
@@ -164,7 +174,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 			if (!IsWordIsogram(Words_9[Index])) { std::cout << Words_9[Index] << std::endl; }
 			Index++;
 		} while (Index < 15);
-		DoneOnce = true;
+		bDoneOnceValidateDictionary = true;
 	}
 
 	std::srand(time(NULL)); // REQUIRED this re-populates the SEED for the rand() number generator
