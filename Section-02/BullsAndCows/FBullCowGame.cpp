@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42b
+*	Jan.2016 pre-release version 0.9.42c
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -51,22 +51,42 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
 		// game [DIFFICULTY Tuning: Part A] because the quicker a player score goes up, the more quickly difficulty goes up
-		FBullCowGame::ScoreUp(10*(MyLevel +1) + (FBullCowGame::GetMaxTries() - MyCurrentTurn));
+		int32 ScoreFac1 = 10 * PositivePowerResult(MyLevel +1, 2);
+		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn;
+		int32 Score = ScoreFac1 * (ScoreFac2 +1);
+		FBullCowGame::ScoreUp(Score);
 
 		// game [DIFFICULTY Tuning: Part B] can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
-		if (MyLevel == 0 && MyScore > 30) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 1 && MyScore > 60) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 2 && MyScore > 120) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 3 && MyScore > 240) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 4 && MyScore > 480) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 5 && MyScore > 960) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 6 && MyScore > 1920) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 7 && MyScore > 3840) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 8 && MyScore > 7680) { FBullCowGame::LevelUp(); }
+		if (MyLevel == 0 && MyScore > 25) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 1 && MyScore > 75) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 2 && MyScore > 225) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 3 && MyScore > 675) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 4 && MyScore > 2025) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 5 && MyScore > 6075) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 6 && MyScore > 18225) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 7 && MyScore > 54675) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 8 && MyScore > 164025) { FBullCowGame::LevelUp(); }
 		FBullCowGame::bGuessMatches = true;
 	}
 	else { FBullCowGame::IncrementMisses(); }
 	return BullCowCounts;
+}
+
+// use a map to correlate Word.length and MaxTries [DIFFICULTY Tuning: Part C]
+int32 FBullCowGame::GetMaxTries() const
+{
+	TMap<int32, int32>WordLengthToMaxTries 
+	{
+		{ 3, 6 },   { 11, 30 },
+		{ 4, 9 },   { 12, 33 },
+		{ 5, 12 },  { 13, 36 },
+		{ 6, 15 },  { 14, 33 },
+		{ 7, 18 },  { 15, 24 },
+		{ 8, 21 },  { 16, 18 },
+		{ 9, 24 },  { 17, 12 },
+		{ 10, 27 }, { 18, 3 }
+	};
+	return WordLengthToMaxTries[MyIsogram.length()];
 }
 
 void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess, FBullCowCounts &BullCowCounts)
@@ -84,23 +104,6 @@ void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess
 			}
 		}
 	}
-}
-
-// use a map to correlate Word.length and MaxTries [DIFFICULTY Tuning: Part C]
-int32 FBullCowGame::GetMaxTries() const
-{
-	TMap<int32, int32>WordLengthToMaxTries 
-	{
-		{ 3, 6 },   { 11, 21 },
-		{ 4, 7 },   { 12, 16 },
-		{ 5, 9 },   { 13, 12 },
-		{ 6, 12 },  { 14, 9 },
-		{ 7, 16 },  { 15, 7 },
-		{ 8, 21 },  { 16, 6 },
-		{ 9, 27 },  { 17, 5 },
-		{ 10, 34 }, { 18, 4 }
-	};
-	return WordLengthToMaxTries[MyIsogram.length()];
 }
 
 // Initialize a new game state (overloaded: if game InPlay set-up for a new turn)
@@ -233,4 +236,13 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 		if (!isalpha(Word[WordChar])) return false;
 	}
 	return true; 
+}
+
+int32 FBullCowGame::PositivePowerResult(int32 Number, int32 Exponent)
+{
+	if (Exponent <= 0) { return 1; }
+	if (Exponent == 1) { return Number; }
+	int32 n = Number;
+	for (int32 i = 1; i < Exponent; i++) { Number = Number * n; }
+	return Number;
 }

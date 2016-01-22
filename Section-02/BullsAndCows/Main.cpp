@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42b
+*	Jan.2016 pre-release version 0.9.42c
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -55,8 +55,8 @@ void ManageGame()
 // print game introduction text HEAD
 void PrintIntro()
 {
-	std::cout << "Version 0.9.42b";
-	SpamNewline(72);
+	std::cout << "Version 0.9.42c";
+	SpamNewline(72);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
@@ -69,7 +69,7 @@ void PrintIntro()
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
 	std::cout << "determine your next guess. In other words, this round you need to earn ";
 	std::cout << BCGame.GetIsogramLength() << " Bulls\n" << "with one of your guesses to win. Good luck!\n\n";
-	std::cout << "     |                    Level (Score) : " << BCGame.GetLevel() + 1 << " (" << BCGame.GetScore() << ")\n";
+	std::cout << "     |         Score (Diffuculty Level) : " << BCGame.GetScore() << " (" << BCGame.GetLevel() +1 << ")\n";
 	std::cout << "     | Words Missed (Incorrect Guesses) : " << BCGame.GetDefeats() << " (" << BCGame.GetMisses() << ")\n";
 	std::cout << "     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
