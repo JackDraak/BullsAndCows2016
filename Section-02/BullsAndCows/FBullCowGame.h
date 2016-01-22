@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42c
+*	Jan.2016 pre-release version 0.9.42d
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
@@ -53,6 +53,9 @@ public:
 	int32 GetScore() const;
 	int32 GetMisses() const;
 	int32 GetDefeats() const;
+	int32 GetWins() const;
+	int32 GetBulls() const;
+	int32 GetCows() const;
 	bool IsPhaseWon() const;
 	EGuessStatus CheckGuessValidity(FString) const;
 
@@ -63,6 +66,8 @@ public:
 	void IncrementTry();
 	void IncrementMisses();
 	void IncrementDefeats();
+	void IncrementWins();
+	void BoostBullScore(int32);
 	void LevelUp();
 	void ScoreUp(int32);
 
@@ -75,6 +80,9 @@ private:
 	int32 MyScore;
 	int32 MyMisses;
 	int32 MyDefeats;
+	int32 MyWins;
+	int32 MyTotalBull;
+	int32 MyTotalCow;
 	bool bGuessMatches;
 	bool bDoneOnceReset;
 	bool bDoneOnceValidateDictionary;

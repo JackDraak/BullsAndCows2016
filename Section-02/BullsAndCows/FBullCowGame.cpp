@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42c
+*	Jan.2016 pre-release version 0.9.42d
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -25,12 +25,17 @@ int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
 int32 FBullCowGame::GetLevel() const            { return MyLevel; }
 int32 FBullCowGame::GetMisses() const           { return MyMisses; }
 int32 FBullCowGame::GetDefeats() const          { return MyDefeats; }
+int32 FBullCowGame::GetWins() const             { return MyWins; }
+int32 FBullCowGame::GetBulls() const            { return MyTotalBull; }
+int32 FBullCowGame::GetCows() const             { return MyTotalCow; }
 bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
 void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::IncrementMisses()            { MyMisses++; return; }
 void FBullCowGame::IncrementDefeats()           { MyDefeats++; return; }
+void FBullCowGame::IncrementWins()              { MyWins++; return; }
+void FBullCowGame::BoostBullScore(int32 Bulls)  { MyTotalBull = MyTotalBull + Bulls; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
-void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; }
+void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; return; }
 
 // ensure the entered guess is alphabetic, correct # of letters & is an isogram
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
@@ -66,6 +71,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 		else if (MyLevel == 6 && MyScore > 18225) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 7 && MyScore > 54675) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 8 && MyScore > 164025) { FBullCowGame::LevelUp(); }
+		FBullCowGame::BoostBullScore(MyIsogram.length());
 		FBullCowGame::bGuessMatches = true;
 	}
 	else { FBullCowGame::IncrementMisses(); }
@@ -99,8 +105,16 @@ void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess
 			char GuessWordChar = tolower(Guess[GuessChar]); // NOTE this is the other call to use tolower() [see also IsWordIsogram()]
 			if (GuessWordChar == GameWordChar)
 			{
-				if (MyGameWordChar == GuessChar) { BullCowCounts.Bulls++; }
-				else { BullCowCounts.Cows++; }
+				if (MyGameWordChar == GuessChar) 
+				{ 
+					BullCowCounts.Bulls++; 
+					MyTotalBull++;
+				}
+				else 
+				{ 
+					BullCowCounts.Cows++;
+					MyTotalCow++;
+				}
 			}
 		}
 	}
@@ -114,6 +128,9 @@ void FBullCowGame::Reset()
 		MyScore = 0;
 		MyLevel = 0;
 		MyMisses = 0;
+		MyTotalCow = 0;
+		MyTotalBull = 0;
+		MyWins = 0;
 		bDoneOnceReset = true;
 	}
 	bGuessMatches = false;
@@ -145,7 +162,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 	FString Words_2[INDEX_DEPTH] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks", "thing", "miles", "lives", "facts", "cloth" };
 	FString Words_3[INDEX_DEPTH] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos", "travel", "wealth", "second", "curled", "loving" };
 	FString Words_4[INDEX_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports", "clothes", "polearm", "jockeys", "subject", "cliquey" };
-	FString Words_5[INDEX_DEPTH] = { "slumbering", "ziplocks", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "imports", "clothes", "spectrum", "jockular", "gumption", "pronated" };
+	FString Words_5[INDEX_DEPTH] = { "slumbering", "ziplocks", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "imports", "clothes", "oblique", "jockular", "gumption", "pronated" };
 	FString Words_6[INDEX_DEPTH] = { "hospitable", "background", "campground", "greyhounds", "infamously", "sympathizer", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "subjectify", "introduces", "nightmares" };
 	FString Words_7[INDEX_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
 	FString Words_8[INDEX_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
@@ -179,8 +196,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 		} while (Index < 15);
 		bDoneOnceValidateDictionary = true;
 	}
-
-	std::srand(time(NULL)); // REQUIRED this re-populates the SEED for the rand() number generator
+	std::srand(time(NULL));
 	int32 Index = rand() % INDEX_DEPTH; 
 
 	switch (MyLevel)
@@ -218,7 +234,7 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 	TMap<char, bool> LetterSeen;
 	for (auto Letter : Word)
 	{
-		Letter = tolower(Letter); // one of two places tolower() is called, see also ProcessValidGuess()
+		Letter = tolower(Letter); // one of two places tolower() is called, see also TallyBullsAndCows()
 		if (!LetterSeen[Letter])
 		{
 			LetterSeen[Letter] = true;
@@ -238,6 +254,7 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 	return true; 
 }
 
+// useage: PositivePowerResult( base, exponent)
 int32 FBullCowGame::PositivePowerResult(int32 Number, int32 Exponent)
 {
 	if (Exponent <= 0) { return 1; }

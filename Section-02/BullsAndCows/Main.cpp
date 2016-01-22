@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42c
+*	Jan.2016 pre-release version 0.9.42d
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -52,10 +52,10 @@ void ManageGame()
 	return;
 }
 
-// print game introduction text HEAD
+// print game introduction text
 void PrintIntro()
 {
-	std::cout << "Version 0.9.42c";
+	std::cout << "Version 0.9.42d";
 	SpamNewline(72);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -69,8 +69,10 @@ void PrintIntro()
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
 	std::cout << "determine your next guess. In other words, this round you need to earn ";
 	std::cout << BCGame.GetIsogramLength() << " Bulls\n" << "with one of your guesses to win. Good luck!\n\n";
-	std::cout << "     |         Score (Diffuculty Level) : " << BCGame.GetScore() << " (" << BCGame.GetLevel() +1 << ")\n";
-	std::cout << "     | Words Missed (Incorrect Guesses) : " << BCGame.GetDefeats() << " (" << BCGame.GetMisses() << ")\n";
+	std::cout << "     | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
+	std::cout << "     |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
+	std::cout << "     |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
+	std::cout << "     |                      Near Misses : " << BCGame.GetMisses() << "\n";
 	std::cout << "     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
 
@@ -123,15 +125,16 @@ void PrintPhaseSummary()
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word: ";
 		std::cout << BCGame.GetRankedIsogram();
 		std::cout << std::endl;
+		BCGame.IncrementWins();
 	}
 	else if (BCGame.GetTurn() >= BCGame.GetMaxTries()) // TODO track lost rounds, include with phase summary
 	{
-		BCGame.IncrementDefeats();
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it! Don't give up yet!";
 		std::cout << std::endl << "      !~!~!LOSER!~!~!       Guesses: " << BCGame.GetTurn() - 1 << " of " << BCGame.GetMaxTries() << " used";
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word : ";
 		for (auto Letter : BCGame.GetRankedIsogram()) { std::cout << "#"; }
 		std::cout << std::endl;
+		BCGame.IncrementDefeats();
 	}
 	return;
 }
@@ -148,6 +151,7 @@ bool bAskToPlayAgain()
 	}
 	return true;
 }
+
 // spam `X` newlines at the console
 void SpamNewline(int32 Repeats)
 {
