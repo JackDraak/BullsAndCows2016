@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42e
+*	Jan.2016 pre-release version 0.9.43
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -9,6 +9,7 @@
 */
 #pragma once
 #include "FBullCowGame.h"
+#include <string>
 
 // required for UnrealEngine-friendly syntax:
 using FText = std::string;
@@ -55,7 +56,7 @@ void ManageGame()
 // output - print game introduction, instruction and status text
 void PrintIntro()
 {
-	std::cout << "Version 0.9.42e";
+	std::cout << "Version 0.9.43";
 	SpamNewline(72);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -69,10 +70,10 @@ void PrintIntro()
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
 	std::cout << "determine your next guess. In other words, this round you need to earn ";
 	std::cout << BCGame.GetIsogramLength() << " Bulls\n" << "with one of your guesses to win. Good luck!\n\n";
-	std::cout << "     | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
-	std::cout << "     |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
 	std::cout << "     |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
+	std::cout << "     |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
 	std::cout << "     |                      Near Misses : " << BCGame.GetMisses() << "\n";
+	std::cout << "     | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
 	std::cout << "     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
 

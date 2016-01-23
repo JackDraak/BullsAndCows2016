@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42e
+*	Jan.2016 pre-release version 0.9.43
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
@@ -17,7 +17,6 @@
 *	The FBullCowGame class handles the mechanics of the Bull Cow Game
 */
 #pragma once
-#include <string>
 #include <iostream>
 
 // required for UnrealEngine-friendly syntax
@@ -84,8 +83,7 @@ private:
 	int32 MyTotalBull;
 	int32 MyTotalCow;
 	bool bGuessMatches;
-	bool bDoneOnceReset;
-	bool bDoneOnceValidateDictionary;
+	bool bDoneOnce;
 
 	int32 PositivePowerResult(int32 Number, int32 Exponent);
 	bool IsWordIsogram(FString) const;

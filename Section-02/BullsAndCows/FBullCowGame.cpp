@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.42e
+*	Jan.2016 pre-release version 0.9.43
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -55,22 +55,22 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	TallyBullsAndCows(GameWordLength, Guess, BullCowCounts);
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
-		// game [DIFFICULTY Tuning: Part A] because the quicker a player score goes up, the more quickly difficulty goes up
+		// game [DIFFICULTY Tuning: Part A] higher scores basically equate to higher difficulty
 		int32 ScoreFac1 = 10 * PositivePowerResult(MyLevel +1, 2);
 		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn;
 		int32 Score = ScoreFac1 * (ScoreFac2 +1);
 		FBullCowGame::ScoreUp(Score);
 
-		// game [DIFFICULTY Tuning: Part B] can be acomplished here; the curve { 3, 9, 27, 71, 223, ... } stages leveling:
-		if (MyLevel == 0 && MyScore > 25) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 1 && MyScore > 75) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 2 && MyScore > 225) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 3 && MyScore > 675) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 4 && MyScore > 2025) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 5 && MyScore > 6075) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 6 && MyScore > 18225) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 7 && MyScore > 54675) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 8 && MyScore > 164025) { FBullCowGame::LevelUp(); }
+		// game [DIFFICULTY Tuning: Part B] can be acomplished here: set thresholds to gain levels
+		if (MyLevel == 0 && MyScore > 50) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 1 && MyScore > 250) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 2 && MyScore > 1250) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 3 && MyScore > 6750) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 4 && MyScore > 20250) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 5 && MyScore > 60750) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 6 && MyScore > 182250) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 7 && MyScore > 546750) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 8 && MyScore > 1640250) { FBullCowGame::LevelUp(); }
 		FBullCowGame::BoostBullScore(MyIsogram.length());
 		FBullCowGame::bGuessMatches = true;
 	}
@@ -78,18 +78,24 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	return BullCowCounts;
 }
 
-// use a map to correlate Word.length and MaxTries [DIFFICULTY Tuning: Part C]
 int32 FBullCowGame::GetMaxTries() const
 {
 	TMap<int32, int32>WordLengthToMaxTries 
 	{
-		{ 3, 6 },   { 10, 17 },
-		{ 4, 7 },   { 11, 15 },
-		{ 5, 9 },   { 12, 13 },
-		{ 6, 12 },  { 13, 10 },
-		{ 7, 15 },  { 14, 7 },
-		{ 8, 17 },  { 15, 2 },
-		{ 9, 18 }
+		{ 4, 8 }, 
+		{ 5, 10 },
+		{ 6, 12 },
+		{ 7, 14 }, 
+		{ 8, 16 }, 
+		{ 9, 18 },
+		{ 10, 20 },
+		{ 11, 18 },
+		{ 12, 16 },
+		{ 13, 14 },
+		{ 14, 11 },
+		{ 15, 9 },
+		{ 16, 7 },
+		{ 17, 5 }
 	};
 	return WordLengthToMaxTries[MyIsogram.length()];
 }
@@ -122,84 +128,91 @@ void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess
 // Initialize a new game state (overloaded: if game InPlay set-up for a new turn)
 void FBullCowGame::Reset()
 {
-	if (!bDoneOnceReset)
+	if (!bDoneOnce)
 	{
+		MyWins = 0;
 		MyScore = 0;
 		MyLevel = 0;
 		MyMisses = 0;
+		MyDefeats = 0;
 		MyTotalCow = 0;
 		MyTotalBull = 0;
-		MyWins = 0;
-		MyDefeats = 0;
-		bDoneOnceReset = true;
+		bDoneOnce = true;
 	}
 	bGuessMatches = false;
 	MyCurrentTurn = 1;
 
-	// The following Do-While code validates dictionary entries before putting them in play...
-	// it will silently select a new word if it first selects a non isogram word from the dictionary.
-	// WARNING If the dictionary is absent or overly corrupted, this could result in an infinte loop
-	// TODO apply this to a Dictionary of size S
-		// select random member from pool
-		// size-compare, is it level-appropriate? if so
-		// then vVv check for isogram... serve the word when all tests pass(?)
-	bool bSafeWord;
+	bool bGameWordIsIsogram;
 	do
 	{
 		FString MyGameWord = SelectIsogramForLevel();
-		bSafeWord = IsWordIsogram(MyGameWord);
-	} while (!bSafeWord);
+		bGameWordIsIsogram = IsWordIsogram(MyGameWord);
+	} while (!bGameWordIsIsogram);
 	return;
 }
 
-// select an apropriate random *isogram from the map, based on the player level
 FString FBullCowGame::SelectIsogramForLevel()
 {
-	constexpr int32 INDEX_DEPTH = 15; // TODO if the dictionary is expanded, UPDATE. Each row must grow at the same time to length INDEX_DEPTH
+	constexpr int32 INDEX_DEPTH = 30; // UPDATE: Each row must grow at the same time to length INDEX_DEPTH
 
-	FString Words_0[INDEX_DEPTH] = { "pat", "eat", "rat", "and", "mat", "cat", "ate", "sat", "fat", "bat", "our", "the", "new", "had", "day" };
-	FString Words_1[INDEX_DEPTH] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk", "same", "dart", "this", "from", "suit" };
-	FString Words_2[INDEX_DEPTH] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks", "thing", "miles", "lives", "facts", "cloth" };
-	FString Words_3[INDEX_DEPTH] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos", "travel", "wealth", "second", "curled", "loving" };
-	FString Words_4[INDEX_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports", "clothes", "polearm", "jockeys", "subject", "cliquey" };
-	FString Words_5[INDEX_DEPTH] = { "slumbering", "ziplocks", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "imports", "clothes", "oblique", "jockular", "gumption", "pronated" };
-	FString Words_6[INDEX_DEPTH] = { "hospitable", "background", "campground", "greyhounds", "infamously", "sympathizer", "shockingly", "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "subjectify", "introduces", "nightmares" };
-	FString Words_7[INDEX_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "abolishment", "atmospheric", "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary" };
-	FString Words_8[INDEX_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", "exhaustingly" };
-	FString Words_9[INDEX_DEPTH] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", "computerizably", "unmaledictory", "ambidextrously" };
+	FString Words_0[INDEX_DEPTH] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
+	                                 "same", "dart", "this", "from", "suit", "acre", "ages", "bale", "bail", "fast",
+	                                 "felt", "fawn", "nape", "army", "navy", "sold", "soda", "soup", "wave", "yarn" };
 
-	// validate dictionary once --
-	// bad words are sent to std::cout, 
-	// so scroll up in the console to see if any were flagged before the first header was printed
-	// Yes, it's bootleg, but so is running a dictionary with non-isogram members! :)
-	//
-	// REVISED: before a word is put in play it is validated as an isogram or replaced, but let's leave 
-	// this here as an easy way to validate updated dictionaries.... Once you do remove it:
-	// ^^ that would allow you to remove #include<stdio> from FBullCowGame.h and put it back in Main.cpp
-	// (where it belongs!) 
-	if (!bDoneOnceValidateDictionary) 
-	{
-		int32 Index = 1;
-		do
-		{
-			if (!IsWordIsogram(Words_0[Index])) { std::cout << Words_0[Index] << std::endl; }
-			if (!IsWordIsogram(Words_1[Index])) { std::cout << Words_1[Index] << std::endl; }
-			if (!IsWordIsogram(Words_2[Index])) { std::cout << Words_2[Index] << std::endl; }
-			if (!IsWordIsogram(Words_3[Index])) { std::cout << Words_3[Index] << std::endl; }
-			if (!IsWordIsogram(Words_4[Index])) { std::cout << Words_4[Index] << std::endl; }
-			if (!IsWordIsogram(Words_5[Index])) { std::cout << Words_5[Index] << std::endl; }
-			if (!IsWordIsogram(Words_6[Index])) { std::cout << Words_6[Index] << std::endl; }
-			if (!IsWordIsogram(Words_7[Index])) { std::cout << Words_7[Index] << std::endl; }
-			if (!IsWordIsogram(Words_8[Index])) { std::cout << Words_8[Index] << std::endl; }
-			if (!IsWordIsogram(Words_9[Index])) { std::cout << Words_9[Index] << std::endl; }
-			Index++;
-		} while (Index < 15);
-		bDoneOnceValidateDictionary = true;
-	}
-	std::srand(time(NULL));
+	FString Words_1[INDEX_DEPTH] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks",
+                                     "thing", "miles", "lives", "facts", "cloth", "dwarf", "empty", "trash", "envoy", "enact", 
+	                                 "faith", "farms", "farce", "faery", "laugh", "lingo", "litre", "march", "marsh", "swift" };
+
+	FString Words_2[INDEX_DEPTH] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos",
+		                             "travel", "wealth", "second", "curled", "loving", "belfry", "fables", "factor", "fairly", "famine",
+	                                 "farces", "nailed", "nebula", "nickel", "muster", "buster", "myrtle", "nachos", "mythos", "phrase" };
+
+	FString Words_3[INDEX_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports",
+		                             "clothes", "polearm", "jockeys", "subject", "cliquey", "apricot", "anxiety", "domains", "dolphin", "exclaim",
+	                                 "fabrics", "factory", "haircut", "pulsing", "scourge", "schlump", "turbine", "wrongly", "wyverns", "yoghurt" };
+
+	FString Words_4[INDEX_DEPTH] = { "authored", "bankrupt", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "bunghole", 
+		                             "burliest", "bushland", "jockular", "gumption", "pronated", "bushmeat", "buxomest", "busywork", "butchery", "cogently",
+	                                 "exoplasm", "exploits", "explains", "exhaling", "handgrip", "hardiest", "hasteful", "megalith", "megatons", "merciful" };
+	
+	FString Words_5[INDEX_DEPTH] = { "yachtsmen", "worshiped", "workspace", "womanizer", "wolfsbane", "windstorm", "workmates", "wordgames",
+									 "authorize", "waveforms", "binocular", "watchdogs", "vulgarity", "introduce", "nightmare", "vulcanism",
+									 "wavefront", "welcoming", "vouchsafe", "verbosity", "veracious", "uncharted", "unclamped", "traveling", 
+	                                 "tribunals", "solarized", "solemnity", "revolting", "redaction", "racheting" };
+
+	FString Words_6[INDEX_DEPTH] = { "abductions", "hospitable", "background", "campground", "greyhounds", "infamously", "afterglows", "shockingly", 
+		                             "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "subjectify", "algorithms", "nightmares",
+	                                 "aftershock", "agonizedly", "birthnames", "benchmarks", "behaviours", "background", "capsulized", "chlorinate",
+	                                 "chipboards", "chalkstone", "exhaustion", "exfoliants", "gobsmacked", "graciously" };
+
+	FString Words_7[INDEX_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "sympathizer", "abolishment", "atmospheric",
+									 "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary",
+									 "birthplaces", "bodysurfing", "cabinetwork", "backlighted", "decryptions", "encryptions", "designatory", "delusionary",
+									 "demographic", "discernably", "exculpatory", "factorylike", "flavourings", "francophile" };
+	
+	FString Words_8[INDEX_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", 
+		                             "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", 
+		                             "exhaustingly", "pyromagnetic", "stenographic", "productively", "stickhandler", "subnormality", "nightwalkers", 
+                                     "overstudying", "outsparkling", "locksmithery", "discountable", "descrambling", "demonstrably", "demographics", 
+	                                 "discrepantly", "considerably" };
+	
+	FString Words_9[INDEX_DEPTH] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", 
+	                                 "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", 
+		                             "unmaledictory", "ambidextrously", "undiscoverably", "dermatoglyphic", "computerizably", "muckspreading", 
+	                                 "metalworkings", "musicotherapy", "chimneyboards", "comsumptively", "copyrightable", "documentarily", 
+	                                 "draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" };
+	
+	// pick random INDEX frame for a game word
+	std::srand((unsigned)time(NULL));
 	int32 Index = rand() % INDEX_DEPTH; 
-
-	switch (MyLevel)
+	
+	// window (or bracket) word-in-play to being +/- 1 from current player level
+	constexpr int32 WINDOW = 3;
+	int32 Window = (rand() % WINDOW);
+	int32 MyWordLevel = MyLevel + Window - 1;
+	if (MyWordLevel < 0) { MyWordLevel = 0; }
+	else if (MyWordLevel > 9) { MyWordLevel = 9; }
+	switch (MyWordLevel)
 	{
 	case 0:
 		MyIsogram = Words_0[Index];	break;
@@ -227,14 +240,13 @@ FString FBullCowGame::SelectIsogramForLevel()
 	return MyIsogram; // BREAKPOINT here to view secret game word
 }
 
-// True/False: Isogram
 bool FBullCowGame::IsWordIsogram(FString Word) const
 {
 	if (Word.length() <= 1) { return true; }
 	TMap<char, bool> LetterSeen;
 	for (auto Letter : Word)
 	{
-		Letter = tolower(Letter); // one of two places tolower() is called, see also TallyBullsAndCows()
+		Letter = tolower(Letter);
 		if (!LetterSeen[Letter])
 		{
 			LetterSeen[Letter] = true;
@@ -244,7 +256,6 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 	return true;
 }
 
-// True/False: Alphabetic
 bool FBullCowGame::IsWordAlpha(FString Word) const
 {
 	for (int32 WordChar = 0; WordChar < int32(Word.length()); WordChar++)
@@ -254,12 +265,11 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 	return true; 
 }
 
-// useage: PositivePowerResult( base, exponent)
-int32 FBullCowGame::PositivePowerResult(int32 Number, int32 Exponent)
+int32 FBullCowGame::PositivePowerResult(int32 Base, int32 Exponent)
 {
 	if (Exponent <= 0) { return 1; }
-	if (Exponent == 1) { return Number; }
-	int32 n = Number;
-	for (int32 i = 1; i < Exponent; i++) { Number = Number * n; }
-	return Number;
+	if (Exponent == 1) { return Base; }
+	int32 n = Base;
+	for (int32 i = 1; i < Exponent; i++) { Base = Base * n; }
+	return Base;
 }
