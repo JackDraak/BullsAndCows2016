@@ -23,6 +23,8 @@ void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount);
 void PrintPhaseSummary();
 bool bAskToPlayAgain();
 void SpamNewline(int32 Repeats);
+void PrintHint();
+bool bHints = false;
 
 // instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
@@ -111,12 +113,23 @@ FText GetValidGuess()
 	return Guess;
 }
 
+// TODO create a method that instead of #####.length returns with Bulls (i.e. ab###f) for optional hints, i.e. run-in hint-mode
+void PrintHint()
+{
+	std::cout << "#@#@#@#@#@#\n"; // TODO complete form here
+	return;
+}
+
+// print-back user guess, i.e.  ab#### cd
+
+
 // output - after a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) // TODO create a method that instead of #####.length returns with Bulls (i.e. ab###f) for optional hints, i.e. run-in hint-mode
+void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) 
 {
 	std::cout << "Guess #" << BCGame.GetTurn() << ": " << Guess << ": ";
 	std::cout << "Bulls = " << BullCowCount.Bulls << " & ";
 	std::cout << "Cows = " << BullCowCount.Cows << "\n";
+	if (bHints) { PrintHint(); }
 }
 
 // output - Game-Phase (Round) Summary generated here: if phase is won then use Form-A, else if out of turns then use Form-B
@@ -143,16 +156,14 @@ void PrintPhaseSummary()
 	return;
 }
 
-// I/O - determine if the player wants to continue playing, explicit n/N required, or exit 0
+// I/O - determine if the player wants to continue playing, or toggle hints
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-	std::cout << std::endl << "[`Ctrl-C` to exit anytime, explicit N expected] Continue playing? Y/n ";
+	std::cout << std::endl << "[h to toggle hints] Continue playing? Y/n ";
 	std::getline(std::cin, Responce);
-	if ((Responce[0] == 'n') || (Responce[0] == 'N'))
-	{
-		return false;
-	}
+	if ((Responce[0] == 'n') || (Responce[0] == 'N')) { return false; }
+	else if ((Responce[0] == 'h') || (Responce[0] == 'H')) { bHints = !bHints; }
 	return true;
 }
 

@@ -212,41 +212,40 @@ FString FBullCowGame::SelectIsogramForLevel()
 		"metalworkings", "musicotherapy", "chimneyboards", "comsumptively", "copyrightable", "documentarily",
 		"draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" 
 	};
-
-	// pick random INDEX frame for a game word
-	std::srand((unsigned)time(NULL));
-	int32 Index = rand() % INDEX_DEPTH; 
 	
-	// window (or bracket) word-in-play to being +/- 1 from current player level
 	constexpr int32 WINDOW = 3;
-	int32 Window = (rand() % WINDOW);
-	int32 MyWordLevel = MyLevel + Window - 1;
-	if (MyWordLevel < 0) { MyWordLevel = 0; }
-	else if (MyWordLevel > 9) { MyWordLevel = 9; }
-	switch (MyWordLevel)
+	std::srand((unsigned)time(NULL));
+	int32 RandomIndex = rand() % INDEX_DEPTH; 
+	int32 ThisWindow = (rand() % WINDOW) -1;
+	int32 ThisWordLevel = MyLevel + ThisWindow;
+
+	if (ThisWordLevel < 0) { ThisWordLevel = 0; }
+	else if (ThisWordLevel > 9) { ThisWordLevel = 9; }
+
+	switch (ThisWordLevel)
 	{
 	case 0:
-		MyIsogram = Words_0[Index];	break;
+		MyIsogram = Words_0[RandomIndex];	break;
 	case 1:
-		MyIsogram = Words_1[Index];	break;
+		MyIsogram = Words_1[RandomIndex];	break;
 	case 2:
-		MyIsogram = Words_2[Index];	break;
+		MyIsogram = Words_2[RandomIndex];	break;
 	case 3:
-		MyIsogram = Words_3[Index];	break;
+		MyIsogram = Words_3[RandomIndex];	break;
 	case 4:
-		MyIsogram = Words_4[Index];	break;
+		MyIsogram = Words_4[RandomIndex];	break;
 	case 5:
-		MyIsogram = Words_5[Index];	break;
+		MyIsogram = Words_5[RandomIndex];	break;
 	case 6:
-		MyIsogram = Words_6[Index];	break;
+		MyIsogram = Words_6[RandomIndex];	break;
 	case 7:
-		MyIsogram = Words_7[Index];	break;
+		MyIsogram = Words_7[RandomIndex];	break;
 	case 8:
-		MyIsogram = Words_8[Index];	break;
+		MyIsogram = Words_8[RandomIndex];	break;
 	case 9:
-		MyIsogram = Words_9[Index];	break;
+		MyIsogram = Words_9[RandomIndex];	break;
 	default:
-		MyIsogram = Words_0[Index];	break;
+		MyIsogram = Words_0[RandomIndex];	break;
 	}
 	return MyIsogram; // BREAKPOINT here to view secret game word
 }
