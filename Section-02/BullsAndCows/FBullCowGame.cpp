@@ -155,53 +155,64 @@ FString FBullCowGame::SelectIsogramForLevel()
 {
 	constexpr int32 INDEX_DEPTH = 30; // UPDATE: Each row must grow at the same time to length INDEX_DEPTH
 
-	FString Words_0[INDEX_DEPTH] = { "sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
-	                                 "same", "dart", "this", "from", "suit", "acre", "ages", "bale", "bail", "fast",
-	                                 "felt", "fawn", "nape", "army", "navy", "sold", "soda", "soup", "wave", "yarn" };
+	FString Words_0[INDEX_DEPTH] = { 
+		"sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
+		"same", "dart", "this", "from", "suit", "acre", "ages", "bale", "bail", "fast",
+		"felt", "fawn", "nape", "army", "navy", "sold", "soda", "soup", "wave", "yarn"
+	};
+	FString Words_1[INDEX_DEPTH] = { 
+		"toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks",
+		"thing", "miles", "lives", "facts", "cloth", "dwarf", "empty", "trash", "envoy", "enact",
+		"faith", "farms", "farce", "faery", "laugh", "lingo", "litre", "march", "marsh", "swift"
+	};
+	FString Words_2[INDEX_DEPTH] = {
+		"jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos",
+		"travel", "wealth", "second", "curled", "loving", "belfry", "fables", "factor", "fairly", "famine",
+		"farces", "nailed", "nebula", "nickel", "muster", "buster", "myrtle", "nachos", "mythos", "phrase" 
+	};
+	FString Words_3[INDEX_DEPTH] = {
+		"jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports",
+		"clothes", "polearm", "jockeys", "subject", "cliquey", "apricot", "anxiety", "domains", "dolphin", "exclaim",
+		"fabrics", "factory", "haircut", "pulsing", "scourge", "schlump", "turbine", "wrongly", "wyverns", "yoghurt" 
+	};
+	FString Words_4[INDEX_DEPTH] = { 
+		"authored", "bankrupt", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "bunghole",
+		"burliest", "bushland", "jockular", "gumption", "pronated", "bushmeat", "buxomest", "busywork", "butchery", "cogently",
+		"exoplasm", "exploits", "explains", "exhaling", "handgrip", "hardiest", "hasteful", "megalith", "megatons", "merciful" 
+	};
+	FString Words_5[INDEX_DEPTH] = {
+		"yachtsmen", "worshiped", "workspace", "womanizer", "wolfsbane", "windstorm", "workmates", "wordgames",
+		"authorize", "waveforms", "binocular", "watchdogs", "vulgarity", "introduce", "nightmare", "vulcanism",
+		"wavefront", "welcoming", "vouchsafe", "verbosity", "veracious", "uncharted", "unclamped", "traveling",
+		"tribunals", "solarized", "solemnity", "revolting", "redaction", "racheting" 
+	};
+	FString Words_6[INDEX_DEPTH] = {
+		"abductions", "hospitable", "background", "campground", "greyhounds", "infamously", "afterglows", "shockingly",
+		"duplicates", "authorizes", "farsighted", "binoculars", "destroying", "subjectify", "algorithms", "nightmares",
+		"aftershock", "agonizedly", "birthnames", "benchmarks", "behaviours", "background", "capsulized", "chlorinate",
+		"chipboards", "chalkstone", "exhaustion", "exfoliants", "gobsmacked", "graciously"
+	};
+	FString Words_7[INDEX_DEPTH] = {
+		"workmanship", "palindromes", "speculation", "trampolines", "personality", "sympathizer", "abolishment", "atmospheric",
+		"playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary",
+		"birthplaces", "bodysurfing", "cabinetwork", "backlighted", "decryptions", "encryptions", "designatory", "delusionary",
+		"demographic", "discernably", "exculpatory", "factorylike", "flavourings", "francophile" 
+	};
+	FString Words_8[INDEX_DEPTH] = {
+		"thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering",
+		"lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized",
+		"exhaustingly", "pyromagnetic", "stenographic", "productively", "stickhandler", "subnormality", "nightwalkers",
+		"overstudying", "outsparkling", "locksmithery", "discountable", "descrambling", "demonstrably", "demographics",
+		"discrepantly", "considerably" 
+	};
+	FString Words_9[INDEX_DEPTH] = {
+		"subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing",
+		"unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively",
+		"unmaledictory", "ambidextrously", "undiscoverably", "dermatoglyphic", "computerizably", "muckspreading",
+		"metalworkings", "musicotherapy", "chimneyboards", "comsumptively", "copyrightable", "documentarily",
+		"draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" 
+	};
 
-	FString Words_1[INDEX_DEPTH] = { "toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks",
-                                     "thing", "miles", "lives", "facts", "cloth", "dwarf", "empty", "trash", "envoy", "enact", 
-	                                 "faith", "farms", "farce", "faery", "laugh", "lingo", "litre", "march", "marsh", "swift" };
-
-	FString Words_2[INDEX_DEPTH] = { "jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos",
-		                             "travel", "wealth", "second", "curled", "loving", "belfry", "fables", "factor", "fairly", "famine",
-	                                 "farces", "nailed", "nebula", "nickel", "muster", "buster", "myrtle", "nachos", "mythos", "phrase" };
-
-	FString Words_3[INDEX_DEPTH] = { "jukebox", "ziplock", "lockjaw", "quickly", "crazily", "jaybird", "jackpot", "quicken", "quicker", "imports",
-		                             "clothes", "polearm", "jockeys", "subject", "cliquey", "apricot", "anxiety", "domains", "dolphin", "exclaim",
-	                                 "fabrics", "factory", "haircut", "pulsing", "scourge", "schlump", "turbine", "wrongly", "wyverns", "yoghurt" };
-
-	FString Words_4[INDEX_DEPTH] = { "authored", "bankrupt", "hospital", "imported", "questing", "finagled", "question", "speaking", "spectrum", "bunghole", 
-		                             "burliest", "bushland", "jockular", "gumption", "pronated", "bushmeat", "buxomest", "busywork", "butchery", "cogently",
-	                                 "exoplasm", "exploits", "explains", "exhaling", "handgrip", "hardiest", "hasteful", "megalith", "megatons", "merciful" };
-	
-	FString Words_5[INDEX_DEPTH] = { "yachtsmen", "worshiped", "workspace", "womanizer", "wolfsbane", "windstorm", "workmates", "wordgames",
-									 "authorize", "waveforms", "binocular", "watchdogs", "vulgarity", "introduce", "nightmare", "vulcanism",
-									 "wavefront", "welcoming", "vouchsafe", "verbosity", "veracious", "uncharted", "unclamped", "traveling", 
-	                                 "tribunals", "solarized", "solemnity", "revolting", "redaction", "racheting" };
-
-	FString Words_6[INDEX_DEPTH] = { "abductions", "hospitable", "background", "campground", "greyhounds", "infamously", "afterglows", "shockingly", 
-		                             "duplicates", "authorizes", "farsighted", "binoculars", "destroying", "subjectify", "algorithms", "nightmares",
-	                                 "aftershock", "agonizedly", "birthnames", "benchmarks", "behaviours", "background", "capsulized", "chlorinate",
-	                                 "chipboards", "chalkstone", "exhaustion", "exfoliants", "gobsmacked", "graciously" };
-
-	FString Words_7[INDEX_DEPTH] = { "workmanship", "palindromes", "speculation", "trampolines", "personality", "sympathizer", "abolishment", "atmospheric",
-									 "playgrounds", "backgrounds", "countryside", "birthplaces", "precautions", "regulations", "subcategory", "documentary",
-									 "birthplaces", "bodysurfing", "cabinetwork", "backlighted", "decryptions", "encryptions", "designatory", "delusionary",
-									 "demographic", "discernably", "exculpatory", "factorylike", "flavourings", "francophile" };
-	
-	FString Words_8[INDEX_DEPTH] = { "thunderclaps", "misconjugated", "unproblematic", "unprofitable", "questionably", "packinghouse", "upholstering", 
-		                             "lexicography", "malnourished", "subordinately", "counterplays", "multipronged", "unforgivable", "subvocalized", 
-		                             "exhaustingly", "pyromagnetic", "stenographic", "productively", "stickhandler", "subnormality", "nightwalkers", 
-                                     "overstudying", "outsparkling", "locksmithery", "discountable", "descrambling", "demonstrably", "demographics", 
-	                                 "discrepantly", "considerably" };
-	
-	FString Words_9[INDEX_DEPTH] = { "subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing", 
-	                                 "unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively", 
-		                             "unmaledictory", "ambidextrously", "undiscoverably", "dermatoglyphic", "computerizably", "muckspreading", 
-	                                 "metalworkings", "musicotherapy", "chimneyboards", "comsumptively", "copyrightable", "documentarily", 
-	                                 "draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" };
-	
 	// pick random INDEX frame for a game word
 	std::srand((unsigned)time(NULL));
 	int32 Index = rand() % INDEX_DEPTH; 
