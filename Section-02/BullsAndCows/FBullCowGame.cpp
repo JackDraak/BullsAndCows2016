@@ -19,6 +19,7 @@ using int32 = int;
 
 FBullCowGame::FBullCowGame()                    { FBullCowGame::Reset(); }
 FString FBullCowGame::GetRankedIsogram() const  { return MyIsogram; }
+FString FBullCowGame::GetGuess() const          { return MyGuess; }
 int32 FBullCowGame::GetIsogramLength() const    { return (MyIsogram.length()); }
 int32 FBullCowGame::GetScore() const            { return MyScore; }
 int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
@@ -50,6 +51,7 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 {
 	FBullCowCounts BullCowCounts;
+	MyGuess = Guess;
 	int32 GameWordLength = GetIsogramLength();
 
 	TallyBullsAndCows(GameWordLength, Guess, BullCowCounts);
@@ -141,6 +143,7 @@ void FBullCowGame::Reset()
 	}
 	bGuessMatches = false;
 	MyCurrentTurn = 1;
+	MyGuess = "";
 
 	bool bGameWordIsIsogram;
 	do

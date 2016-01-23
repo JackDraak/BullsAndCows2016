@@ -10,6 +10,10 @@
 #pragma once
 #include "FBullCowGame.h"
 #include <string>
+//#include <sstream>
+#include <ctime>
+#include <algorithm>
+//#include <iterator>
 
 // required for UnrealEngine-friendly syntax:
 using FText = std::string;
@@ -24,7 +28,7 @@ void PrintPhaseSummary();
 bool bAskToPlayAgain();
 void SpamNewline(int32 Repeats);
 void PrintHint();
-bool bHints = false;
+bool bHints = true; // TODO make this false for deployment
 
 // instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
@@ -113,15 +117,65 @@ FText GetValidGuess()
 	return Guess;
 }
 
-// TODO create a method that instead of #####.length returns with Bulls (i.e. ab###f) for optional hints, i.e. run-in hint-mode
 void PrintHint()
 {
-	std::cout << "#@#@#@#@#@#\n"; // TODO complete form here
+	FString GameWord = BCGame.GetRankedIsogram(); // Secret word that is in-play
+	FString Guess = BCGame.GetGuess(); // players Guess
+
+	int32 GameWordLength = GameWord.length();
+	FString MyCowsHint = "";
+	FString MyBullsHint = "";
+	char HashChar = 35;
+
+	std::cout << " Hint: (" << GameWord << ") The Secret Game Word\n"; // TODO remove this, it is here for debugging purposes
+	std::cout << " Hint: (" << Guess << ") Your Guess Word\n";
+
+	// Loop for length of Game-word
+	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
+	{
+		bool bHashed = false;
+		bool bBull = false;
+		bool bCow = false;
+
+		// Inner loop for comparing each Guess character against Game-word
+		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
+		{
+			char GameWordChar = GameWord[GameWordCharPosition];
+			char GuessWordChar = tolower(Guess[GuessCharPosition]);
+			if (GuessWordChar == GameWordChar)
+			{
+				if (GameWordCharPosition == GuessCharPosition)
+				{
+					bBull = true;
+					bHashed = true;
+					bCow = true;
+					MyBullsHint.append(1, GameWord[GameWordCharPosition]);
+				}
+				else
+				{ 
+					bCow = true;
+					bBull = true;
+					MyBullsHint.append(1, 49); // TODO after debug change 49 (`1`) to HashChar or 35
+					bHashed = true;
+
+					MyCowsHint.append(1, GameWord[GameWordCharPosition]);
+				}
+			}
+			if (!bCow && bBull && !bHashed) 
+			{ 
+				MyBullsHint.append(1, 50); // TODO after debug change 50 (`2`) to HashChar or 35
+				bHashed = true;
+				bBull = false;
+				bCow = false;
+			}
+		}
+	}
+	std::cout << " Hint: (" << MyBullsHint << ") Your Bulls Hint\n";
+	std::cout << " Hint: (" << MyCowsHint << ") Your Unintentionally Sorted Cows Hint\n"; // TODO remove after debugging
+	std::random_shuffle(MyCowsHint.begin(), MyCowsHint.end());
+	std::cout << " Hint: (" << MyCowsHint << ") Your Shuffled Cow Hint\n";
 	return;
 }
-
-// print-back user guess, i.e.  ab#### cd
-
 
 // output - after a guess is validated, print the results: Guess# of #, Bull# Cow#
 void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) 
@@ -160,7 +214,13 @@ void PrintPhaseSummary()
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-	std::cout << std::endl << "[h to toggle hints] Continue playing? Y/n ";
+	if (bHints)
+	{
+		std::cout << std::endl << "[`h` to turn hints OFF] Continue playing? Y/n ";
+	} else {
+		std::cout << std::endl << "[`h` to turn hints ON] Continue playing? Y/n ";
+	}
+
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'n') || (Responce[0] == 'N')) { return false; }
 	else if ((Responce[0] == 'h') || (Responce[0] == 'H')) { bHints = !bHints; }

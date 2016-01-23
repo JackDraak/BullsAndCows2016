@@ -45,6 +45,7 @@ public:
 	FBullCowGame();
 
 	FString GetRankedIsogram() const;
+	FString GetGuess() const;
 	int32 GetIsogramLength() const;
 	int32 GetMaxTries() const;
 	int32 GetTurn() const;
@@ -73,6 +74,7 @@ public:
 private:
 	// set values in constructor definition FBullCowGame::Reset()
 	FString MyIsogram;
+	FString MyGuess;
 	int32 MyMaxTries;
 	int32 MyCurrentTurn;
 	int32 MyLevel;
