@@ -107,7 +107,7 @@ void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess
 		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
 		{
 			char GameWordChar = MyIsogram[MyGameWordChar];
-			char GuessWordChar = tolower(Guess[GuessChar]); // NOTE this is the other call to use tolower() [see also IsWordIsogram()]
+			char GuessWordChar = tolower(Guess[GuessChar]);
 			if (GuessWordChar == GameWordChar)
 			{
 				if (MyGameWordChar == GuessChar) 
@@ -153,7 +153,7 @@ void FBullCowGame::Reset()
 
 FString FBullCowGame::SelectIsogramForLevel()
 {
-	constexpr int32 INDEX_DEPTH = 30; // UPDATE: Each row must grow at the same time to length INDEX_DEPTH
+	constexpr int32 INDEX_DEPTH = 30; // UPDATE if modified: Each row must grow at the same time to length INDEX_DEPTH
 
 	FString Words_0[INDEX_DEPTH] = { 
 		"sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
