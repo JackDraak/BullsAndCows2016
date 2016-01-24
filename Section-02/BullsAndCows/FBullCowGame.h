@@ -18,6 +18,7 @@
 */
 #pragma once
 #include <iostream>
+#include <ctime>
 
 // required for UnrealEngine-friendly syntax
 using FString = std::string;

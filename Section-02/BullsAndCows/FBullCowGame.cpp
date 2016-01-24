@@ -10,7 +10,6 @@
 */
 #pragma once
 #include "FBullCowGame.h"
-#include <ctime>
 #include <map>
 
 // required for UnrealEngine-friendly syntax
