@@ -1,12 +1,12 @@
 /*	FBullCowGame.cpp
-*	created by Jack Draak
-*	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.44b
-*
-*	This class handles the game mechanics of the Bull Cow Game
-*	I/O functions are handled in the Main.cpp class
-*
-*	see FBullCowGame.h for further description
+	created by Jack Draak
+	as tutored by Ben Tristem
+	Jan.2016 pre-release version 0.9.44b
+
+	This class handles the game mechanics of the Bull Cow Game
+	I/O functions are handled in the Main.cpp class
+
+	see FBullCowGame.h for further description
 */
 #pragma once
 #include "FBullCowGame.h"
