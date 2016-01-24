@@ -1,12 +1,12 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.44b
+	Jan.2016 pre-release version 0.9.5
 
-	This class handles the game mechanics of the Bull Cow Game
-	I/O functions are handled in the Main.cpp class
+	This class handles the game mechanics of the Bull Cow Game.
+	I/O functions are handled in the Main.cpp class.
 
-	see FBullCowGame.h for further description
+	See Main.cpp for further description.
 */
 #pragma once
 #include "FBullCowGame.h"
@@ -40,10 +40,10 @@ void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; ret
 // ensure the entered guess is alphabetic, correct # of letters & is an isogram
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {
-	if (Guess.length() != GetIsogramLength())   { return EGuessStatus::Length_Mismatch; }
-	else if (!IsWordIsogram(Guess))             { return EGuessStatus::Not_Isogram; }
-	else if (!IsWordAlpha(Guess))               { return EGuessStatus::Not_Alpha; }
-	else                                        { return EGuessStatus::OK; }
+	if (!IsWordAlpha(Guess))                       { return EGuessStatus::Not_Alpha; }
+	else if (!IsWordIsogram(Guess))                { return EGuessStatus::Not_Isogram; }
+	else if (Guess.length() != GetIsogramLength()) { return EGuessStatus::Length_Mismatch; }
+	else                                           { return EGuessStatus::OK; }
 }
 
 // upon reciept of a valid* guess, increments turn and returns count
@@ -53,10 +53,11 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	MyGuess = Guess;
 	int32 GameWordLength = GetIsogramLength();
 
+	// TODO play-tuning is required: 
 	TallyBullsAndCows(GameWordLength, Guess, BullCowCounts);
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
-		// game [DIFFICULTY Tuning: Part A] higher scores basically equate to higher difficulty
+		// game [DIFFICULTY Tuning: Part A] here: higher scores = more rapid advancement in levels
 		constexpr int32 SF_ONE_A = 10;
 		constexpr int32 SF_ONE_B = 2;
 		int32 ScoreFac1 = SF_ONE_A * PositivePowerResult(MyLevel +1, SF_ONE_B);
@@ -65,15 +66,15 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 		FBullCowGame::ScoreUp(Score);
 
 		// game [DIFFICULTY Tuning: Part B] can be acomplished here: set thresholds to gain levels
-		if (MyLevel == 0 && MyScore > 50) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 1 && MyScore > 250) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 2 && MyScore > 1250) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 3 && MyScore > 6750) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 4 && MyScore > 20250) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 5 && MyScore > 60750) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 6 && MyScore > 182250) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 7 && MyScore > 546750) { FBullCowGame::LevelUp(); }
-		else if (MyLevel == 8 && MyScore > 1640250) { FBullCowGame::LevelUp(); }
+		if (MyLevel == 0 && MyScore > 100) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 1 && MyScore > 300) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 2 && MyScore > 1000) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 3 && MyScore > 5000) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 4 && MyScore > 15000) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 5 && MyScore > 100000) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 6 && MyScore > 1500000) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 7 && MyScore > 5000000) { FBullCowGame::LevelUp(); }
+		else if (MyLevel == 8 && MyScore > 20000000) { FBullCowGame::LevelUp(); }
 		FBullCowGame::BoostBullScore(MyIsogram.length());
 		FBullCowGame::bGuessMatches = true;
 	}
@@ -82,6 +83,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 }
 
 // TODO return different Map depending on Player-selected difficulty setting
+// game [DIFFICULTY Tuning: Part C] here: tune the number of guesses a player is given in relation to word-length
 int32 FBullCowGame::GetMaxTries() const
 {
 	TMap<int32, int32>WordLengthToMaxTries 
@@ -282,8 +284,8 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 
 int32 FBullCowGame::PositivePowerResult(int32 Base, int32 Exponent)
 {
-	if (Exponent <= 0) { return 1; }
-	if (Exponent == 1) { return Base; }
+	if (Exponent < 1) { return 1; }
+	// if (Exponent == 1) { return Base; }
 	int32 n = Base;
 	for (int32 i = 1; i < Exponent; i++) { Base = Base * n; }
 	return Base;

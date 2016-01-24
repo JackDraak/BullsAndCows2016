@@ -1,13 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.44b
-
-	GAME-LOGIC:
-	This is a `Mastermind`-style word guessing game using a small
-	dictionary of isograms, tied to a scoring and leveling system
-	designed to provide increasingly difficult challenges to one
-	or more players working co-oepratively.
+	Jan.2016 pre-release version 0.9.5
 
 	This header file is included by both:
 		Main.cpp
@@ -15,6 +9,8 @@
 
 	I/O functions are handled in the Main.cpp class
 	The FBullCowGame class handles the mechanics of the Bull Cow Game
+
+	See Main.cpp for further description.
 */
 #pragma once
 #include <iostream>

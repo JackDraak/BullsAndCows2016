@@ -1,16 +1,22 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.44b1
+	Jan.2016 pre-release version 0.9.5
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
 	The game mechanics operate in the FBullCowGame.cpp class.
 
+	GAME-LOGIC:
+	This is a `Mastermind`-style word guessing game using a small
+	dictionary of isograms, tied to a scoring and leveling system
+	designed to provide increasingly difficult challenges to one
+	or more players working co-oepratively.
+
 	Special Features Include:
 		300 word isogram dictionary 
-			- split into 10 levels of difficulty
-			- with "Word-Windowing" technology to keep the player on their toes
+			- Split into 10 levels of difficulty
+			- New "Word-Windowing" technology to keep the player on their toes
 			  (challenge-word level = player level, window: +/- 1)
 		Customizable help levels
 			- toggle specific or general Bulltips
@@ -20,6 +26,13 @@
 			- Hits, Misses & Near Misses
 			- Player rank, from level 1-10
 			- Get awarded arbitrary "Points" for each win!
+
+		Feedback Requests:
+			- Game tuning
+				- word variety (good? bad?)
+				- # of guesses (Too few? too many?)
+				- rate of advancement (too slow? too fast?)
+			- Misc. feedback
 */
 #pragma once
 #include "FBullCowGame.h"
@@ -74,7 +87,7 @@ void ManageGame()
 void PrintIntro()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.44b";
+	std::cout << "Version 0.9.5";
 	SpamNewline(SPAM_SPAN);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -103,7 +116,7 @@ FText GetValidGuess()
 	do
 	{
 		// Acquire input:
-		std::cout << std::endl << "Please enter guess #" << BCGame.GetTurn();
+		std::cout << std::endl << "Please enter a " << BCGame.GetIsogramLength() << " letter guess, #" << BCGame.GetTurn();
 		std::cout << " of " << BCGame.GetMaxTries() << ": ";
 		std::getline(std::cin, Guess);
 
@@ -112,15 +125,15 @@ FText GetValidGuess()
 		switch (Status)
 		{
 		case EGuessStatus::Length_Mismatch:
-			std::cout << "\nPlease enter a " << BCGame.GetIsogramLength() << " letter isogram.\n";
+			std::cout << "\nOops, that won't work! `" << Guess << "` has " << Guess.length() << " letters.\n";
 			break;
 		case EGuessStatus::Not_Isogram:
 			std::cout << "\nAn isogram doesn't use any single letter more than once, rather than using\n";
-			std::cout << Guess << ", please try guessing again.\n";
+			std::cout << "`" << Guess << "`, please try guessing again.\n";
 			break;
 		case EGuessStatus::Not_Alpha:
 			std::cout << "\nYou've entered one or more non-alphabetic characters. Instead of using\n";
-			std::cout << Guess << ", please try an English isogram word.\n";
+			std::cout << "`" << Guess << "`, please try an English isogram word.\n";
 			break;
 		default: // i.o.w. case OK
 			break;
