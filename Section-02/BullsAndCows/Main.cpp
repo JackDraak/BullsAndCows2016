@@ -1,4 +1,4 @@
-/*	Main.cpp
+﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
 	Jan.2016 pre-release version 0.9.44b1
@@ -11,12 +11,12 @@
 		300 word isogram dictionary 
 			- split into 10 levels of difficulty
 			- with "Word-Windowing" technology to keep the player on their toes
-			  (word level = player level, window: +/- 1)
+			  (challenge-word level = player level, window: +/- 1)
 		Customizable help levels
 			- toggle specific or general Bulltips
 			- toggle specific or general Cowtips
 		Stats Galore
-			- #'s of Awards
+			- #'s of Cow and Bull awards
 			- Hits, Misses & Near Misses
 			- Player rank, from level 1-10
 			- Get awarded arbitrary "Points" for each win!
@@ -73,8 +73,9 @@ void ManageGame()
 // Output - Print game introduction, instruction and status text:
 void PrintIntro()
 {
+	constexpr int32 SPAM_SPAN = 72;
 	std::cout << "Version 0.9.44b";
-	SpamNewline(72);	
+	SpamNewline(SPAM_SPAN);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
@@ -87,11 +88,11 @@ void PrintIntro()
 	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
 	std::cout << "determine your next guess. In other words, this round you need to earn ";
 	std::cout << BCGame.GetIsogramLength() << " Bulls\n" << "with one of your guesses to win. Good luck!\n\n";
-	std::cout << "     |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
-	std::cout << "     |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
-	std::cout << "     |                      Near Misses : " << BCGame.GetMisses() << "\n";
-	std::cout << "     | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
-	std::cout << "     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
+	std::cout << " /\\   /\\  |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
+	std::cout << " \\ \\_/ /  |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
+	std::cout << " ( .^. )  |                      Near Misses : " << BCGame.GetMisses() << "\n";
+	std::cout << "  \\ _ /   | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
+	std::cout << "   (_)    |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
 
 // I/O - Get a valid guess from the player, loop until satisfied:
@@ -128,16 +129,15 @@ FText GetValidGuess()
 	return Guess;
 }
 
-// Output - after a guess is validated, print the results: Guess# of #, Bull# Cow#
+// Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
 void PrintTurnSummary()
 {
 	FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(BCGame.GetGuess());
 	FString GameWord = BCGame.GetRankedIsogram();
 	int32 GameWordLength = GameWord.length();
 	FString Guess = BCGame.GetGuess();
-	FString MyBullsHint = "";
-	FString MyCowsHint = "";
-
+	FString SpecificBulltips = "";
+	FString SpecificCowTips = "";
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
@@ -148,32 +148,33 @@ void PrintTurnSummary()
 			{
 				if (GameWordCharPosition == GuessCharPosition)
 				{
-					MyBullsHint.append(1, GameWord[GameWordCharPosition]);
+					SpecificBulltips.append(1, GameWord[GameWordCharPosition]);
 				}
 				else
 				{
-					MyCowsHint.append(1, GameWord[GameWordCharPosition]);
+					SpecificCowTips.append(1, GameWord[GameWordCharPosition]);
 				}
 			}
 		}
 	}
-	// TODO Add logic for hint "hacker" levels... <cont.>
+	// TODO Future Feature: Add logic for hint "hacker" levels... <cont.>
 	// i.e.: 0 = neophyte (none), 1 = cowtips only, 2 = bulltips only, 3 = bulls+cows, 4(?) = exclusions...
-	std::cout << "\n    Guess Result #" << BCGame.GetTurn() << " of " << BCGame.GetMaxTries() << ": " << Guess << " has ";
+
+	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has ";
 	if (!bBullHints) { std::cout << BullCowCounts.Bulls << " Bulls and "; }
-	else { std::cout << "-" << MyBullsHint << "- Bulls and "; }
+	else { std::cout << "-" << SpecificBulltips << "- Bulls and "; }
 	
-	std::random_shuffle(MyCowsHint.begin(), MyCowsHint.end());
+	std::random_shuffle(SpecificCowTips.begin(), SpecificCowTips.end());
 	if (!bCowHints) { std::cout << BullCowCounts.Cows << " Cows\n"; }
-	else { std::cout << "-" << MyCowsHint << "- Cows\n "; }
+	else { std::cout << "-" << SpecificCowTips << "- Cows\n "; }
 }
 
-// Output - Game-Phase (Round) Summary generated here: if phase is won then use Form-A, else if out of turns then use Form-B:
+// Output - Game-Phase (Round) Summary generated here:
 void PrintPhaseSummary()
 {
 	if (BCGame.IsPhaseWon())
 	{
-		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Congratulations on winning this round!";
+		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Congratulations on winning this round!"; // TODO Say something random here after 1st print
 		std::cout << std::endl << "      !~!~WINNER!~!~!       Guesses: " << BCGame.GetTurn() - 1 << " of " << BCGame.GetMaxTries() << " used";
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word: ";
 		std::cout << BCGame.GetRankedIsogram();
@@ -182,7 +183,7 @@ void PrintPhaseSummary()
 	}
 	else if (BCGame.GetTurn() >= BCGame.GetMaxTries())
 	{
-		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it! Don't give up yet!";
+		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it! Don't give up yet!"; // TODO Say something random here after 1st print
 		std::cout << std::endl << "      !~!~!LOSER!~!~!       Guesses: " << BCGame.GetTurn() - 1 << " of " << BCGame.GetMaxTries() << " used";
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word : ";
 		for (auto Letter : BCGame.GetRankedIsogram()) { std::cout << "#"; }
@@ -196,7 +197,6 @@ void PrintPhaseSummary()
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-
 	if (bBullHints && !bCowHints)
 	{
 		std::cout << std::endl << "[B de-activate Bulltips, C activate specific Cowtips] Continue playing? Y/n ";

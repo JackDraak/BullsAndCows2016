@@ -57,7 +57,9 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
 		// game [DIFFICULTY Tuning: Part A] higher scores basically equate to higher difficulty
-		int32 ScoreFac1 = 10 * PositivePowerResult(MyLevel +1, 2);
+		constexpr int32 SF_ONE_A = 10;
+		constexpr int32 SF_ONE_B = 2;
+		int32 ScoreFac1 = SF_ONE_A * PositivePowerResult(MyLevel +1, SF_ONE_B);
 		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn;
 		int32 Score = ScoreFac1 * (ScoreFac2 +1);
 		FBullCowGame::ScoreUp(Score);
