@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.43
+*	Jan.2016 pre-release version 0.9.44
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -79,6 +79,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	return BullCowCounts;
 }
 
+// TODO return different Map depending on PLayer-selected difficulty setting
 int32 FBullCowGame::GetMaxTries() const
 {
 	TMap<int32, int32>WordLengthToMaxTries 
@@ -126,7 +127,7 @@ void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess
 	}
 }
 
-// Initialize a new game state (overloaded: if game InPlay set-up for a new turn)
+// Initialize a new game state (overloaded: if game is in-play, set-up for a new turn)
 void FBullCowGame::Reset()
 {
 	if (!bDoneOnce)
@@ -165,7 +166,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 	FString Words_1[INDEX_DEPTH] = { 
 		"toads", "brick", "stick", "roads", "stand", "trick", "thick", "loads", "talks", "locks",
 		"thing", "miles", "lives", "facts", "cloth", "dwarf", "empty", "trash", "envoy", "enact",
-		"faith", "farms", "farce", "faery", "laugh", "lingo", "litre", "march", "marsh", "swift"
+		"faith", "farms", "farce", "fairy", "laugh", "lingo", "litre", "march", "marsh", "swift"
 	};
 	FString Words_2[INDEX_DEPTH] = {
 		"jaunts", "abound", "tricks", "bricks", "crawls", "crowns", "around", "orgasm", "bounty", "gizmos",

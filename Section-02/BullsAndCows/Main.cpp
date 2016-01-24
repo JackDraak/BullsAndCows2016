@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.43
+*	Jan.2016 pre-release version 0.9.44
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -21,13 +21,12 @@ using int32 = int;
 void ManageGame();
 void PrintIntro();
 FText GetValidGuess();
-void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount);
-void PrintEndOfTurn(int32, int32);
+void PrintTurnSummary();
 void PrintPhaseSummary();
 bool bAskToPlayAgain();
 void SpamNewline(int32 Repeats);
-bool bBullHints = true; // TODO make this false for deployment
-bool bCowHints = true; // TODO make this false for deployment
+bool bBullHints = true; // TODO make this false for deployment? Maybe new players will appreciate the tips...
+bool bCowHints = true; // TODO make this false for deployment? Maybe new players will appreciate the tips...
 
 // instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
@@ -51,7 +50,7 @@ void ManageGame()
 	{
 		FText Guess = GetValidGuess();
 		FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(Guess);
-		PrintTurnSummary(Guess, BullCowCounts);
+		PrintTurnSummary();
 		BCGame.IncrementTry();
 	}
 	PrintPhaseSummary();
@@ -109,7 +108,7 @@ FText GetValidGuess()
 			std::cout << "\nYou've entered one or more non-alphabetic characters. Instead of using\n";
 			std::cout << Guess << ", please try an English isogram word.\n";
 			break;
-		default: // i.e. case OK
+		default: // i.o.w. case OK
 			break;
 		}
 	} while (Status != EGuessStatus::OK);
@@ -117,48 +116,43 @@ FText GetValidGuess()
 }
 
 // output - after a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FText &Guess, FBullCowCounts &BullCowCount) 
+void PrintTurnSummary()
 {
-	PrintEndOfTurn(BullCowCount.Bulls, BullCowCount.Cows);
-	return;
-}
+	// TODO logic for hint "hacker" levels... 0 = neophyte (none), 1 = cowtips only, 2 = bulltips only, 3 = bulls+cows, 4(?) = exclusions
+	FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(BCGame.GetGuess());
+	FString GameWord = BCGame.GetRankedIsogram();
+	FString Guess = BCGame.GetGuess();
+	int32 GameWordLength = GameWord.length();
+	FString MyCowsHint = "";
+	FString MyBullsHint = "";
 
-	void PrintEndOfTurn(int32 Bulls, int32 Cows)
+	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
-		// TODO hint levels... 0 = expert, 1 = cows, 2 = bulls, 3 = bulls+cows, 4(?) = exclusions
-		FString GameWord = BCGame.GetRankedIsogram();
-		FString Guess = BCGame.GetGuess();
-		int32 GameWordLength = GameWord.length();
-		FString MyCowsHint = "";
-		FString MyBullsHint = "";
-		for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
+		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
 		{
-			for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
+			char GameWordChar = GameWord[GameWordCharPosition];
+			char GuessWordChar = tolower(Guess[GuessCharPosition]);
+			if (GuessWordChar == GameWordChar)
 			{
-				char GameWordChar = GameWord[GameWordCharPosition];
-				char GuessWordChar = tolower(Guess[GuessCharPosition]);
-				if (GuessWordChar == GameWordChar)
+				if (GameWordCharPosition == GuessCharPosition)
 				{
-					if (GameWordCharPosition == GuessCharPosition)
-					{
-						MyBullsHint.append(1, GameWord[GameWordCharPosition]);
-					}
-					else
-					{
-						MyCowsHint.append(1, GameWord[GameWordCharPosition]);
-					}
+					MyBullsHint.append(1, GameWord[GameWordCharPosition]);
+				}
+				else
+				{
+					MyCowsHint.append(1, GameWord[GameWordCharPosition]);
 				}
 			}
 		}
-		std::random_shuffle(MyCowsHint.begin(), MyCowsHint.end());
-		std::cout << "\n    Guess Result #" << BCGame.GetTurn() << " of " << BCGame.GetMaxTries() << ": " << Guess << " has ";
-
-		if (!bBullHints) { std::cout << Bulls << " Bulls and "; }
-		else { std::cout << "-" << MyBullsHint << "- Bulls and "; }
-
-		if (!bCowHints) { std::cout << Cows << " Cows\n"; }
-		else { std::cout << "-" << MyCowsHint << "- Cows\n "; }
 	}
+	std::cout << "\n    Guess Result #" << BCGame.GetTurn() << " of " << BCGame.GetMaxTries() << ": " << Guess << " has ";
+	if (!bBullHints) { std::cout << BullCowCounts.Bulls << " Bulls and "; }
+	else { std::cout << "-" << MyBullsHint << "- Bulls and "; }
+	
+	std::random_shuffle(MyCowsHint.begin(), MyCowsHint.end());
+	if (!bCowHints) { std::cout << BullCowCounts.Cows << " Cows\n"; }
+	else { std::cout << "-" << MyCowsHint << "- Cows\n "; }
+}
 
 // output - Game-Phase (Round) Summary generated here: if phase is won then use Form-A, else if out of turns then use Form-B
 void PrintPhaseSummary()

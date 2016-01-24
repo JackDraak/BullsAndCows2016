@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.43
+*	Jan.2016 pre-release version 0.9.44
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
