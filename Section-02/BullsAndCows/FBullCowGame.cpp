@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.44
+*	Jan.2016 pre-release version 0.9.44b
 *
 *	This class handles the game mechanics of the Bull Cow Game
 *	I/O functions are handled in the Main.cpp class
@@ -79,7 +79,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	return BullCowCounts;
 }
 
-// TODO return different Map depending on PLayer-selected difficulty setting
+// TODO return different Map depending on Player-selected difficulty setting
 int32 FBullCowGame::GetMaxTries() const
 {
 	TMap<int32, int32>WordLengthToMaxTries 

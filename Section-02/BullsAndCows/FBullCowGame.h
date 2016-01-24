@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.44
+*	Jan.2016 pre-release version 0.9.44b
 *
 *	GAME-LOGIC:
 *	This is a `Mastermind`-style word guessing game using a small
@@ -88,7 +88,7 @@ private:
 	bool bGuessMatches;
 	bool bDoneOnce;
 
-	int32 PositivePowerResult(int32 Number, int32 Exponent);
+	int32 PositivePowerResult(int32 Base, int32 Exponent);
 	bool IsWordIsogram(FString) const;
 	bool IsWordAlpha(FString) const;
 };

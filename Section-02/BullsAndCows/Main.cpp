@@ -1,7 +1,7 @@
 /*	Main.cpp
 *	created by Jack Draak
 *	as tutored by Ben Tristem
-*	Jan.2016 pre-release version 0.9.44
+*	Jan.2016 pre-release version 0.9.44b
 *
 *	This is the console executable that makes use of the FBullCowGame class.
 *	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -60,7 +60,7 @@ void ManageGame()
 // output - print game introduction, instruction and status text
 void PrintIntro()
 {
-	std::cout << "Version 0.9.43";
+	std::cout << "Version 0.9.44b";
 	SpamNewline(72);	
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -183,9 +183,9 @@ bool bAskToPlayAgain()
 {
 	FText Responce = "";
 
-	if (!bBullHints && !bCowHints)
+	if (bBullHints && !bCowHints)
 	{
-		std::cout << std::endl << "[B or C to turn hints ON] Continue playing? Y/n ";
+		std::cout << std::endl << "[B de-activate Bulltips, C activate Cowtips] Continue playing? Y/n ";
 	}
 	else if (bBullHints && bCowHints)
 	{
@@ -195,15 +195,14 @@ bool bAskToPlayAgain()
 	{
 		std::cout << std::endl << "[B activate Bulltips, C de-activate Cowtips] Continue playing? Y/n ";
 	}
-	else // if (bBullHints && !bCowHints)
+	else // if (!bBullHints && !bCowHints)
 	{
-		std::cout << std::endl << "[B de-activate Bulltips, C activate Cowtips] Continue playing? Y/n ";
+		std::cout << std::endl << "[B or C to turn hints ON] Continue playing? Y/n ";
 	}
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'n') || (Responce[0] == 'N')) { return false; }
 	else if ((Responce[0] == 'b') || (Responce[0] == 'B')) { bBullHints = !bBullHints; }
 	else if ((Responce[0] == 'c') || (Responce[0] == 'C')) { bCowHints = !bCowHints; }
-
 	return true;
 }
 
