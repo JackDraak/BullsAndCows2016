@@ -13,8 +13,8 @@
 	See Main.cpp for further description.
 */
 #pragma once
-#include <ctime>
 #include <iostream>
+#include <random>
 
 // required for UnrealEngine-friendly syntax
 using FString = std::string;
@@ -40,11 +40,13 @@ enum class EGuessStatus
 };
 
 class FBullCowGame {
+	std::mt19937 engine = std::mt19937{ 1729 }; //seeded using number for debugging. Expected results - bale, locks....
+												//seed with std::random_device{}() for proper randomness
 public:
 	//constructors
 	FBullCowGame();
 
-	EGuessStatus CheckGuessValidity(FString) const;
+	EGuessStatus CheckGuessValidity(const FString&) const;
 	FString GetIsogram() const;
 	int32 GetMaxTries() const;
 	FString GetGuess() const;
@@ -58,7 +60,7 @@ public:
 	int32 GetWins() const;
 	int32 GetCows() const;
 
-	FBullCowCounts ProcessValidGuess(FString);
+	FBullCowCounts ProcessValidGuess(const FString&);
 	FString SelectIsogramForLevel();
 	void IncrementDefeats();
 	void IncrementMisses();
@@ -84,7 +86,7 @@ private:
 	bool bGuessMatches;
 	int32 MyCurrentTurn;
 
-	bool IsWordAlpha(FString) const;
-	bool IsWordIsogram(FString) const;
+	bool IsWordAlpha(const FString&) const;
+	bool IsWordIsogram(const FString&) const;
 	int32 PositiveExponentResult(int32 Base, int32 Exponent);
 };
