@@ -9,6 +9,7 @@
 	See Main.cpp for further description.
 */
 #pragma once
+#include <algorithm>
 #include <map>
 #include "FBullCowGame.h"
 
@@ -36,7 +37,7 @@ void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 
 // ensure the entered guess is alphabetic, correct # of letters & is an isogram
-EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
+EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
 {
 	if (!IsWordAlpha(Guess))                       { return EGuessStatus::Not_Alpha; }
 	else if (!IsWordIsogram(Guess))                { return EGuessStatus::Not_Isogram; }
@@ -45,19 +46,19 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 }
 
 // upon reciept of a valid* guess, updates Bull and Cow counts + tips
-FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
+FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 {
-	MyGuess = Guess;
-	constexpr int32 LbChar = 35;
+	constexpr char LbChar = '#';
 	FBullCowCounts BullCowCounts;
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
+	//populate Hashtips with the correct amount of '#'
+	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
 
 
 	// Tally Bulls and Cows, now with tips
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
-		bool bHashed = false;
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
 		{
 			const char GameWordChar = MyIsogram[GameWordCharPosition];
@@ -69,8 +70,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 					MyTotalBull++;
 					BullCowCounts.Bulls++;
 					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
-					if (!bHashed)
-					{
+					BullCowCounts.Hashtips[GameWordCharPosition] = GameWord[GameWordCharPosition];
 						BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]); // BUG not tagging everytime it ought to
 					}
 					bHashed = true;
@@ -80,8 +80,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					if (!bHashed)
-					{
+					BullCowCounts.Hashtips[GameWordCharPosition] = '*';
 						BullCowCounts.Hashtips.append(1, LbChar); // BUG tagging when there should be a Bull instead
 					}
 					bHashed = true;
@@ -174,11 +173,10 @@ void FBullCowGame::Reset()
 
 FString FBullCowGame::SelectIsogramForLevel()
 {
-	constexpr int32 WINDOW = 3;
-	constexpr int32 INDEX_DEPTH = 30;
-	std::srand((unsigned)time(NULL));
-	int32 RandomIndex = rand() % INDEX_DEPTH;
-	int32 ThisWindow = (rand() % WINDOW) - 1;
+	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1); //using uniform dist instead of srand for better randomness
+	std::uniform_int_distribution<> WindowDist(-1, 1);			   //distribution range in inclusive
+	int32 RandomIndex = IndexDist(engine); //uses the random engine within the distribution to get a number
+	int32 ThisWindow = WindowDist(engine); // --
 	int32 ThisWordLevel = MyLevel + ThisWindow;
 
 	FString Words_0[INDEX_DEPTH] = { 
@@ -269,7 +267,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 	return MyIsogram; // BREAKPOINT here to view secret game word
 }
 
-bool FBullCowGame::IsWordIsogram(FString Word) const
+bool FBullCowGame::IsWordIsogram(const FString& Word) const
 {
 	if (Word.length() <= 1) { return true; }
 	TMap<char, bool> LetterSeen;
@@ -285,7 +283,7 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 	return true;
 }
 
-bool FBullCowGame::IsWordAlpha(FString Word) const
+bool FBullCowGame::IsWordAlpha(const FString& Word) const
 {
 	for (int32 WordChar = 0; WordChar < int32(Word.length()); WordChar++)
 	{
