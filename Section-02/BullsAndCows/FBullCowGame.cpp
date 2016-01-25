@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.53
+	Jan.2016 pre-release version 0.9.531
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -52,11 +52,9 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	FBullCowCounts BullCowCounts;
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
-	//populate Hashtips with the correct amount of '#'
-	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
-
 
 	// Tally Bulls and Cows, now with tips
+	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
@@ -71,15 +69,13 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 					BullCowCounts.Bulls++;
 					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
 					BullCowCounts.Hashtips[GameWordCharPosition] = GameWord[GameWordCharPosition];
-					BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]); // BUG not tagging everytime it ought to
 				}
 				else if (GameWordCharPosition != GuessCharPosition)
 				{
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					BullCowCounts.Hashtips[GameWordCharPosition] = '*';
-					BullCowCounts.Hashtips.append(1, LbChar); // BUG tagging when there should be a Bull instead
+					BullCowCounts.Hashtips[GameWordCharPosition] = LbChar;
 				}
 			}
 		}
@@ -165,10 +161,10 @@ void FBullCowGame::Reset()
 FString FBullCowGame::SelectIsogramForLevel()
 {
 	constexpr int32 INDEX_DEPTH = 30;
-	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1); //using uniform dist instead of srand for better randomness
-	std::uniform_int_distribution<> WindowDist(-1, 1);			   //distribution range in inclusive
-	int32 RandomIndex = IndexDist(engine); //uses the random engine within the distribution to get a number
-	int32 ThisWindow = WindowDist(engine); // --
+	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1);
+	std::uniform_int_distribution<> WindowDist(-1, 1);
+	int32 RandomIndex = IndexDist(engine);
+	int32 ThisWindow = WindowDist(engine);
 	int32 ThisWordLevel = MyLevel + ThisWindow;
 
 	FString Words_0[INDEX_DEPTH] = { 

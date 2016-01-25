@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.53
+	Jan.2016 pre-release version 0.9.531
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -37,11 +37,11 @@
 			- Misc. feedback
 
 		Known Bugs:
-			Current work in progress (WIP) `Hashtips` not building proper strings
+			THANKS SuperWig for helping with the random issue and the Hashtips!
 */
 #pragma once
-#include <string>
 #include <algorithm>
+#include <string>
 #include "FBullCowGame.h"
 
 // Required for UnrealEngine-friendly syntax:
@@ -66,7 +66,7 @@ FBullCowGame BCGame;
 int main()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.53";
+	std::cout << "Version 0.9.531";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
