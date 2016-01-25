@@ -13,8 +13,8 @@
 	See Main.cpp for further description.
 */
 #pragma once
-#include <ctime>
 #include <iostream>
+#include <random>
 
 // required for UnrealEngine-friendly syntax
 using FString = std::string;
@@ -40,6 +40,8 @@ enum class EGuessStatus
 };
 
 class FBullCowGame {
+	std::mt19937 engine = std::mt19937{ 1729 }; //seeded using number for debugging. Expected results - bale, locks....
+												//seed with std::random_device{}() for proper randomness
 public:
 	//constructors
 	FBullCowGame();

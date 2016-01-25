@@ -155,13 +155,13 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts)
 	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has ";
 	if (!bBullHints) { std::cout << BullCowCounts.Bulls << " Bulls and "; }
 	else { std::cout << "-" << BullCowCounts.Bulltips << "- Bulls and "; }
-	
+
 	std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end());
+
 	if (!bCowHints) { std::cout << BullCowCounts.Cows << " Cows\n"; }
 	else { std::cout << "-" << BullCowCounts.Cowtips << "- Cows\n "; }
 
-	// DEBUG attempting to form the Hashtips
-	// TODO get this working or ditch it --> std::cout << "Hashtip: `" << BullCowCounts.Hashtips << "`\n";
+	std::cout << "Hashtip: `" << BullCowCounts.Hashtips << "`\n";  //TODO better placement of the tip
 }
 
 // Output - Game-Phase (Round) Summary generated here:

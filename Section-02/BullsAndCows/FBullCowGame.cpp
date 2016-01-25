@@ -9,6 +9,7 @@
 	See Main.cpp for further description.
 */
 #pragma once
+#include <algorithm>
 #include <map>
 #include "FBullCowGame.h"
 
@@ -51,11 +52,12 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	FBullCowCounts BullCowCounts;
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
+	//populate Hashtips with the correct amount of '#'
+	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
 
 	// Tally Bulls and Cows, now with tips
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
-		bool bHashed = false;
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
 		{
 			char GameWordChar = MyIsogram[GameWordCharPosition];
@@ -67,24 +69,17 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 					MyTotalBull++;
 					BullCowCounts.Bulls++;
 					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
-					BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]);
-					bHashed = true;
+					BullCowCounts.Hashtips[GameWordCharPosition] = GameWord[GameWordCharPosition];
 				}
 				else
 				{
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					BullCowCounts.Hashtips.append(1, 42);
-					bHashed = true;
+					BullCowCounts.Hashtips[GameWordCharPosition] = '*';
 				}
 			}
-			else if (!bHashed)
-			{
-				BullCowCounts.Hashtips.append(1, LbChar);
-				bHashed = true;
-			}
-		}  
+		}
 	}
 
 	if (BullCowCounts.Bulls == GameWordLength) 
@@ -167,11 +162,11 @@ void FBullCowGame::Reset()
 
 FString FBullCowGame::SelectIsogramForLevel()
 {
-	std::srand((unsigned)time(NULL));
 	constexpr int32 INDEX_DEPTH = 30; // UPDATE if modified: Each Word-row must grow at the same time to length INDEX_DEPTH
-	constexpr int32 WINDOW = 3;
-	int32 RandomIndex = rand() % INDEX_DEPTH;
-	int32 ThisWindow = (rand() % WINDOW) - 1;
+	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1); //using uniform dist instead of srand for better randomness
+	std::uniform_int_distribution<> WindowDist(-1, 1);			   //distribution range in inclusive
+	int32 RandomIndex = IndexDist(engine); //uses the random engine within the distribution to get a number
+	int32 ThisWindow = WindowDist(engine); // --
 	int32 ThisWordLevel = MyLevel + ThisWindow;
 
 	FString Words_0[INDEX_DEPTH] = { 
