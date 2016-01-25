@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.5
+	Jan.2016 pre-release version 0.9.51
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -9,33 +9,32 @@
 	See Main.cpp for further description.
 */
 #pragma once
-#include "FBullCowGame.h"
 #include <map>
+#include "FBullCowGame.h"
 
 // required for UnrealEngine-friendly syntax
 #define TMap std::map
 using int32 = int;
 
 FBullCowGame::FBullCowGame()                    { FBullCowGame::Reset(); }
-FString FBullCowGame::GetRankedIsogram() const  { return MyIsogram; }
+int32 FBullCowGame::GetWins() const             { return MyWins; }
+int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
+int32 FBullCowGame::GetCows() const             { return MyTotalCow; }
+int32 FBullCowGame::GetBulls() const            { return MyTotalBull; }
+int32 FBullCowGame::GetLevel() const            { return MyLevel; }
+int32 FBullCowGame::GetScore() const            { return MyScore; }
+int32 FBullCowGame::GetMisses() const           { return MyMisses; }
+bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
+int32 FBullCowGame::GetDefeats() const          { return MyDefeats; }
 FString FBullCowGame::GetGuess() const          { return MyGuess; }
 int32 FBullCowGame::GetIsogramLength() const    { return (MyIsogram.length()); }
-int32 FBullCowGame::GetScore() const            { return MyScore; }
-int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
-int32 FBullCowGame::GetLevel() const            { return MyLevel; }
-int32 FBullCowGame::GetMisses() const           { return MyMisses; }
-int32 FBullCowGame::GetDefeats() const          { return MyDefeats; }
-int32 FBullCowGame::GetWins() const             { return MyWins; }
-int32 FBullCowGame::GetBulls() const            { return MyTotalBull; }
-int32 FBullCowGame::GetCows() const             { return MyTotalCow; }
-bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
-void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
-void FBullCowGame::IncrementMisses()            { MyMisses++; return; }
-void FBullCowGame::IncrementDefeats()           { MyDefeats++; return; }
-void FBullCowGame::IncrementWins()              { MyWins++; return; }
-void FBullCowGame::BoostBullScore(int32 Bulls)  { MyTotalBull = MyTotalBull + Bulls; return; }
-void FBullCowGame::LevelUp()                    { MyLevel++; return; }
+FString FBullCowGame::GetRankedIsogram() const  { return MyIsogram; }
 void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; return; }
+void FBullCowGame::IncrementDefeats()           { MyDefeats++; return; }
+void FBullCowGame::IncrementMisses()            { MyMisses++; return; }
+void FBullCowGame::IncrementWins()              { MyWins++; return; }
+void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
+void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 
 // ensure the entered guess is alphabetic, correct # of letters & is an isogram
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
@@ -49,12 +48,36 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 // upon reciept of a valid* guess, increments turn and returns count
 FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 {
-	FBullCowCounts BullCowCounts;
 	MyGuess = Guess;
-	int32 GameWordLength = GetIsogramLength();
+	FBullCowCounts BullCowCounts;
+	FString GameWord = MyIsogram;
+	int32 GameWordLength = MyIsogram.length();
 
-	// TODO play-tuning is required: 
-	TallyBullsAndCows(GameWordLength, Guess, BullCowCounts);
+	// Tally Bulls and Cows, now with tips
+	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
+	{
+		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
+		{
+			char GameWordChar = MyIsogram[GameWordCharPosition];
+			char GuessWordChar = tolower(Guess[GuessCharPosition]);
+			if (GuessWordChar == GameWordChar)
+			{
+				if (GameWordCharPosition == GuessCharPosition)
+				{
+					BullCowCounts.Bulls++;
+					MyTotalBull++;
+					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
+				}
+				else
+				{
+					BullCowCounts.Cows++;
+					MyTotalCow++;
+					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
+				}
+			}
+		}
+	}
+
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
 		// game [DIFFICULTY Tuning: Part A] here: higher scores = more rapid advancement in levels
@@ -75,7 +98,6 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 		else if (MyLevel == 6 && MyScore > 1500000) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 7 && MyScore > 5000000) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 8 && MyScore > 20000000) { FBullCowGame::LevelUp(); }
-		FBullCowGame::BoostBullScore(MyIsogram.length());
 		FBullCowGame::bGuessMatches = true;
 	}
 	else { FBullCowGame::IncrementMisses(); }
@@ -104,31 +126,6 @@ int32 FBullCowGame::GetMaxTries() const
 		{ 17, 5 }
 	};
 	return WordLengthToMaxTries[MyIsogram.length()];
-}
-
-void FBullCowGame::TallyBullsAndCows(const int32 &GameWordLength, FString &Guess, FBullCowCounts &BullCowCounts)
-{
-	for (int32 MyGameWordChar = 0; MyGameWordChar < GameWordLength; MyGameWordChar++)
-	{
-		for (int32 GuessChar = 0; GuessChar < GameWordLength; GuessChar++)
-		{
-			char GameWordChar = MyIsogram[MyGameWordChar];
-			char GuessWordChar = tolower(Guess[GuessChar]);
-			if (GuessWordChar == GameWordChar)
-			{
-				if (MyGameWordChar == GuessChar) 
-				{ 
-					BullCowCounts.Bulls++; 
-					MyTotalBull++;
-				}
-				else 
-				{ 
-					BullCowCounts.Cows++;
-					MyTotalCow++;
-				}
-			}
-		}
-	}
 }
 
 // Initialize a new game state (overloaded: if game is in-play, set-up for a new turn)
@@ -214,8 +211,8 @@ FString FBullCowGame::SelectIsogramForLevel()
 	};
 	FString Words_9[INDEX_DEPTH] = {
 		"subdermatoglyphic", "uncopyrightable", "ambidextrously", "hydromagnetics", "pseudomythical", "flamethrowing",
-		"unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively",
 		"unmaledictory", "ambidextrously", "undiscoverably", "dermatoglyphic", "computerizably", "muckspreading",
+		"unsympathized", "unpredictably", "multibranched", "subformatively", "hydropneumatic", "consumptively",
 		"metalworkings", "musicotherapy", "chimneyboards", "comsumptively", "copyrightable", "documentarily",
 		"draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" 
 	};
@@ -285,7 +282,6 @@ bool FBullCowGame::IsWordAlpha(FString Word) const
 int32 FBullCowGame::PositivePowerResult(int32 Base, int32 Exponent)
 {
 	if (Exponent < 1) { return 1; }
-	// if (Exponent == 1) { return Base; }
 	int32 n = Base;
 	for (int32 i = 1; i < Exponent; i++) { Base = Base * n; }
 	return Base;

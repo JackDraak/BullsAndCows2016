@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.5
+	Jan.2016 pre-release version 0.9.51
 
 	This header file is included by both:
 		Main.cpp
@@ -13,8 +13,8 @@
 	See Main.cpp for further description.
 */
 #pragma once
-#include <iostream>
 #include <ctime>
+#include <iostream>
 
 // required for UnrealEngine-friendly syntax
 using FString = std::string;
@@ -22,17 +22,19 @@ using int32 = int;
 
 struct FBullCowCounts
 {
-	int32 Bulls = 0;
 	int32 Cows = 0;
+	int32 Bulls = 0;
+	FString Cowtips = "";
+	FString Bulltips = "";
 };
 
 // possible return status' when processing Guess input:
 enum class EGuessStatus
 {
-	Invalid_Status,
 	OK,
-	Not_Isogram,
 	Not_Alpha,
+	Not_Isogram,
+	Invalid_Status,
 	Length_Mismatch
 };
 
@@ -41,50 +43,48 @@ public:
 	//constructors
 	FBullCowGame();
 
+	EGuessStatus CheckGuessValidity(FString) const;
 	FString GetRankedIsogram() const;
-	FString GetGuess() const;
 	int32 GetIsogramLength() const;
 	int32 GetMaxTries() const;
-	int32 GetTurn() const;
+	FString GetGuess() const;
+	int32 GetDefeats() const;
+	int32 GetMisses() const;
+	bool IsPhaseWon() const;
 	int32 GetLevel() const;
 	int32 GetScore() const;
-	int32 GetMisses() const;
-	int32 GetDefeats() const;
-	int32 GetWins() const;
 	int32 GetBulls() const;
+	int32 GetTurn() const;
+	int32 GetWins() const;
 	int32 GetCows() const;
-	bool IsPhaseWon() const;
-	EGuessStatus CheckGuessValidity(FString) const;
 
 	FBullCowCounts ProcessValidGuess(FString);
-	void TallyBullsAndCows(const int32 &GameWordLength, FString &Guess, FBullCowCounts &BullCowCounts);
 	FString SelectIsogramForLevel();
-	void Reset();
-	void IncrementTry();
-	void IncrementMisses();
 	void IncrementDefeats();
+	void IncrementMisses();
 	void IncrementWins();
-	void BoostBullScore(int32);
-	void LevelUp();
+	void IncrementTry();
 	void ScoreUp(int32);
+	void LevelUp();
+	void Reset();
 
 private:
 	// set values in constructor definition FBullCowGame::Reset()
-	FString MyIsogram;
-	FString MyGuess;
-	int32 MyMaxTries;
-	int32 MyCurrentTurn;
+	int32 MyWins;
 	int32 MyLevel;
 	int32 MyScore;
 	int32 MyMisses;
-	int32 MyDefeats;
-	int32 MyWins;
-	int32 MyTotalBull;
-	int32 MyTotalCow;
-	bool bGuessMatches;
 	bool bDoneOnce;
+	FString MyGuess;
+	int32 MyDefeats;
+	int32 MyMaxTries;
+	int32 MyTotalCow;
+	int32 MyTotalBull;
+	FString MyIsogram;
+	bool bGuessMatches;
+	int32 MyCurrentTurn;
 
-	int32 PositivePowerResult(int32 Base, int32 Exponent);
-	bool IsWordIsogram(FString) const;
 	bool IsWordAlpha(FString) const;
+	bool IsWordIsogram(FString) const;
+	int32 PositivePowerResult(int32 Base, int32 Exponent);
 };
