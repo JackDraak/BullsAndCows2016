@@ -44,7 +44,7 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 	else                                           { return EGuessStatus::OK; }
 }
 
-// upon reciept of a valid* guess, increments turn and returns count
+// upon reciept of a valid* guess, updates Bull and Cow counts + tips
 FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 {
 	MyGuess = Guess;
@@ -53,46 +53,53 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
 
+
 	// Tally Bulls and Cows, now with tips
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
-		// bool bHashed = false;
+		bool bHashed = false;
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
 		{
-			char GameWordChar = MyIsogram[GameWordCharPosition];
-			char GuessWordChar = tolower(Guess[GuessCharPosition]);
-			if (GuessWordChar == GameWordChar)
+			const char GameWordChar = MyIsogram[GameWordCharPosition];
+			const char GuessWordChar = tolower(Guess[GuessCharPosition]);
+			if (GameWordChar == GuessWordChar)
 			{
 				if (GameWordCharPosition == GuessCharPosition)
 				{
 					MyTotalBull++;
 					BullCowCounts.Bulls++;
 					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
-					// BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]);
-					// bHashed = true;
+					if (!bHashed)
+					{
+						BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]); // BUG not tagging everytime it ought to
+					}
+					bHashed = true;
 				}
-				else
+				else if (GameWordCharPosition != GuessCharPosition)
 				{
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					// BullCowCounts.Hashtips.append(1, 42);
-					// bHashed = true;
+					if (!bHashed)
+					{
+						BullCowCounts.Hashtips.append(1, LbChar); // BUG tagging when there should be a Bull instead
+					}
+					bHashed = true;
 				}
 			}
-			//else if (!bHashed)
-			//{
-			//	BullCowCounts.Hashtips.append(1, LbChar);
-			//	bHashed = true;
-			//}
-		}  
+			else if (GameWordCharPosition != GuessCharPosition && !bHashed)
+			{
+				BullCowCounts.Hashtips.append(1, LbChar);
+				bHashed = true;
+			}
+		}
 	}
 
 	if (BullCowCounts.Bulls == GameWordLength) 
 	{
 		// game [DIFFICULTY Tuning: Part A] here: higher scores = more rapid advancement in levels
 		constexpr int32 SF_ONE_A = 10; // must be >0
-		constexpr int32 SF_ONE_B = 2; // exponent in Level^N
+		constexpr int32 SF_ONE_B = 2; // as exponent in Level^N
 		int32 ScoreFac1 = SF_ONE_A * PositiveExponentResult(MyLevel +1, SF_ONE_B);
 		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn;
 		int32 Score = ScoreFac1 * (ScoreFac2 +1);
@@ -146,6 +153,11 @@ void FBullCowGame::Reset()
 	MyCurrentTurn = 1;
 	MyGuess = "";
 
+	do
+	{
+		bGameWordIsIsogram = IsWordIsogram(SelectIsogramForLevel());
+	} while (!bGameWordIsIsogram);
+
 	if (!bDoneOnce)
 	{
 		MyWins = 0;
@@ -157,20 +169,14 @@ void FBullCowGame::Reset()
 		MyTotalBull = 0;
 		bDoneOnce = true;
 	}
-
-	do
-	{
-		//FString MyGameWord = SelectIsogramForLevel(); TODO cleanup
-		bGameWordIsIsogram = IsWordIsogram(SelectIsogramForLevel());
-	} while (!bGameWordIsIsogram);
 	return;
 }
 
 FString FBullCowGame::SelectIsogramForLevel()
 {
-	std::srand((unsigned)time(NULL));
-	constexpr int32 INDEX_DEPTH = 30; // UPDATE if modified: Each Word-row must grow at the same time to length INDEX_DEPTH
 	constexpr int32 WINDOW = 3;
+	constexpr int32 INDEX_DEPTH = 30;
+	std::srand((unsigned)time(NULL));
 	int32 RandomIndex = rand() % INDEX_DEPTH;
 	int32 ThisWindow = (rand() % WINDOW) - 1;
 	int32 ThisWordLevel = MyLevel + ThisWindow;

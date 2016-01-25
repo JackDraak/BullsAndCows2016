@@ -37,6 +37,7 @@
 			- Misc. feedback
 
 		Known Bugs:
+			Current work in progress (WIP) `Hashtips` not building proper strings
 */
 #pragma once
 #include <string>
@@ -159,8 +160,8 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts)
 	if (!bCowHints) { std::cout << BullCowCounts.Cows << " Cows\n"; }
 	else { std::cout << "-" << BullCowCounts.Cowtips << "- Cows\n "; }
 
-	// DEBUG attempting to form the Hashtips
-	// TODO get this working or ditch it --> std::cout << "Hashtip: `" << BullCowCounts.Hashtips << "`\n";
+	// DEBUG  while attempting to form the Hashtips, uncomment this line to see them in-play
+	std::cout << "Hashtip: `" << BullCowCounts.Hashtips << "`\n";
 }
 
 // Output - Game-Phase (Round) Summary generated here:
