@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.52
+	Jan.2016 pre-release version 0.9.53
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -66,7 +66,7 @@ FBullCowGame BCGame;
 int main()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.52";
+	std::cout << "Version 0.9.53";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";

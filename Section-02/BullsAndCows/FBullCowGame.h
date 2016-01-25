@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.52
+	Jan.2016 pre-release version 0.9.53
 
 	This header file is included by both:
 		Main.cpp
