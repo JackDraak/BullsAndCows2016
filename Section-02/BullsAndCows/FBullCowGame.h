@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.51
+	Jan.2016 pre-release version 0.9.52
 
 	This header file is included by both:
 		Main.cpp
@@ -26,6 +26,7 @@ struct FBullCowCounts
 	int32 Bulls = 0;
 	FString Cowtips = "";
 	FString Bulltips = "";
+	FString Hashtips = "";
 };
 
 // possible return status' when processing Guess input:
@@ -44,8 +45,7 @@ public:
 	FBullCowGame();
 
 	EGuessStatus CheckGuessValidity(FString) const;
-	FString GetRankedIsogram() const;
-	int32 GetIsogramLength() const;
+	FString GetIsogram() const;
 	int32 GetMaxTries() const;
 	FString GetGuess() const;
 	int32 GetDefeats() const;
@@ -86,5 +86,5 @@ private:
 
 	bool IsWordAlpha(FString) const;
 	bool IsWordIsogram(FString) const;
-	int32 PositivePowerResult(int32 Base, int32 Exponent);
+	int32 PositiveExponentResult(int32 Base, int32 Exponent);
 };
