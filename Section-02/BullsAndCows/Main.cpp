@@ -48,7 +48,7 @@ using FText = std::string;
 using int32 = int;
 
 // Function prototypes, as outside class:
-void PrintIntro();
+void PrintRoundIntro();
 FText GetValidGuess();
 bool bCowHints = true;
 bool bBullHints = true;
@@ -64,6 +64,21 @@ FBullCowGame BCGame;
 // The entry-point for the applciation:
 int main()
 {
+	constexpr int32 SPAM_SPAN = 72;
+	std::cout << "Version 0.9.52";
+	SpamNewline(SPAM_SPAN);
+	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
+	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
+	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
+	std::cout << "Your mission, should you choose to accept it, is to guess an isogram*.\n\n";
+	std::cout << " * An isogram is a word comprised of unique letters, for example:\n";
+	std::cout << "     - step: is an isogram, each letter is unique in the word\n";
+	std::cout << "     - book: is NOT an isogram; it contains two 'o's\n\n";
+	std::cout << "How to win: After you enter a guess, you will be awarded Bulls and Cows.\n";
+	std::cout << "Guessing a correct letter in the correct position is worth one Bull, while a\n";
+	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
+	std::cout << "determine your next guess.\n";
+
 	do { MasterControlProgram(); } while (bAskToPlayAgain());
 
 	// "End of line." -- program execution complete --
@@ -75,7 +90,7 @@ int main()
 void MasterControlProgram()
 {
 	BCGame.Reset();
-	PrintIntro();
+	PrintRoundIntro();
 	while (!BCGame.IsPhaseWon() && BCGame.GetTurn() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
@@ -88,23 +103,9 @@ void MasterControlProgram()
 }
 
 // Output - Print game introduction, instruction and status text:
-void PrintIntro()
+void PrintRoundIntro()
 {
-	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.52";
-	SpamNewline(SPAM_SPAN);	
-	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
-	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
-	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
-	std::cout << "Your mission, should you choose to accept it, is to guess an isogram*.\n\n";
-	std::cout << " * An isogram is a word comprised of unique letters, for example:\n";
-	std::cout << "     - step: is an isogram, each letter is unique in the word\n";
-	std::cout << "     - book: is NOT an isogram; it contains two 'o's\n\n";
-	std::cout << "How to win: After you enter a guess, you will be awarded Bulls and Cows.\n";
-	std::cout << "Guessing a correct letter in the correct position is worth one Bull, while a\n";
-	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
-	std::cout << "determine your next guess. In other words, this round you need to earn ";
-	std::cout << BCGame.GetIsogram().length() << " Bulls\n" << "with one of your guesses to win. Good luck!\n\n";
+	std::cout << "\nThis round you need to earn " << BCGame.GetIsogram().length() << " Bulls with one of your guesses to win. Good luck!\n";
 	std::cout << " /\\   /\\  |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
 	std::cout << " \\ \\_/ /  |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
 	std::cout << " ( .^. )  |                      Near Misses : " << BCGame.GetMisses() << "\n";

@@ -36,7 +36,7 @@ void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 
 // ensure the entered guess is alphabetic, correct # of letters & is an isogram
-EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
+EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
 {
 	if (!IsWordAlpha(Guess))                       { return EGuessStatus::Not_Alpha; }
 	else if (!IsWordIsogram(Guess))                { return EGuessStatus::Not_Isogram; }
@@ -45,10 +45,9 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 }
 
 // upon reciept of a valid* guess, increments turn and returns count
-FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
+FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 {
-	MyGuess = Guess;
-	constexpr int32 LbChar = 35;
+	constexpr char LbChar = '#';
 	FBullCowCounts BullCowCounts;
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
@@ -56,7 +55,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 	// Tally Bulls and Cows, now with tips
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
-		// bool bHashed = false;
+		bool bHashed = false;
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
 		{
 			char GameWordChar = MyIsogram[GameWordCharPosition];
@@ -68,23 +67,23 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(FString Guess)
 					MyTotalBull++;
 					BullCowCounts.Bulls++;
 					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
-					// BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]);
-					// bHashed = true;
+					BullCowCounts.Hashtips.append(1, GameWord[GameWordCharPosition]);
+					bHashed = true;
 				}
 				else
 				{
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					// BullCowCounts.Hashtips.append(1, 42);
-					// bHashed = true;
+					BullCowCounts.Hashtips.append(1, 42);
+					bHashed = true;
 				}
 			}
-			//else if (!bHashed)
-			//{
-			//	BullCowCounts.Hashtips.append(1, LbChar);
-			//	bHashed = true;
-			//}
+			else if (!bHashed)
+			{
+				BullCowCounts.Hashtips.append(1, LbChar);
+				bHashed = true;
+			}
 		}  
 	}
 
@@ -263,7 +262,7 @@ FString FBullCowGame::SelectIsogramForLevel()
 	return MyIsogram; // BREAKPOINT here to view secret game word
 }
 
-bool FBullCowGame::IsWordIsogram(FString Word) const
+bool FBullCowGame::IsWordIsogram(const FString& Word) const
 {
 	if (Word.length() <= 1) { return true; }
 	TMap<char, bool> LetterSeen;
@@ -279,7 +278,7 @@ bool FBullCowGame::IsWordIsogram(FString Word) const
 	return true;
 }
 
-bool FBullCowGame::IsWordAlpha(FString Word) const
+bool FBullCowGame::IsWordAlpha(const FString& Word) const
 {
 	for (int32 WordChar = 0; WordChar < int32(Word.length()); WordChar++)
 	{
