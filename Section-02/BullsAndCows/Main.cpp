@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.56
+	Jan.2016 pre-release version 0.9.56a
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -50,16 +50,17 @@ using FText = std::string;
 using int32 = int;
 
 // Function prototypes, as outside class:
-void PrintRoundIntro();
-FText GetValidGuess();
-bool bCowHints = true;
 bool bBullHints = true;
-bool bHashHints = true; // TODO set this to false for release
+bool bCowHints = true;
+bool bHashHints = false;
 bool bAskToPlayAgain();
-void PrintPhaseSummary();
+FText GetValidGuess();
 void MasterControlProgram();
+void PrintPhaseSummary();
+void PrintRoundIntro();
+void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess);
+void PrintWelcome();
 void SpamNewline(const int32 Repeats);
-void PrintTurnSummary(FBullCowCounts BullCowCounts, FString& Guess);
 
 // Instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
@@ -67,21 +68,7 @@ FBullCowGame BCGame;
 // The entry-point for the applciation:
 int main()
 {
-	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.552";
-	SpamNewline(SPAM_SPAN);
-	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
-	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
-	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
-	std::cout << "Your mission, should you choose to accept it, is to guess an isogram*.\n\n";
-	std::cout << " * An isogram is a word comprised of unique letters, for example:\n";
-	std::cout << "     - step: is an isogram, each letter is unique in the word\n";
-	std::cout << "     - book: is NOT an isogram; it contains two 'o's\n\n";
-	std::cout << "How to win: After you enter a guess, you will be awarded Bulls and Cows.\n";
-	std::cout << "Guessing a correct letter in the correct position is worth one Bull, while a\n";
-	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
-	std::cout << "determine your next guess.\n";
-
+	PrintWelcome();
 	do { MasterControlProgram(); } while (bAskToPlayAgain());
 
 	// "End of line." -- program execution complete --
@@ -103,6 +90,24 @@ void MasterControlProgram()
 	}
 	PrintPhaseSummary();
 	return;
+}
+
+void PrintWelcome()
+{
+	constexpr int32 SPAM_SPAN = 72;
+	std::cout << "Version 0.9.552";
+	SpamNewline(SPAM_SPAN);
+	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
+	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
+	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n\n";
+	std::cout << "Your mission, should you choose to accept it, is to guess an isogram*.\n\n";
+	std::cout << " * An isogram is a word comprised of unique letters, for example:\n";
+	std::cout << "     - step: is an isogram, each letter is unique in the word\n";
+	std::cout << "     - book: is NOT an isogram; it contains two 'o's\n\n";
+	std::cout << "How to win: After you enter a guess, you will be awarded Bulls and Cows.\n";
+	std::cout << "Guessing a correct letter in the correct position is worth one Bull, while a\n";
+	std::cout << "correct letter in the wrong position adds one Cow. Use these clues to help\n";
+	std::cout << "determine your next guess.\n";
 }
 
 // Output - Print game introduction, instruction and status text:
@@ -152,7 +157,7 @@ FText GetValidGuess()
 }
 
 // Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FBullCowCounts BullCowCounts, FString& Guess)
+void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
 {
 
 	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has:\n";
@@ -196,32 +201,14 @@ bool bAskToPlayAgain()
 {
 	FText Responce = "";
 
-	if (bBullHints)
-	{
-		std::cout << std::endl << "[Options: B -#- Bulls, ";
-	}
-	else
-	{
-		std::cout << std::endl << "[Options: B abc Bulls, ";
-	}
+	if (bBullHints)	{ std::cout << std::endl << "[Options: B -#- Bulls, "; }
+	else { std::cout << std::endl << "[Options: B abc Bulls, "; }
 
-	if (bCowHints)
-	{
-		std::cout << "C -#- Cows, ";
-	}
-	else
-	{
-		std::cout << "C abc Cows, ";
-	}
+	if (bCowHints) { std::cout << "C -#- Cows, "; }
+	else { std::cout << "C abc Cows, "; }
 
-	if (bHashHints)
-	{
-		std::cout << "H chuck Hashtips] Continue playing? Y/n ";
-	}
-	else
-	{
-		std::cout << "H add meaty Hashtips] Continue playing? Y/n ";
-	}
+	if (bHashHints)	{std::cout << "H chuck Hashtips] Continue playing? Y/n "; }
+	else { std::cout << "H add meaty Hashtips] Continue playing? Y/n "; }
 
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'n') || (Responce[0] == 'N')) { return false; }
