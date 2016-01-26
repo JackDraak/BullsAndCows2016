@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.551
+	Jan.2016 pre-release version 0.9.552
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -27,6 +27,7 @@
 			- Hits, Misses & Near Misses
 			- Player rank, from level 1-10
 			- Get awarded arbitrary "Points" for each win!
+			- 515 Functions behind the scenes!
 
 		Feedback Requests:
 			- Game tuning
@@ -107,12 +108,13 @@ void MasterControlProgram()
 // Output - Print game introduction, instruction and status text:
 void PrintRoundIntro()
 {
-	std::cout << "\nThis round you need to earn " << BCGame.GetIsogram().length() << " Bulls with one of your guesses to win. Good luck!\n";
-	std::cout << " /\\   /\\  |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
-	std::cout << " \\ \\_/ /  |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
-	std::cout << " ( .^. )  |                      Near Misses : " << BCGame.GetMisses() << "\n";
-	std::cout << "  \\ _ /   | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
-	std::cout << "   (_)    |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
+	std::cout << "\nA secret " << BCGame.GetIsogram().length() << "-letter isogram has been slected just for you... Therefore,";
+	std::cout << "\nThis round you'll need to earn " << BCGame.GetIsogram().length() << " Bulls in one guess to win. Good luck!\n\n";
+	std::cout << " |  /\\   /\\  |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
+	std::cout << " |  \\ \\_/ /  |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
+	std::cout << " |  ( .^. )  |                      Near Misses : " << BCGame.GetMisses() << "\n";
+	std::cout << " |   \\ _ /   | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
+	std::cout << " |    (_)    |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
 
 // I/O - Get a valid guess from the player, loop until satisfied:
