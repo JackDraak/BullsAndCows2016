@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.56
+	Jan.2016 pre-release version 0.9.57
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -18,23 +18,23 @@
 using int32 = int;
 
 FBullCowGame::FBullCowGame()                    { FBullCowGame::Reset(); }
-int32 FBullCowGame::GetWins() const             { return MyWins; }
-int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
-int32 FBullCowGame::GetCows() const             { return MyTotalCow; }
 int32 FBullCowGame::GetBulls() const            { return MyTotalBull; }
-int32 FBullCowGame::GetLevel() const            { return MyLevel; }
-int32 FBullCowGame::GetScore() const            { return MyScore; }
-int32 FBullCowGame::GetMisses() const           { return MyMisses; }
-bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
+int32 FBullCowGame::GetCows() const             { return MyTotalCow; }
 int32 FBullCowGame::GetDefeats() const          { return MyDefeats; }
 FString FBullCowGame::GetGuess() const          { return MyGuess; }
 FString FBullCowGame::GetIsogram() const        { return MyIsogram; }
-void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; return; }
+int32 FBullCowGame::GetLevel() const            { return MyLevel; }
+int32 FBullCowGame::GetMisses() const           { return MyMisses; }
+int32 FBullCowGame::GetScore() const            { return MyScore; }
+int32 FBullCowGame::GetTurn() const             { return MyCurrentTurn; }
+int32 FBullCowGame::GetWins() const             { return MyWins; }
+bool FBullCowGame::IsPhaseWon() const           { return bGuessMatches; }
 void FBullCowGame::IncrementDefeats()           { MyDefeats++; return; }
+void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::IncrementMisses()            { MyMisses++; return; }
 void FBullCowGame::IncrementWins()              { MyWins++; return; }
-void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
+void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; return; }
 
 // ensure the entered guess is alphabetic, isogram & correct # of letters
 EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
