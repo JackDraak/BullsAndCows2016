@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.532
+	Jan.2016 pre-release version 0.9.55
 
 	This header file is included by both:
 		Main.cpp
@@ -40,8 +40,7 @@ enum class EGuessStatus
 };
 
 class FBullCowGame {
-	std::mt19937 engine = std::mt19937{ 1729 }; //seeded using number for debugging. Expected results - bale, locks....
-												//seed with std::random_device{}() for proper randomness
+	std::mt19937 engine = std::mt19937{ std::random_device{}() }; //seed with std::random_device{}() for proper randomness
 public:
 	//constructors
 	FBullCowGame();

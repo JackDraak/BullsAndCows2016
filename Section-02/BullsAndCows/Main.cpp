@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.532
+	Jan.2016 pre-release version 0.9.55
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -53,11 +53,12 @@ void PrintRoundIntro();
 FText GetValidGuess();
 bool bCowHints = true;
 bool bBullHints = true;
+bool bHashHints = true; // TODO set this to false for release
 bool bAskToPlayAgain();
 void PrintPhaseSummary();
 void MasterControlProgram();
 void SpamNewline(int32 Repeats);
-void PrintTurnSummary(FBullCowCounts);
+void PrintTurnSummary(FBullCowCounts, FString Guess);
 
 // Instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
@@ -66,7 +67,7 @@ FBullCowGame BCGame;
 int main()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.531";
+	std::cout << "Version 0.9.55";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -96,7 +97,7 @@ void MasterControlProgram()
 	{
 		FText Guess = GetValidGuess();
 		FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(Guess);
-		PrintTurnSummary(BullCowCounts);
+		PrintTurnSummary(BullCowCounts, Guess);
 		BCGame.IncrementTry();
 	}
 	PrintPhaseSummary();
@@ -149,20 +150,20 @@ FText GetValidGuess()
 }
 
 // Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FBullCowCounts BullCowCounts)
+void PrintTurnSummary(FBullCowCounts BullCowCounts, FString Guess)
 {
-	FString Guess = BCGame.GetGuess();
 
-	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has ";
-	if (!bBullHints) { std::cout << BullCowCounts.Bulls << " Bulls and "; }
-	else { std::cout << "-" << BullCowCounts.Bulltips << "- Bulls and "; }
+	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has:\n";
+	if (!bBullHints) { std::cout << "Bulltips: " << BullCowCounts.Bulls << "\n"; }
+	else if (bBullHints) { std::cout << "Bulltips: -" << BullCowCounts.Bulltips << "-\n"; }
 
-	std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end());
+	std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end()); // shuffle Cows
 
-	if (!bCowHints) { std::cout << BullCowCounts.Cows << " Cows\n"; }
-	else { std::cout << "-" << BullCowCounts.Cowtips << "- Cows\n "; }
+	if (!bCowHints) { std::cout << "Cowtips: " << BullCowCounts.Cows << "\n"; }
+	else if (bCowHints) { std::cout << "Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
 
-	std::cout << "Hashtip: `" << BullCowCounts.Hashtips << "`\n";  //TODO better placement of the tip
+	if (!bHashHints) { std::cout << "\n"; }
+	else if (bHashHints) { std::cout << "Hashtips: `" << BullCowCounts.Hashtips << "`\n"; }
 }
 
 // Output - Game-Phase (Round) Summary generated here:
@@ -193,26 +194,39 @@ void PrintPhaseSummary()
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-	if (bBullHints && !bCowHints)
+
+	if (bBullHints)
 	{
-		std::cout << std::endl << "[B de-activate Bulltips, C activate specific Cowtips] Continue playing? Y/n ";
+		std::cout << std::endl << "B Bulltips off -- ";
 	}
-	else if (bBullHints && bCowHints)
+	else
 	{
-		std::cout << std::endl << "[B or C to turn -specific- hints OFF] Continue playing? Y/n ";
+		std::cout << std::endl << "B Bulltips on -- ";
 	}
-	else if (!bBullHints && bCowHints)
+
+	if (bCowHints)
 	{
-		std::cout << std::endl << "[B activate specific Bulltips, C de-activate Cowtips] Continue playing? Y/n ";
+		std::cout << "C Cowtips off -- ";
 	}
-	else // Default case: if (!bBullHints && !bCowHints)
+	else
 	{
-		std::cout << std::endl << "[B or C to turn -specific- hints ON] Continue playing? Y/n ";
+		std::cout << "C Cowtips on -- ";
 	}
+
+	if (bHashHints)
+	{
+		std::cout << "H Hashtips off... Continue playing? Y/n ";
+	}
+	else
+	{
+		std::cout << "H Hashtips on... Continue playing? Y/n ";
+	}
+
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'n') || (Responce[0] == 'N')) { return false; }
 	else if ((Responce[0] == 'b') || (Responce[0] == 'B')) { bBullHints = !bBullHints; }
 	else if ((Responce[0] == 'c') || (Responce[0] == 'C')) { bCowHints = !bCowHints; }
+	else if ((Responce[0] == 'h') || (Responce[0] == 'H')) { bHashHints = !bHashHints; }
 	return true;
 }
 

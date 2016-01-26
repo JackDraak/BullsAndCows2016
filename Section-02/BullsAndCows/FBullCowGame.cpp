@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.532
+	Jan.2016 pre-release version 0.9.55
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -107,7 +107,7 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	return BullCowCounts;
 }
 
-// TODO return different Map depending on Player-selected difficulty setting
+// TODO ?return different Map depending on Player-selected difficulty setting?
 // game [DIFFICULTY Tuning: Part C] here: tune the number of guesses a player is given in relation to word-length
 int32 FBullCowGame::GetMaxTries() const
 {
@@ -166,6 +166,8 @@ FString FBullCowGame::SelectIsogramForLevel()
 	int32 RandomIndex = IndexDist(engine);
 	int32 ThisWindow = WindowDist(engine);
 	int32 ThisWordLevel = MyLevel + ThisWindow;
+	if (ThisWordLevel < 0) { ThisWordLevel = 0; }
+	else if (ThisWordLevel > 9) { ThisWordLevel = 9; }
 
 	FString Words_0[INDEX_DEPTH] = { 
 		"sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
@@ -225,8 +227,6 @@ FString FBullCowGame::SelectIsogramForLevel()
 		"draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" 
 	};
 	
-	if (ThisWordLevel < 0) { ThisWordLevel = 0; }
-	else if (ThisWordLevel > 9) { ThisWordLevel = 9; }
 	switch (ThisWordLevel)
 	{
 	case 0:
