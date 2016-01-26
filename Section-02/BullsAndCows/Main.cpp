@@ -162,8 +162,7 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts, FString Guess)
 	if (!bCowHints) { std::cout << "Cowtips: " << BullCowCounts.Cows << "\n"; }
 	else if (bCowHints) { std::cout << "Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
 
-	if (!bHashHints) { std::cout << "\n"; }
-	else if (bHashHints) { std::cout << "Hashtips: `" << BullCowCounts.Hashtips << "`\n"; }
+	if (bHashHints) { std::cout << "Hashtips: `" << BullCowCounts.Hashtips << "`\n"; }
 }
 
 // Output - Game-Phase (Round) Summary generated here:
@@ -197,29 +196,29 @@ bool bAskToPlayAgain()
 
 	if (bBullHints)
 	{
-		std::cout << std::endl << "B Bulltips off -- ";
+		std::cout << std::endl << "[Options: B -#- Bulls, ";
 	}
 	else
 	{
-		std::cout << std::endl << "B Bulltips on -- ";
+		std::cout << std::endl << "[Options: B abc Bulls, ";
 	}
 
 	if (bCowHints)
 	{
-		std::cout << "C Cowtips off -- ";
+		std::cout << "C -#- Cows, ";
 	}
 	else
 	{
-		std::cout << "C Cowtips on -- ";
+		std::cout << "C abc Cows, ";
 	}
 
 	if (bHashHints)
 	{
-		std::cout << "H Hashtips off... Continue playing? Y/n ";
+		std::cout << "H chuck Hashtips] Continue playing? Y/n ";
 	}
 	else
 	{
-		std::cout << "H Hashtips on... Continue playing? Y/n ";
+		std::cout << "H add meaty Hashtips] Continue playing? Y/n ";
 	}
 
 	std::getline(std::cin, Responce);
