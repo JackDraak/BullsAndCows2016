@@ -60,6 +60,7 @@ public:
 	int32 GetWins() const;
 	int32 GetCows() const;
 
+	std::mt19937& GetEngine();
 	FBullCowCounts ProcessValidGuess(const FString&);
 	FString SelectIsogramForLevel();
 	void IncrementDefeats();
@@ -88,5 +89,5 @@ private:
 
 	bool IsWordAlpha(const FString&) const;
 	bool IsWordIsogram(const FString&) const;
-	int32 PositiveExponentResult(int32 Base, const int32& Exponent);
+	int32 PositiveExponentResult(int32 Base, const int32 Exponent);
 };

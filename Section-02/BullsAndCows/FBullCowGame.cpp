@@ -74,7 +74,6 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					BullCowCounts.Hashtips[GameWordCharPosition] = LbChar;
 				}
 			}
 		}
@@ -254,6 +253,11 @@ FString FBullCowGame::SelectIsogramForLevel()
 	return MyIsogram; // BREAKPOINT here to view secret game word
 }
 
+std::mt19937& FBullCowGame::GetEngine()
+{
+	return engine;
+}
+
 bool FBullCowGame::IsWordIsogram(const FString& Word) const
 {
 	if (Word.length() <= 1) { return true; }
@@ -279,7 +283,7 @@ bool FBullCowGame::IsWordAlpha(const FString& Word) const
 	return true; 
 }
 
-int32 FBullCowGame::PositiveExponentResult(int32 Base, const int32& Exponent)
+int32 FBullCowGame::PositiveExponentResult(int32 Base, const int32 Exponent)
 {
 	if (Exponent < 1) { return 1; }
 	int32 BaseCopy = Base;

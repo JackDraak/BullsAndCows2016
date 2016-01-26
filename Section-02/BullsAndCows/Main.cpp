@@ -58,7 +58,7 @@ FText GetValidGuess();
 void MasterControlProgram();
 void PrintPhaseSummary();
 void PrintRoundIntro();
-void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess);
+void PrintTurnSummary(FBullCowCounts& BullCowCounts, const FString& Guess);
 void PrintWelcome();
 void SpamNewline(const int32 Repeats);
 
@@ -157,17 +157,17 @@ FText GetValidGuess()
 }
 
 // Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
+void PrintTurnSummary(FBullCowCounts& BullCowCounts, const FString& Guess)
 {
 
 	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has:\n";
 	if (!bBullHints) { std::cout << "Bulltips: " << BullCowCounts.Bulls << "\n"; }
 	else if (bBullHints) { std::cout << "Bulltips: -" << BullCowCounts.Bulltips << "-\n"; }
 
-	std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end()); // shuffle Cows
+	std::shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end(), BCGame.GetEngine()); // shuffle Cows
 
-	if (!bCowHints) { std::cout << " Cowtips: " << BullCowCounts.Cows << "\n"; }
-	else if (bCowHints) { std::cout << " Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
+	if (!bCowHints) { std::cout << "Cowtips: " << BullCowCounts.Cows << "\n"; }
+	else if (bCowHints) { std::cout << "Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
 
 	if (bHashHints) { std::cout << "Hashtips: `" << BullCowCounts.Hashtips << "`\n"; }
 }
