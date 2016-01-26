@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.52
+	Jan.2016 pre-release version 0.9.56
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -36,7 +36,7 @@ void FBullCowGame::IncrementWins()              { MyWins++; return; }
 void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 
-// ensure the entered guess is alphabetic, correct # of letters & is an isogram
+// ensure the entered guess is alphabetic, isogram & correct # of letters
 EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
 {
 	if (!IsWordAlpha(Guess))                       { return EGuessStatus::Not_Alpha; }
@@ -45,24 +45,22 @@ EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
 	else                                           { return EGuessStatus::OK; }
 }
 
-// upon reciept of a valid* guess, increments turn and returns count
+// upon reciept of a valid* guess, updates Bull and Cow counts + tips
 FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 {
 	constexpr char LbChar = '#';
 	FBullCowCounts BullCowCounts;
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
-	//populate Hashtips with the correct amount of '#'
-	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
 
-	// Tally Bulls and Cows, now with tips
+	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
 		for (int32 GuessCharPosition = 0; GuessCharPosition < GameWordLength; GuessCharPosition++)
 		{
-			char GameWordChar = MyIsogram[GameWordCharPosition];
-			char GuessWordChar = tolower(Guess[GuessCharPosition]);
-			if (GuessWordChar == GameWordChar)
+			const char GameWordChar = MyIsogram[GameWordCharPosition];
+			const char GuessWordChar = tolower(Guess[GuessCharPosition]);
+			if (GameWordChar == GuessWordChar)
 			{
 				if (GameWordCharPosition == GuessCharPosition)
 				{
@@ -71,12 +69,12 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 					BullCowCounts.Bulltips.append(1, GameWord[GameWordCharPosition]);
 					BullCowCounts.Hashtips[GameWordCharPosition] = GameWord[GameWordCharPosition];
 				}
-				else
+				else if (GameWordCharPosition != GuessCharPosition)
 				{
 					MyTotalCow++;
 					BullCowCounts.Cows++;
 					BullCowCounts.Cowtips.append(1, GameWord[GameWordCharPosition]);
-					BullCowCounts.Hashtips[GameWordCharPosition] = '*';
+					BullCowCounts.Hashtips[GameWordCharPosition] = LbChar;
 				}
 			}
 		}
@@ -86,13 +84,13 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	{
 		// game [DIFFICULTY Tuning: Part A] here: higher scores = more rapid advancement in levels
 		constexpr int32 SF_ONE_A = 10; // must be >0
-		constexpr int32 SF_ONE_B = 2; // exponent in Level^N
+		constexpr int32 SF_ONE_B = 2; // as exponent in Level^N
 		int32 ScoreFac1 = SF_ONE_A * PositiveExponentResult(MyLevel +1, SF_ONE_B);
-		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn;
-		int32 Score = ScoreFac1 * (ScoreFac2 +1);
+		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn +1;
+		int32 Score = ScoreFac1 * ScoreFac2;
 		FBullCowGame::ScoreUp(Score);
 
-		// game [DIFFICULTY Tuning: Part B] can be acomplished here: set thresholds to gain levels
+		// game [DIFFICULTY Tuning: Part B] here: set benchmarks to gain levels
 		if (MyLevel == 0 && MyScore > 100) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 1 && MyScore > 300) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 2 && MyScore > 1000) { FBullCowGame::LevelUp(); }
@@ -108,7 +106,6 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	return BullCowCounts;
 }
 
-// TODO return different Map depending on Player-selected difficulty setting
 // game [DIFFICULTY Tuning: Part C] here: tune the number of guesses a player is given in relation to word-length
 int32 FBullCowGame::GetMaxTries() const
 {
@@ -140,6 +137,11 @@ void FBullCowGame::Reset()
 	MyCurrentTurn = 1;
 	MyGuess = "";
 
+	do
+	{
+		bGameWordIsIsogram = IsWordIsogram(SelectIsogramForLevel());
+	} while (!bGameWordIsIsogram);
+
 	if (!bDoneOnce)
 	{
 		MyWins = 0;
@@ -151,23 +153,20 @@ void FBullCowGame::Reset()
 		MyTotalBull = 0;
 		bDoneOnce = true;
 	}
-
-	do
-	{
-		//FString MyGameWord = SelectIsogramForLevel(); TODO cleanup
-		bGameWordIsIsogram = IsWordIsogram(SelectIsogramForLevel());
-	} while (!bGameWordIsIsogram);
 	return;
 }
 
 FString FBullCowGame::SelectIsogramForLevel()
 {
-	constexpr int32 INDEX_DEPTH = 30; // UPDATE if modified: Each Word-row must grow at the same time to length INDEX_DEPTH
-	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1); //using uniform dist instead of srand for better randomness
-	std::uniform_int_distribution<> WindowDist(-1, 1);			   //distribution range in inclusive
-	int32 RandomIndex = IndexDist(engine); //uses the random engine within the distribution to get a number
-	int32 ThisWindow = WindowDist(engine); // --
+	constexpr int32 INDEX_DEPTH = 30;
+	constexpr int32 MAX_PLAYER_LEVEL = 10;
+	std::uniform_int_distribution<> WindowDist(-1, 1);
+	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1);
+	int32 RandomIndex = IndexDist(engine);
+	int32 ThisWindow = WindowDist(engine);
 	int32 ThisWordLevel = MyLevel + ThisWindow;
+	if (ThisWordLevel < 0) { ThisWordLevel = 0; }
+	else if (ThisWordLevel > MAX_PLAYER_LEVEL -1) { ThisWordLevel = MAX_PLAYER_LEVEL -1; }
 
 	FString Words_0[INDEX_DEPTH] = { 
 		"sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
@@ -227,8 +226,6 @@ FString FBullCowGame::SelectIsogramForLevel()
 		"draughtswomen", "flowchartings", "lycanthropies", "pneumogastric", "salpingectomy", "subordinately" 
 	};
 	
-	if (ThisWordLevel < 0) { ThisWordLevel = 0; }
-	else if (ThisWordLevel > 9) { ThisWordLevel = 9; }
 	switch (ThisWordLevel)
 	{
 	case 0:
@@ -282,7 +279,7 @@ bool FBullCowGame::IsWordAlpha(const FString& Word) const
 	return true; 
 }
 
-int32 FBullCowGame::PositiveExponentResult(int32 Base, int32 Exponent)
+int32 FBullCowGame::PositiveExponentResult(int32 Base, const int32& Exponent)
 {
 	if (Exponent < 1) { return 1; }
 	int32 BaseCopy = Base;
