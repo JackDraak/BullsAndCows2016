@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.57
+	Jan.2016 pre-release version 0.9.57a
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -117,6 +117,7 @@ void PrintWelcome()
 	std::cout << " * An isogram is a word comprised of unique letters, for example:\n";
 	std::cout << "     - step: is an isogram, each letter is unique in the word\n";
 	std::cout << "     - book: is NOT an isogram; it contains two 'o's\n";
+	return;
 }
 
 // Output - Print new phase intro:
@@ -124,6 +125,7 @@ void PrintPhaseIntro()
 {
 	std::cout << "\nA secret " << BCGame.GetIsogram().length() << "-letter isogram has been selected just for you... Therefore,";
 	std::cout << "\nThis round you'll need to earn " << BCGame.GetIsogram().length() << " Bulls in one guess to win. Good luck!\n";
+	return;
 }
 
 // Output - Print game status (scores) text:
@@ -134,6 +136,7 @@ void PrintStats()
 	std::cout << "  |   ( .^. )   |                      Near Misses : " << BCGame.GetMisses() << "\n";
 	std::cout << "  |    \\ _ /    | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() + 1 << ") " << BCGame.GetScore() << "\n";
 	std::cout << "  |     (_)     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
+	return;
 }
 
 // I/O - Get a valid guess from the player, loop until satisfied:
@@ -173,7 +176,6 @@ FText GetValidGuessFromPlayer()
 // Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
 void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
 {
-
 	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has:\n";
 	if (!bBullHints) { std::cout << "Bulltips: " << BullCowCounts.Bulls << "\n"; }
 	else if (bBullHints) { std::cout << "Bulltips: -" << BullCowCounts.Bulltips << "-\n"; }
@@ -184,6 +186,7 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
 	else if (bCowHints) { std::cout << " Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
 
 	if (bHashHints) { std::cout << "Hashtips: `" << BullCowCounts.Hashtips << "`\n"; }
+	return;
 }
 
 // Output - Game-Phase (Round) Summary generated here:
@@ -210,11 +213,10 @@ void PrintPhaseSummary()
 	return;
 }
 
-// I/O - Determine if the player wants to continue playing, and/or toggle hints:
+// I/O - Determine if the player wants to continue playing, and/or toggle options:
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-
 	if (bBullHints)	{ std::cout << std::endl << "Options: You can select a single option this turn --\nHint Options: (B)ulls as numbers, "; }
 	else { std::cout << std::endl << "Options: You can select a single option this turn --\nHint Options: (B)ulls as letters, "; }
 
@@ -231,13 +233,33 @@ bool bAskToPlayAgain()
 	else if ((Responce[0] == 'h') || (Responce[0] == 'H')) { bHashHints = !bHashHints; }
 	else if ((Responce[0] == 'r') || (Responce[0] == 'R')) { PrintWelcome(); }
 	else if ((Responce[0] == 'd') || (Responce[0] == 'D')) { PrintHelp(); }
-
 	return true;
 }
 
-void PrintHelp () // TODO put some meat on these bones!
+// Output - Print extended help information:
+void PrintHelp ()
 {
-	std::cout << "\nTBD: Write an expanded help text.\n";
+	//presently covers the interactive help system
+	std::cout << "\n";
+	std::cout << "The 'interactive hint system' has been designed to try to give you help the way\n";
+	std::cout << "you want it, because each player will desire a different level of difficulty.\n";
+	std::cout << "The default is to provide no `Hashtip`, but Bull and Cow hints are provided as\n";
+	std::cout << "specific letters. The meaning of these hints is illustrated here:\n";
+	std::cout << "\n";
+	std::cout << "Secret word: `veil`, If you guess: `vane', the hint responces will be:\n"; 
+	std::cout << "Bulls -v- and Cows -e-, indicating the V of the guess was a correct letter in\n";
+	std::cout << "the correct position (1st letter) while the E does appear in the secret word,\n";
+	std::cout << "but *not* in the 4th position and is therefore counted a Cow.\n";
+	std::cout << "\n";
+	std::cout << "You may chose to make the game more difficult by getting either or both of the\n";
+	std::cout << "Bull and Cow hints as only numbers. In other words, given the secret and guess\n"; 
+	std::cout << "above, the hint is Bulls:1, Cows:1.  Helpful, but much less than the letters.\n"; 
+	std::cout << "\n";
+	std::cout << "You may also select the `Hashtips` when options are available between words,\n";
+	std::cout << "to give an additional line of output with your result. In the example above,\n";
+	std::cout << "the Hastip would be `v###`. Perhaps seeing the letters in their proper places\n";
+	std::cout << "will help you think of a next guess! Good luck, and Thank You for playing!\n";
+	return;
 }
 
 // Output - Repeat `X` newlines out to the console:
