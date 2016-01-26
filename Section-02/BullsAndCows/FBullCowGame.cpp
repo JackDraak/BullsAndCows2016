@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.551
+	Jan.2016 pre-release version 0.9.56
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -36,7 +36,7 @@ void FBullCowGame::IncrementWins()              { MyWins++; return; }
 void FBullCowGame::IncrementTry()               { MyCurrentTurn++; return; }
 void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 
-// ensure the entered guess is alphabetic, correct # of letters & is an isogram
+// ensure the entered guess is alphabetic, isogram & correct # of letters
 EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
 {
 	if (!IsWordAlpha(Guess))                       { return EGuessStatus::Not_Alpha; }
@@ -53,7 +53,6 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	FString GameWord = MyIsogram;
 	int32 GameWordLength = MyIsogram.length();
 
-	// Tally Bulls and Cows, now with tips
 	BullCowCounts.Hashtips = std::string(GameWordLength, LbChar);
 	for (int32 GameWordCharPosition = 0; GameWordCharPosition < GameWordLength; GameWordCharPosition++)
 	{
@@ -87,11 +86,11 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 		constexpr int32 SF_ONE_A = 10; // must be >0
 		constexpr int32 SF_ONE_B = 2; // as exponent in Level^N
 		int32 ScoreFac1 = SF_ONE_A * PositiveExponentResult(MyLevel +1, SF_ONE_B);
-		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn;
-		int32 Score = ScoreFac1 * (ScoreFac2 +1);
+		int32 ScoreFac2 = FBullCowGame::GetMaxTries() - MyCurrentTurn +1;
+		int32 Score = ScoreFac1 * ScoreFac2;
 		FBullCowGame::ScoreUp(Score);
 
-		// game [DIFFICULTY Tuning: Part B] can be acomplished here: set thresholds to gain levels
+		// game [DIFFICULTY Tuning: Part B] here: set benchmarks to gain levels
 		if (MyLevel == 0 && MyScore > 100) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 1 && MyScore > 300) { FBullCowGame::LevelUp(); }
 		else if (MyLevel == 2 && MyScore > 1000) { FBullCowGame::LevelUp(); }
@@ -107,7 +106,6 @@ FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
 	return BullCowCounts;
 }
 
-// TODO ?return different Map depending on Player-selected difficulty setting?
 // game [DIFFICULTY Tuning: Part C] here: tune the number of guesses a player is given in relation to word-length
 int32 FBullCowGame::GetMaxTries() const
 {
@@ -161,13 +159,14 @@ void FBullCowGame::Reset()
 FString FBullCowGame::SelectIsogramForLevel()
 {
 	constexpr int32 INDEX_DEPTH = 30;
-	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1);
+	constexpr int32 MAX_PLAYER_LEVEL = 10;
 	std::uniform_int_distribution<> WindowDist(-1, 1);
+	std::uniform_int_distribution<> IndexDist(0, INDEX_DEPTH - 1);
 	int32 RandomIndex = IndexDist(engine);
 	int32 ThisWindow = WindowDist(engine);
 	int32 ThisWordLevel = MyLevel + ThisWindow;
 	if (ThisWordLevel < 0) { ThisWordLevel = 0; }
-	else if (ThisWordLevel > 9) { ThisWordLevel = 9; }
+	else if (ThisWordLevel > MAX_PLAYER_LEVEL -1) { ThisWordLevel = MAX_PLAYER_LEVEL -1; }
 
 	FString Words_0[INDEX_DEPTH] = { 
 		"sand", "pair", "raid", "care", "sock", "fair", "hair", "land", "walk", "talk",
@@ -280,7 +279,7 @@ bool FBullCowGame::IsWordAlpha(const FString& Word) const
 	return true; 
 }
 
-int32 FBullCowGame::PositiveExponentResult(int32 Base, int32 Exponent)
+int32 FBullCowGame::PositiveExponentResult(int32 Base, const int32& Exponent)
 {
 	if (Exponent < 1) { return 1; }
 	int32 BaseCopy = Base;

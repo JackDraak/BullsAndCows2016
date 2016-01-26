@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.552a
+	Jan.2016 pre-release version 0.9.56
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -58,8 +58,8 @@ bool bHashHints = true; // TODO set this to false for release
 bool bAskToPlayAgain();
 void PrintPhaseSummary();
 void MasterControlProgram();
-void SpamNewline(int32 Repeats);
-void PrintTurnSummary(FBullCowCounts, FString Guess);
+void SpamNewline(const int32 Repeats);
+void PrintTurnSummary(FBullCowCounts BullCowCounts, FString& Guess);
 
 // Instantiate a new game named BCGame, which is recycled through each turn and round (or phase):
 FBullCowGame BCGame;
@@ -152,7 +152,7 @@ FText GetValidGuess()
 }
 
 // Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FBullCowCounts BullCowCounts, FString Guess)
+void PrintTurnSummary(FBullCowCounts BullCowCounts, FString& Guess)
 {
 
 	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has:\n";
@@ -161,8 +161,8 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts, FString Guess)
 
 	std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end()); // shuffle Cows
 
-	if (!bCowHints) { std::cout << "Cowtips: " << BullCowCounts.Cows << "\n"; }
-	else if (bCowHints) { std::cout << "Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
+	if (!bCowHints) { std::cout << " Cowtips: " << BullCowCounts.Cows << "\n"; }
+	else if (bCowHints) { std::cout << " Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
 
 	if (bHashHints) { std::cout << "Hashtips: `" << BullCowCounts.Hashtips << "`\n"; }
 }
@@ -232,7 +232,7 @@ bool bAskToPlayAgain()
 }
 
 // Output - Spam `X` newlines at the console. Go figure:
-void SpamNewline(int32 Repeats)
+void SpamNewline(const int32 Repeats)
 {
 	int32 LoopNumber = 0;
 	if (Repeats >= 1)

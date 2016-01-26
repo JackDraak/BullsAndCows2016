@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.551
+	Jan.2016 pre-release version 0.9.56
 
 	This header file is included by both:
 		Main.cpp
@@ -40,7 +40,8 @@ enum class EGuessStatus
 };
 
 class FBullCowGame {
-	std::mt19937 engine = std::mt19937{ std::random_device{}() }; //seed with std::random_device{}() for proper randomness
+	std::mt19937 engine = std::mt19937{ std::random_device{}() }; //seed with `std::random_device{}()` for proper randomness
+
 public:
 	//constructors
 	FBullCowGame();
@@ -87,5 +88,5 @@ private:
 
 	bool IsWordAlpha(const FString&) const;
 	bool IsWordIsogram(const FString&) const;
-	int32 PositiveExponentResult(int32 Base, int32 Exponent);
+	int32 PositiveExponentResult(int32 Base, const int32& Exponent);
 };
