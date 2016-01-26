@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.56a
+	Jan.2016 pre-release version 0.9.56b
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -13,21 +13,23 @@
 	designed to provide increasingly difficult challenges to one
 	or more players working co-oepratively.
 
+	TODO: head-to-head or other competetive modes
+
 	Special Features Include:
 		300 word isogram dictionary 
 			- Split into 10 levels of difficulty
 			- New "Word-Windowing" technology to keep the player on their toes
 			  (challenge-word level = player level, window: +/- 1)
-		Customizable help levels
-			- toggle specific or general Bulltips
-			- toggle specific or general Cowtips
-			- Work in Progress: Hashtips
+		Interactive hint system
+			- toggle specific or general Bulltips (hints as letters or numbers)
+			- toggle specific or general Cowtips (hints as letters or numbers)
+			- toggle Hashtips (reveals which actual positions the Bulls reside in)
 		Stats Galore
 			- #'s of Cow and Bull awards
 			- Hits, Misses & Near Misses
 			- Player rank, from level 1-10
-			- Get awarded arbitrary "Points" for each win!
-			- 515 Functions behind the scenes!
+			- Get awarded massive arbitrary "Points" for each win!
+			- 516 Functions behind the scenes!
 
 		Feedback Requests:
 			- Game tuning
@@ -57,7 +59,8 @@ bool bAskToPlayAgain();
 FText GetValidGuess();
 void MasterControlProgram();
 void PrintPhaseSummary();
-void PrintRoundIntro();
+void PrintPhaseIntro();
+void PrintStats();
 void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess);
 void PrintWelcome();
 void SpamNewline(const int32 Repeats);
@@ -80,11 +83,12 @@ int main()
 void MasterControlProgram()
 {
 	BCGame.Reset();
-	PrintRoundIntro();
+	PrintPhaseIntro();
 	while (!BCGame.IsPhaseWon() && BCGame.GetTurn() <= BCGame.GetMaxTries())
 	{
 		FText Guess = GetValidGuess();
 		FBullCowCounts BullCowCounts = BCGame.ProcessValidGuess(Guess);
+		PrintStats();
 		PrintTurnSummary(BullCowCounts, Guess);
 		BCGame.IncrementTry();
 	}
@@ -92,10 +96,11 @@ void MasterControlProgram()
 	return;
 }
 
+// Output - Print game introduction & instruction
 void PrintWelcome()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.552";
+	std::cout << "Version 0.9.56b";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -110,16 +115,21 @@ void PrintWelcome()
 	std::cout << "determine your next guess.\n";
 }
 
-// Output - Print game introduction, instruction and status text:
-void PrintRoundIntro()
+// Output - Print new phase intro:
+void PrintPhaseIntro()
 {
 	std::cout << "\nA secret " << BCGame.GetIsogram().length() << "-letter isogram has been selected just for you... Therefore,";
-	std::cout << "\nThis round you'll need to earn " << BCGame.GetIsogram().length() << " Bulls in one guess to win. Good luck!\n\n";
-	std::cout << " |  /\\   /\\  |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
-	std::cout << " |  \\ \\_/ /  |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
-	std::cout << " |  ( .^. )  |                      Near Misses : " << BCGame.GetMisses() << "\n";
-	std::cout << " |   \\ _ /   | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() +1 << ") " << BCGame.GetScore() << "\n";
-	std::cout << " |    (_)    |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
+	std::cout << "\nThis round you'll need to earn " << BCGame.GetIsogram().length() << " Bulls in one guess to win. Good luck!\n";
+}
+
+// Output - Print game status (scores) text:
+void PrintStats()
+{
+	std::cout << "\n  |   /\\   /\\   |  Words Lassoed : Words Butchered : " << BCGame.GetWins() << " : " << BCGame.GetDefeats() << "\n";
+	std::cout << "  |   \\ \\_/ /   |      Total Awards -- Bulls, Cows : " << BCGame.GetBulls() << ", " << BCGame.GetCows() << "\n";
+	std::cout << "  |   ( .^. )   |                      Near Misses : " << BCGame.GetMisses() << "\n";
+	std::cout << "  |    \\ _ /    | (Current Diffuculty Level) Score : (" << BCGame.GetLevel() + 1 << ") " << BCGame.GetScore() << "\n";
+	std::cout << "  |     (_)     |       Maximum guesses this round : " << BCGame.GetMaxTries() << "\n";
 }
 
 // I/O - Get a valid guess from the player, loop until satisfied:
@@ -218,7 +228,7 @@ bool bAskToPlayAgain()
 	return true;
 }
 
-// Output - Spam `X` newlines at the console. Go figure:
+// Output - Repeat `X` newlines out to the console:
 void SpamNewline(const int32 Repeats)
 {
 	int32 LoopNumber = 0;
