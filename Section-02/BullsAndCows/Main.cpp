@@ -68,7 +68,7 @@ FBullCowGame BCGame;
 int main()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.55";
+	std::cout << "Version 0.9.552";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
