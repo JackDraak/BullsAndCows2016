@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.59
+	Jan.2016 pre-release version 0.9.6
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -73,7 +73,7 @@ void PrintHelp();
 void PrintPhaseSummary();
 void PrintPhaseIntro();
 void PrintStats();
-void PrintTurnSummary(FBullCowCounts BullCowCounts, FString& Guess);
+void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess);
 void PrintWelcome();
 void SpamNewline(int32 Repeats);
 
@@ -112,7 +112,7 @@ void MasterControlProgram()
 void PrintWelcome()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.59";
+	std::cout << "Version 0.9.6";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -185,7 +185,7 @@ FText GetValidGuessFromPlayer()
 }
 
 // Output - After a guess is validated, print the results: Guess# of #, Bull# Cow#
-void PrintTurnSummary(FBullCowCounts BullCowCounts, FString& Guess)
+void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
 {
 	std::cout << "\nGuess Result " << BCGame.GetTurn() << "/" << BCGame.GetMaxTries() << ": " << Guess << ", has:\n";
 	if (!bBullHints) { std::cout << "Bulltips: " << BullCowCounts.Bulls << "\n"; }
