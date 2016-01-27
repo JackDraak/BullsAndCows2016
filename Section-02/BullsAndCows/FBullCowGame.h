@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.58
+	Jan.2016 pre-release version 0.9.59
 
 	This header file is included by both:
 		Main.cpp
@@ -47,7 +47,7 @@ public:
 	FBullCowGame();
 	std::mt19937& GetEngine();
 
-	EGuessStatus CheckGuessValidity(const FString&) const;
+	EGuessStatus CheckGuessValidity(FString&) const;
 	int32 GetBulls() const;
 	int32 GetCows() const;
 	int32 GetDefeats() const;
@@ -69,7 +69,7 @@ public:
 	void Reset();
 
 	FString SelectIsogramForLevel();
-	FBullCowCounts ProcessValidGuess(const FString&);
+	FBullCowCounts ProcessValidGuess(FString&);
 
 private:
 	// set values in constructor definition FBullCowGame::Reset()
@@ -87,7 +87,7 @@ private:
 	int32 MyTotalCow;
 	int32 MyWins;
 
-	bool IsWordAlpha(const FString&) const;
-	bool IsWordIsogram(const FString&) const;
-	int32 PositiveExponentResult(int32 Base, const int32& Exponent);
+	bool IsWordAlpha(FString&) const;
+	bool IsWordIsogram(FString&) const;
+	int32 PositiveExponentResult(int32 Base, int32 Exponent);
 };

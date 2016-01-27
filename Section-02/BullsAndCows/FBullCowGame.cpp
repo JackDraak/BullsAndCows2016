@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.58
+	Jan.2016 pre-release version 0.9.59
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -37,7 +37,7 @@ void FBullCowGame::LevelUp()                    { MyLevel++; return; }
 void FBullCowGame::ScoreUp(int32 Score)         { MyScore = MyScore + Score; return; }
 
 // ensure the entered guess is alphabetic, isogram & correct # of letters
-EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
+EGuessStatus FBullCowGame::CheckGuessValidity(FString& Guess) const
 {
 	if (!IsWordAlpha(Guess))                       { return EGuessStatus::Not_Alpha; }
 	else if (!IsWordIsogram(Guess))                { return EGuessStatus::Not_Isogram; }
@@ -46,7 +46,7 @@ EGuessStatus FBullCowGame::CheckGuessValidity(const FString& Guess) const
 }
 
 // upon reciept of a valid* guess, updates Bull and Cow counts + tips
-FBullCowCounts FBullCowGame::ProcessValidGuess(const FString& Guess)
+FBullCowCounts FBullCowGame::ProcessValidGuess(FString& Guess)
 {
 	constexpr char LbChar = '#';
 	FBullCowCounts BullCowCounts;
@@ -259,7 +259,7 @@ std::mt19937& FBullCowGame::GetEngine()
 	return engine;
 }
 
-bool FBullCowGame::IsWordIsogram(const FString& Word) const
+bool FBullCowGame::IsWordIsogram(FString& Word) const
 {
 	if (Word.length() <= 1) { return true; }
 	TMap<char, bool> LetterSeen;
@@ -275,7 +275,7 @@ bool FBullCowGame::IsWordIsogram(const FString& Word) const
 	return true;
 }
 
-bool FBullCowGame::IsWordAlpha(const FString& Word) const
+bool FBullCowGame::IsWordAlpha(FString& Word) const
 {
 	for (int32 WordChar = 0; WordChar < int32(Word.length()); WordChar++)
 	{
@@ -284,7 +284,7 @@ bool FBullCowGame::IsWordAlpha(const FString& Word) const
 	return true; 
 }
 
-int32 FBullCowGame::PositiveExponentResult(int32 Base, const int32& Exponent)
+int32 FBullCowGame::PositiveExponentResult(int32 Base, int32 Exponent)
 {
 	if (Exponent < 1) { return 1; }
 	int32 BaseCopy = Base;
