@@ -191,7 +191,7 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
 	if (!bBullHints) { std::cout << "Bulltips: " << BullCowCounts.Bulls << "\n"; }
 	else if (bBullHints) { std::cout << "Bulltips: -" << BullCowCounts.Bulltips << "-\n"; }
 
-	//std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end()); // shuffle Cows
+	// shuffle Cows because they're presently sorted to the secret word order:
 	std::shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end(), BCGame.GetEngine());
 
 	if (!bCowHints) { std::cout << " Cowtips: " << BullCowCounts.Cows << "\n"; }
