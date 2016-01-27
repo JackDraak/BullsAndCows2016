@@ -1,7 +1,7 @@
 /*	FBullCowGame.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.57
+	Jan.2016 pre-release version 0.9.58
 
 	This class handles the game mechanics of the Bull Cow Game.
 	I/O functions are handled in the Main.cpp class.
@@ -252,6 +252,11 @@ FString FBullCowGame::SelectIsogramForLevel()
 		MyIsogram = Words_0[RandomIndex];	break;
 	}
 	return MyIsogram; // BREAKPOINT here to view secret game word
+}
+
+std::mt19937& FBullCowGame::GetEngine()
+{
+	return engine;
 }
 
 bool FBullCowGame::IsWordIsogram(const FString& Word) const

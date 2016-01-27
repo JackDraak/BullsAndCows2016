@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.57
+	Jan.2016 pre-release version 0.9.58
 
 	This header file is included by both:
 		Main.cpp
@@ -45,6 +45,7 @@ class FBullCowGame {
 public:
 	//constructors
 	FBullCowGame();
+	std::mt19937& GetEngine();
 
 	EGuessStatus CheckGuessValidity(const FString&) const;
 	int32 GetBulls() const;
@@ -59,7 +60,6 @@ public:
 	int32 GetTurn() const;
 	int32 GetWins() const;
 	bool IsPhaseWon() const;
-
 	void IncrementDefeats();
 	void IncrementMisses();
 	void IncrementTry();

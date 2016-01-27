@@ -1,7 +1,7 @@
 ﻿/*	Main.cpp
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.57a
+	Jan.2016 pre-release version 0.9.58
 
 	This is the console executable that makes use of the FBullCowGame class.
 	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
@@ -16,15 +16,22 @@
 	TODO: head-to-head or other competetive modes
 
 	Special Features Include:
+
 		300 word isogram dictionary 
+
 			- Split into 10 levels of difficulty
 			- New "Word-Windowing" technology to keep the player on their toes
 			  (challenge-word level = player level, window: +/- 1)
+
 		Interactive hint system
+
+			- detailed help page
 			- toggle specific or general Bulltips (hints as letters or numbers)
 			- toggle specific or general Cowtips (hints as letters or numbers)
-			- toggle Hashtips (reveals which actual positions the Bulls reside in)
+			- toggle Hashtips (shows Hash visual-aid for Bulls)
+
 		Stats Galore
+
 			- #'s of Cow and Bull awards
 			- Hits, Misses & Near Misses
 			- Player rank, from level 1-10
@@ -32,14 +39,18 @@
 			- 518 [C++] Functions behind the scenes!
 
 		Feedback Requests:
+
 			- Game tuning
+
 				- word variety (good? bad?)
 				- # of guesses (Too few? too many?)
 				- rate of advancement (too slow? too fast?)
 				- are 4-5 character words easier or harder than 6-8'ish character words?
+
 			- Misc. feedback
 
 		Known Bugs:
+
 			THANKS SuperWig for helping with the random issue and the Hashtips!
 */
 #pragma once
@@ -101,7 +112,7 @@ void MasterControlProgram()
 void PrintWelcome()
 {
 	constexpr int32 SPAM_SPAN = 72;
-	std::cout << "Version 0.9.57";
+	std::cout << "Version 0.9.58";
 	SpamNewline(SPAM_SPAN);
 	std::cout << "                      -+-=-+-=-+-=-+-=-+-=-+-=-+-=-+-\n";
 	std::cout << "                       Welcome  to  Bulls  and  Cows\n";
@@ -180,7 +191,8 @@ void PrintTurnSummary(FBullCowCounts BullCowCounts, const FString& Guess)
 	if (!bBullHints) { std::cout << "Bulltips: " << BullCowCounts.Bulls << "\n"; }
 	else if (bBullHints) { std::cout << "Bulltips: -" << BullCowCounts.Bulltips << "-\n"; }
 
-	std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end()); // shuffle Cows
+	//std::random_shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end()); // shuffle Cows
+	std::shuffle(BullCowCounts.Cowtips.begin(), BullCowCounts.Cowtips.end(), BCGame.GetEngine());
 
 	if (!bCowHints) { std::cout << " Cowtips: " << BullCowCounts.Cows << "\n"; }
 	else if (bCowHints) { std::cout << " Cowtips: -" << BullCowCounts.Cowtips << "-\n"; }
