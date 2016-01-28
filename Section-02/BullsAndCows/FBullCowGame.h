@@ -1,7 +1,7 @@
 /*	FBullCowGame.h
 	created by Jack Draak
 	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.6
+	Jan.2016 pre-release version 0.9.7
 
 	This header file is included by both:
 		Main.cpp
@@ -20,7 +20,7 @@
 using FString = std::string;
 using int32 = int;
 
-struct FBullCowCounts
+struct FGuessAnalysis
 {
 	int32 Bulls = 0;
 	FString Bulltips = "";
@@ -29,8 +29,8 @@ struct FBullCowCounts
 	FString Hashtips = "";
 };
 
-// possible return status' when processing Guess input:
-enum class EGuessStatus
+// possible return status' when validating Guess input:
+enum class EGuessQuality
 {
 	Invalid_Status,
 	Length_Mismatch,
@@ -40,54 +40,54 @@ enum class EGuessStatus
 };
 
 class FBullCowGame {
-	std::mt19937 engine = std::mt19937{ std::random_device{}() }; //seed with `std::random_device{}()` for proper randomness
+	std::mt19937 Entropy = std::mt19937{ std::random_device{}() };
 
 public:
 	//constructors
 	FBullCowGame();
-	std::mt19937& GetEngine();
+	std::mt19937& GetEntropy();
 
-	EGuessStatus CheckGuessValidity(const FString&) const;
-	int32 GetBulls() const;
-	int32 GetCows() const;
-	int32 GetDefeats() const;
-	FString GetGuess() const;
-	FString GetIsogram() const;
-	int32 GetLevel() const;
-	int32 GetMaxTries() const;
-	int32 GetMisses() const;
-	int32 GetScore() const;
-	int32 GetTurn() const;
-	int32 GetWins() const;
+	EGuessQuality CheckGuessValidity(const FString&) const;
+	int32 GetBullsNum() const;
+	int32 GetCowsNum() const;
+	int32 GetMaxTurns() const;
+	int32 GetPhaseLossNum() const;
+	int32 GetPhaseWinNum() const;
+	FString GetPlayerGuess() const;
+	int32 GetPlayerLevel() const;
+	int32 GetPlayerScore() const;
+	FString GetSecretIsogram() const;
+	int32 GetTurnLossNum() const;
+	int32 GetTurnNum() const;
 	bool IsPhaseWon() const;
-	void IncrementDefeats();
-	void IncrementMisses();
-	void IncrementTry();
-	void IncrementWins();
-	void LevelUp();
-	void ScoreUp(int32);
-	void Reset();
+	void IncrementPhaseLossNum();
+	void IncrementPhaseWinNum();
+	void IncrementTurn();
+	void IncrementTurnLossNum();
+	void ResetPhase();
+	void UpLevel();
+	void UpScore(int32);
 
+	FGuessAnalysis AnalyzeValidGuess(const FString&);
 	FString SelectIsogramForLevel();
-	FBullCowCounts ProcessValidGuess(const FString&);
 
 private:
 	// set values in constructor definition FBullCowGame::Reset()
-	bool bDoneOnce;
-	bool bGuessMatches;
-	int32 MyCurrentTurn;
-	int32 MyDefeats;
-	FString MyGuess;
-	FString MyIsogram;
-	int32 MyLevel;
-	int32 MyMaxTries;
-	int32 MyMisses;
-	int32 MyScore;
-	int32 MyTotalBull;
-	int32 MyTotalCow;
-	int32 MyWins;
+	bool bNewGameInitialized;
+	bool bPlayerGuessMatches;
+	int32 PlayerCurrentTurn;
+	FString PlayerGuess;
+	int32 PlayerLevel;
+	int32 PlayerMaxTurns;
+	int32 PlayerPhaseLosses;
+	int32 PlayerPhaseWins;
+	int32 PlayerScore;
+	int32 PlayerTotalBullNum;
+	int32 PlayerTotalCowNum;
+	int32 PlayerTurnLosses;
+	FString SecretIsogram;
 
+	int32 CalculateExponent(int32 Base, int32 Exponent);
 	bool IsWordAlpha(const FString&) const;
 	bool IsWordIsogram(const FString&) const;
-	int32 PositiveExponentResult(int32 Base, int32 Exponent);
 };
