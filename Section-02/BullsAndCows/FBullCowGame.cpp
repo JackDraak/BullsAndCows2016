@@ -38,7 +38,6 @@ void FBullCowGame::IncrementTurnLossNum()      { PlayerTurnLosses++; return; }
 void FBullCowGame::UpLevel()                   { PlayerLevel++; return; }
 void FBullCowGame::UpScore(int32 Score)        { PlayerScore = PlayerScore + Score; return; }
 
-std::mt19937& FBullCowGame::GetEntropy()       { return Entropy; }
 
 // ensure the entered guess is alphabetic, isogram & correct # of letters
 EGuessQuality FBullCowGame::CheckGuessValidity(const FString& Guess) const
@@ -83,6 +82,9 @@ FGuessAnalysis FBullCowGame::AnalyzeValidGuess(const FString& PlayerGuess)
 			}
 		}
 	}
+	// TODO ?add a difficulty setting to allow player to see un-shuffled Cows?
+	// shuffle Cows because they're presently sorted to the secret word order:
+	std::shuffle(GuessAnalysis.Cowtips.begin(), GuessAnalysis.Cowtips.end(), Entropy);
 
 	if (GuessAnalysis.Bulls == SecretWordLength) 
 	{

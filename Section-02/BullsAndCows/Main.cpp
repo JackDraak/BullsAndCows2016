@@ -190,11 +190,7 @@ void PrintTurnSummary(FGuessAnalysis GuessAnalysis, const FString& PlayerGuess)
 	std::cout << "\nGuess Result " << BCGame.GetTurnNum() << "/" << BCGame.GetMaxTurns() << ": " << PlayerGuess << ", has:\n";
 	if (!bBullHints) { std::cout << "Bulltips: " << GuessAnalysis.Bulls << "\n"; }
 	else if (bBullHints) { std::cout << "Bulltips: -" << GuessAnalysis.Bulltips << "-\n"; }
-
-	// TODO ?add a difficulty setting to allow player to see un-shuffled Cows?
-	// shuffle Cows because they're presently sorted to the secret word order:
-	std::shuffle(GuessAnalysis.Cowtips.begin(), GuessAnalysis.Cowtips.end(), BCGame.GetEntropy());
-
+	
 	if (!bCowHints) { std::cout << " Cowtips: " << GuessAnalysis.Cows << "\n"; }
 	else if (bCowHints) { std::cout << " Cowtips: -" << GuessAnalysis.Cowtips << "-\n"; }
 
