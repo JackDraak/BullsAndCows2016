@@ -45,7 +45,6 @@ class FBullCowGame {
 public:
 	//constructors
 	FBullCowGame();
-	std::mt19937& GetEntropy();
 
 	EGuessQuality CheckGuessValidity(const FString&) const;
 	int32 GetBullsNum() const;
