@@ -25,7 +25,8 @@ struct FGuessAnalysis
 	int32 Bulls = 0;
 	FString Bulltips = "";
 	int32 Cows = 0;
-	FString Cowtips = "";
+	FString CowTips = "";
+	FString HackedCows = "";
 	FString Hashtips = "";
 };
 

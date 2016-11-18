@@ -4,8 +4,8 @@
 	Jan.2016 pre-release version 0.9.7
 
 	This is the console executable that makes use of the FBullCowGame class.
-	This acts as the view in a MVC pattern, and is responsible for all I/O functions.
-	The game mechanics operate in the FBullCowGame.cpp class.
+	This acts as the view in a MVC pattern, and is responsible for all I/O 
+    functions. The game mechanics operate in the FBullCowGame.cpp class.
 
 	GAME-LOGIC:
 	This is a `Mastermind`-style word guessing game using a small
@@ -66,6 +66,7 @@ using int32 = int;
 bool bAskToPlayAgain();
 bool bBullHints = true;
 bool bCowHints = true;
+bool bHackedCows = false;
 bool bHashHints = false;
 FText GetValidGuessFromPlayer();
 void MasterControlProgram();
@@ -189,12 +190,13 @@ void PrintTurnSummary(FGuessAnalysis GuessAnalysis, const FString& PlayerGuess)
 {
 	std::cout << "\nGuess Result " << BCGame.GetTurnNum() << "/" << BCGame.GetMaxTurns() << ": " << PlayerGuess << ", has:\n";
 	if (!bBullHints) { std::cout << "Bulltips: " << GuessAnalysis.Bulls << "\n"; }
-	else if (bBullHints) { std::cout << "Bulltips: -" << GuessAnalysis.Bulltips << "-\n"; }
+	else if (bBullHints) { std::cout << "Bulltips: " << GuessAnalysis.Bulltips << "\n"; }
 	
 	if (!bCowHints) { std::cout << " Cowtips: " << GuessAnalysis.Cows << "\n"; }
-	else if (bCowHints) { std::cout << " Cowtips: -" << GuessAnalysis.Cowtips << "-\n"; }
+	else if (bCowHints && bHackedCows) { std::cout << " Cowtips: " << GuessAnalysis.HackedCows << " (hacked:sorted)\n"; }
+	else if (bCowHints && !bHackedCows) { std::cout << " Cowtips: " << GuessAnalysis.CowTips << "\n"; }
 
-	if (bHashHints) { std::cout << "Hashtips: `" << GuessAnalysis.Hashtips << "`\n"; }
+	if (bHashHints) { std::cout << "Hashtips: " << GuessAnalysis.Hashtips << "\n"; }
 	return;
 }
 
@@ -212,7 +214,7 @@ void PrintPhaseSummary()
 	}
 	else if (BCGame.GetTurnNum() >= BCGame.GetMaxTurns())
 	{
-		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it! Don't give up yet!"; // TODO Say something random here after 1st print
+		std::cout << std::endl << "      !~!~!~!~!~!~!~!       It's challenging, isn't it? Don't give up yet!"; // TODO Say something random here after 1st print
 		std::cout << std::endl << "      !~!~!LOSER!~!~!       Guesses: " << BCGame.GetTurnNum() - 1 << " of " << BCGame.GetMaxTurns() << " used";
 		std::cout << std::endl << "      !~!~!~!~!~!~!~!       Game Word : ";
 		for (auto Letter : BCGame.GetSecretIsogram()) { std::cout << "#"; }
@@ -226,22 +228,42 @@ void PrintPhaseSummary()
 bool bAskToPlayAgain()
 {
 	FText Responce = "";
-	if (bBullHints)	{ std::cout << std::endl << "Options: You can select a single option this turn --\nHint Options: (B)ulls as numbers, "; }
-	else { std::cout << std::endl << "Options: You can select a single option this turn --\nHint Options: (B)ulls as letters, "; }
+	std::cout << "\nOptions: You can select a single option this turn --\nHint Options: ";
+
+	if (bBullHints)	{ std::cout << std::endl << "(B)ulls as numbers, "; }
+	else { std::cout << std::endl << "(B)ulls as letters, "; }
 
 	if (bCowHints) { std::cout << "(C)ows as numbers, "; }
 	else { std::cout << "(C)ows as letters, "; }
 
-	if (bHashHints)	{std::cout << "chuck (H)ashtips.\nGame Options: (Q)uit, (R)epeat instructions, (D)etailed help\n<Enter> to continue "; }
-	else { std::cout << "add meaty (H)ashtips.\nGame Options: (Q)uit, (R)epeat instructions, (D)etailed help\n<Enter> to continue "; }
+	if (bHashHints)	{std::cout << "chuck (H)ashtips.\n"; }
+	else { std::cout << "add meaty (H)ashtips.\n"; }
+
+	if (bHackedCows) { std::cout << "Don't <S>how hacked (sorted) Cow letters.\n"; }
+	else { std::cout << "<S>how hacked (sorted) Cow letters.\n"; }
+
+	std::cout << "Game Options: (Q)uit, (R)epeat instructions, (D)etailed help\n<Enter> to continue ";
 
 	std::getline(std::cin, Responce);
 	if ((Responce[0] == 'q') || (Responce[0] == 'Q')) { return false; }
 	else if ((Responce[0] == 'b') || (Responce[0] == 'B')) { bBullHints = !bBullHints; }
-	else if ((Responce[0] == 'c') || (Responce[0] == 'C')) { bCowHints = !bCowHints; }
 	else if ((Responce[0] == 'h') || (Responce[0] == 'H')) { bHashHints = !bHashHints; }
 	else if ((Responce[0] == 'r') || (Responce[0] == 'R')) { PrintWelcome(); }
 	else if ((Responce[0] == 'd') || (Responce[0] == 'D')) { PrintHelp(); }
+	
+	else if ((Responce[0] == 'c') || (Responce[0] == 'C')) {
+		// C1: True hints then false hints && false hacks
+		if (bCowHints) { bCowHints = !bCowHints; bHackedCows = bCowHints; }
+		// C2: false hints then true hints // dont care about hacks state
+		else { bCowHints = !bCowHints; }
+	}
+	
+	else if ((Responce[0] == 's') || (Responce[0] == 'S')) {
+		// H1: true hacks then false hacks // dont care about hint state
+		if (bHackedCows) { bHackedCows = !bHackedCows; }
+		// H2: false hacks then true hacks && hints
+		else { bCowHints = bHackedCows; bHackedCows = !bHackedCows; }
+	}
 	return true;
 }
 

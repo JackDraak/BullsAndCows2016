@@ -76,15 +76,13 @@ FGuessAnalysis FBullCowGame::AnalyzeValidGuess(const FString& PlayerGuess)
 				{
 					PlayerTotalCowNum++;
 					GuessAnalysis.Cows++;
-					GuessAnalysis.Cowtips.append(1, SecretWord[SecretWordCharPosition]);
-				//	GuessAnalysis.Hashtips[SecretWordCharPosition] = LbChar;
+					GuessAnalysis.HackedCows.append(1, SecretWord[SecretWordCharPosition]);
 				}
 			}
 		}
 	}
-	// TODO ?add a difficulty setting to allow player to see un-shuffled Cows?
-	// shuffle Cows because they're presently sorted to the secret word order:
-	std::shuffle(GuessAnalysis.Cowtips.begin(), GuessAnalysis.Cowtips.end(), Entropy);
+	GuessAnalysis.CowTips = GuessAnalysis.HackedCows;
+	std::shuffle(GuessAnalysis.CowTips.begin(), GuessAnalysis.CowTips.end(), Entropy);
 
 	if (GuessAnalysis.Bulls == SecretWordLength) 
 	{
@@ -117,6 +115,7 @@ int32 FBullCowGame::GetMaxTurns() const
 {
 	TMap<int32, int32>WordLengthToMaxTurns 
 	{
+		// word-length, maximum guesses
 		{ 4, 8 }, 
 		{ 5, 10 },
 		{ 6, 12 },
@@ -126,7 +125,7 @@ int32 FBullCowGame::GetMaxTurns() const
 		{ 10, 20 },
 		{ 11, 18 },
 		{ 12, 16 },
-		{ 13, 14 },
+		{ 13, 14 }, // fewer English words, fewer guesses
 		{ 14, 11 },
 		{ 15, 9 },
 		{ 16, 7 },
