@@ -1,57 +1,57 @@
-﻿/*	Main.cpp
-	created by Jack Draak
-	as tutored by Ben Tristem
-	Jan.2016 pre-release version 0.9.7
+﻿/*  Main.cpp
+    created by Jack Draak
+    as tutored by Ben Tristem
+    Jan.2016 pre-release version 0.9.7
 
-	This is the console executable that makes use of the FBullCowGame class.
-	This acts as the view in a MVC pattern, and is responsible for all I/O 
+    This is the console executable that makes use of the FBullCowGame class.
+    This acts as the view in a MVC pattern, and is responsible for all I/O 
     functions. The game mechanics operate in the FBullCowGame.cpp class.
 
-	GAME-LOGIC:
-	This is a `Mastermind`-style word guessing game using a small
-	dictionary of isograms, tied to a scoring and leveling system
-	designed to provide increasingly difficult challenges to one
-	or more players working co-oepratively.
+    GAME-LOGIC:
+    This is a `Mastermind`-style word guessing game using a small
+    dictionary of isograms, tied to a scoring and leveling system
+    designed to provide increasingly difficult challenges to one
+    or more players working co-oepratively.
 
-	TODO: head-to-head or other competetive modes
+    TODO: head-to-head or other competetive modes
 
-	Special Features Include:
+    Special Features Include:
 
-		300 word isogram dictionary 
+        300 word isogram dictionary 
 
-			- Split into 10 levels of difficulty
-			- New "Word-Windowing" technology to keep the player on their toes
-			  (challenge-word level = player level, window: +/- 1)
+            - Split into 10 levels of difficulty
+            - New "Word-Windowing" technology to keep the player on their toes
+              (challenge-word level = player level, window: +/- 1)
 
-		Interactive hint system
+        Interactive hint system
 
-			- detailed help page
-			- toggle specific or general Bulltips (hints as letters or numbers)
-			- toggle specific or general Cowtips (hints as letters or numbers)
-			- toggle Hashtips (shows Hash visual-aid for Bulls)
+            - detailed help page
+            - toggle specific or general Bulltips (hints as letters or numbers)
+            - toggle specific or general Cowtips (hints as letters or numbers)
+            - toggle Hashtips (shows Hash visual-aid for Bulls)
 
-		Stats Galore
+        Stats Galore
 
-			- #'s of Cow and Bull awards
-			- Hits, Misses & Near Misses
-			- Player rank, from level 1-10
-			- Get awarded massive arbitrary "Points" for each win!
-			- 518 [C++] Functions behind the scenes!
+            - #'s of Cow and Bull awards
+            - Hits, Misses & Near Misses
+            - Player rank, from level 1-10
+            - Get awarded massive arbitrary "Points" for each win!
+            - 518 [C++] Functions behind the scenes!
 
-		Feedback Requests:
+        Feedback Requests:
 
-			- Game tuning
+            - Game tuning
 
-				- word variety (good? bad?)
-				- # of guesses (Too few? too many?)
-				- rate of advancement (too slow? too fast?)
-				- are 4-5 character words easier or harder than 6-8'ish character words?
+                - word variety (good? bad?)
+                - # of guesses (Too few? too many?)
+                - rate of advancement (too slow? too fast?)
+                - are 4-5 character words easier or harder than 6-8'ish character words?
 
-			- Misc. feedback
+            - Misc. feedback
 
-		Known Bugs:
+        Known Bugs:
 
-			THANKS SuperWig for helping with the random issue and the Hashtips!
+            THANKS SuperWig for helping with the random issue and the Hashtips!
 */
 #pragma once
 #include <algorithm>
